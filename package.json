@@ -1,0 +1,46 @@
+{
+  "name": "ianswer",
+  "version": "1.0.0",
+  "main": "expo/AppEntry.js",
+  "scripts": {
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "expo start --web",
+    "dev:build:ios": "eas build --profile development --platform ios",
+    "dev:build:android": "eas build --profile development --platform android"
+  },
+  "dependencies": {
+    "@aws-amplify/api": "^6.0.35",
+    "@aws-amplify/auth": "^6.3.4",
+    "@aws-amplify/react-native": "^1.1.1",
+    "@aws-amplify/storage": "^6.4.4",
+    "@react-native-async-storage/async-storage": "^1.23.1",
+    "@react-native-community/masked-view": "^0.1.11",
+    "@react-native-community/netinfo": "^11.3.2",
+    "@react-native-community/viewpager": "^5.0.11",
+    "@react-navigation/native": "^6.1.17",
+    "@react-navigation/stack": "^6.3.29",
+    "amplify-util-import": "^1.5.13",
+    "aws-amplify": "^6.3.4",
+    "expo": "~51.0.8",
+    "expo-camera": "^15.0.9",
+    "expo-constants": "~16.0.1",
+    "expo-dev-client": "~4.0.14",
+    "expo-image-picker": "~15.0.5",
+    "expo-status-bar": "~1.12.1",
+    "expo-tracking-transparency": "~4.0.2",
+    "react": "18.2.0",
+    "react-native": "0.74.1",
+    "react-native-elements": "^3.4.3",
+    "react-native-get-random-values": "^1.11.0",
+    "react-native-google-mobile-ads": "^13.6.0",
+    "react-native-picker-select": "^9.1.3"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.20.0",
+    "@types/react": "~18.2.45",
+    "typescript": "^5.1.3"
+  },
+  "private": true
+}
