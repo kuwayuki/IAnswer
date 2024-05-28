@@ -3,11 +3,12 @@ import { uploadData } from "@aws-amplify/storage";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { CameraType, CameraView, useCameraPermissions } from "expo-camera";
 import * as ImagePicker from "expo-image-picker";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import {
   ActivityIndicator,
   Alert,
   Button,
+  Dimensions,
   Image,
   StyleSheet,
   Text,
@@ -17,13 +18,20 @@ import {
 import { ApiBodyType, AppContextState, RootStackParamList } from "../App";
 import RNPickerSelect from "react-native-picker-select";
 import { BANNER_UNIT_ID, PROPMT_TEMPLATE, PROPMT_TEMPLATES } from "./constant";
-import { BannerAd, BannerAdSize } from "react-native-google-mobile-ads";
+// import { BannerAd, BannerAdSize } from "react-native-google-mobile-ads";
 import { KEY, getLocalStorage, saveLocalStorage } from "./utils";
 import { Icon } from "react-native-elements";
 import IconAtom from "./IconAtom";
 import Constants from "expo-constants";
+import {
+  GestureEvent,
+  GestureHandlerRootView,
+  PinchGestureHandler,
+  State,
+} from "react-native-gesture-handler";
 // import { AdMobInterstitial } from "expo-ads-admob";
 
+const { width: screenWidth } = Dimensions.get("window");
 const CameraScreen: React.FC = () => {
   const appContextState = useContext(AppContextState);
   const [cameraRef, setCameraRef] = useState<CameraView | null>(null);
@@ -32,10 +40,16 @@ const CameraScreen: React.FC = () => {
   const [status, requestStatusPermission] =
     ImagePicker.useMediaLibraryPermissions();
   const [photoUri, setPhotoUri] = useState<string | null>(null);
+  const [imageSize, setImageSize] = useState<{
+    width: number;
+    height: number;
+  } | null>(null);
   const [loading, setLoading] = useState(false);
   const [isDisplayExplane, setDisplayExplane] = useState(false);
   const [prompt, setProompt] = useState<PROPMT_TEMPLATE>();
   const [mode, setMode] = useState<number>(0);
+  const [zoom, setZoom] = useState(0);
+  const pinchRef = useRef(null);
 
   const navigation =
     useNavigation<NavigationProp<RootStackParamList, "Camera">>();
@@ -71,24 +85,34 @@ const CameraScreen: React.FC = () => {
   }
 
   if (!permission.granted) {
-    // Camera permissions are not granted yet.
-    return (
-      <View style={styles.container}>
-        <Text style={{ textAlign: "center" }}>
-          We need your permission to show the camera
-        </Text>
-        <Button onPress={requestPermission} title="grant permission" />
-      </View>
-    );
+    Alert.alert("許可", "カメラへのアクセスを許可しますか？", [
+      { text: "許可する", onPress: requestPermission },
+    ]);
   }
 
   function toggleCameraFacing() {
     setFacing((current) => (current === "back" ? "front" : "back"));
   }
+
+  const handlePinchGesture = (event: GestureEvent<any>) => {
+    // console.log(event);
+    if (event.nativeEvent.state === State.ACTIVE) {
+      // console.log(event.nativeEvent.scale);
+      let newZoom = zoom + event.nativeEvent.velocity * 0.0002;
+      if (newZoom < 0) newZoom = 0;
+      if (newZoom > 1) newZoom = 1;
+      // console.log(newZoom);
+      setZoom(newZoom);
+    }
+  };
+
   const takePicture = async () => {
     if (cameraRef) {
       const photo = await cameraRef.takePictureAsync();
       setPhotoUri(photo!.uri);
+      Image.getSize(photo!.uri, (width, height) => {
+        setImageSize({ width, height });
+      });
       Alert.alert("写真を送信", "この写真を送信しますか？", [
         {
           text: "キャンセル",
@@ -100,6 +124,23 @@ const CameraScreen: React.FC = () => {
         { text: "送信", onPress: () => uploadPhoto(photo!.uri) },
       ]);
     }
+  };
+
+  const getImageStyle = () => {
+    if (!imageSize) {
+      return styles.preview;
+    }
+    const aspectRatio = imageSize.width / imageSize.height;
+    if (imageSize.width > screenWidth) {
+      return {
+        width: screenWidth,
+        height: screenWidth / aspectRatio,
+      };
+    }
+    return {
+      width: imageSize.width,
+      height: imageSize.height,
+    };
   };
 
   const openImagePickerAsync = async () => {
@@ -118,7 +159,11 @@ const CameraScreen: React.FC = () => {
     });
     console.log(pickerResult);
     if (!pickerResult.canceled) {
-      setPhotoUri(pickerResult.assets[0].uri);
+      const url = pickerResult.assets[0].uri;
+      setPhotoUri(url);
+      Image.getSize(url, (width, height) => {
+        setImageSize({ width, height });
+      });
       Alert.alert("写真を送信", "この写真を送信しますか？", [
         {
           text: "キャンセル",
@@ -139,6 +184,11 @@ const CameraScreen: React.FC = () => {
     try {
       let tmpPhotoUri = _photoUri ?? photoUri;
       if (!tmpPhotoUri) return;
+      const size = _photoUri
+        ? Image.getSize(_photoUri, (width, height) => {
+            setImageSize({ width, height });
+          })
+        : null;
       setLoading(true);
       const response = await fetch(tmpPhotoUri);
       // console.log(response);
@@ -243,76 +293,86 @@ const CameraScreen: React.FC = () => {
     <View style={styles.container}>
       {photoUri ? (
         <>
-          <Image source={{ uri: photoUri }} style={styles.preview} />
+          <Image source={{ uri: photoUri }} style={getImageStyle()} />
         </>
       ) : (
-        <CameraView
-          style={styles.camera}
-          facing={facing}
-          mute={true}
-          pictureSize="1280x720"
-          ref={(ref) => setCameraRef(ref)}
-        >
-          {mode === PROPMT_TEMPLATES.FASSION.No && (
-            <TouchableOpacity
-              style={styles.toogle}
-              onPress={toggleCameraFacing}
+        <GestureHandlerRootView>
+          <PinchGestureHandler
+            onGestureEvent={handlePinchGesture}
+            ref={pinchRef}
+          >
+            <CameraView
+              style={styles.camera}
+              facing={facing}
+              mute={true}
+              zoom={zoom}
+              pictureSize="1280x720"
+              ref={(ref) => setCameraRef(ref)}
             >
-              <IconAtom
-                name="camera-reverse"
-                type="ionicon"
-                onPress={toggleCameraFacing}
-                size={20}
-              />
-            </TouchableOpacity>
-          )}
-          {isDisplayExplane && prompt?.Explane && (
-            <View style={styles.explaneContainer}>
-              <Text style={styles.explaneTitle}>{"説明"}</Text>
-              <Text style={styles.explaneText}>{prompt?.Explane}</Text>
-            </View>
-          )}
-          <View style={styles.shutterButtonContainer}>
-            <TouchableOpacity
-              style={styles.shutterButton}
-              onPress={takePicture}
-            ></TouchableOpacity>
-          </View>
-          <View style={styles.galleryButtonContainer}>
-            <TouchableOpacity
-              style={styles.galleryButton}
-              onPress={openImagePickerAsync}
-            >
-              <Text style={styles.galleryButtonText}>🖼</Text>
-            </TouchableOpacity>
-          </View>
-          {appContextState.settingAiType === PROPMT_TEMPLATES.ALL.No && (
-            <View style={styles.pickerContainer}>
-              <RNPickerSelect
-                value={mode}
-                onDonePress={() => setDisplayExplane(false)}
-                onClose={() => setDisplayExplane(false)}
-                onValueChange={(value: number) => {
-                  setMode(value > 0 ? value : 1);
-                  setFacing("back");
-                  setDisplayExplane(true);
-                  saveLocalStorage(KEY.AI_TYPE, value);
-                }}
-                items={[
-                  { label: "🖋テスト回答モード", value: 1 },
-                  { label: "👗ファッションチェックモード", value: 2 },
-                  { label: "🍳レシピモード", value: 3 },
-                  { label: "㎈カロリーモード", value: 4 },
-                  { label: "🚮ゴミ分別モード", value: 5 },
-                ]}
-                style={{
-                  inputIOS: styles.pickerText,
-                  inputAndroid: styles.pickerText,
-                }} // 追加
-              />
-            </View>
-          )}
-        </CameraView>
+              {mode === PROPMT_TEMPLATES.FASSION.No && (
+                <TouchableOpacity
+                  style={styles.toogle}
+                  onPress={toggleCameraFacing}
+                >
+                  <IconAtom
+                    name="camera-reverse"
+                    type="ionicon"
+                    onPress={toggleCameraFacing}
+                    size={20}
+                  />
+                </TouchableOpacity>
+              )}
+              {isDisplayExplane && prompt?.Explane && (
+                <View style={styles.explaneContainer}>
+                  <Text style={styles.explaneTitle}>{"説明"}</Text>
+                  <Text style={styles.explaneText}>{prompt?.Explane}</Text>
+                </View>
+              )}
+              <View style={styles.shutterButtonContainer}>
+                <TouchableOpacity
+                  style={styles.shutterButton}
+                  onPress={takePicture}
+                ></TouchableOpacity>
+              </View>
+              <View style={styles.galleryButtonContainer}>
+                <TouchableOpacity
+                  style={styles.galleryButton}
+                  onPress={openImagePickerAsync}
+                >
+                  <Text style={styles.galleryButtonText}>🖼</Text>
+                </TouchableOpacity>
+              </View>
+              {appContextState.settingAiType === PROPMT_TEMPLATES.ALL.No && (
+                <View style={styles.pickerContainer}>
+                  <RNPickerSelect
+                    value={mode}
+                    onDonePress={() => setDisplayExplane(false)}
+                    onClose={() => setDisplayExplane(false)}
+                    onValueChange={(value: number) => {
+                      setMode(value > 0 ? value : 1);
+                      setFacing("back");
+                      setDisplayExplane(true);
+                      saveLocalStorage(KEY.AI_TYPE, value);
+                    }}
+                    items={[
+                      { label: "🖋テスト回答モード", value: 1 },
+                      { label: "👗ファッションチェックモード", value: 2 },
+                      { label: "🍳レシピモード", value: 3 },
+                      { label: "㎈カロリーモード", value: 4 },
+                      { label: "🚮ゴミ分別モード", value: 5 },
+                      { label: "🗾翻訳モード", value: 6 },
+                      { label: "🥀植物ケアモード", value: 7 },
+                    ]}
+                    style={{
+                      inputIOS: styles.pickerText,
+                      inputAndroid: styles.pickerText,
+                    }} // 追加
+                  />
+                </View>
+              )}
+            </CameraView>
+          </PinchGestureHandler>
+        </GestureHandlerRootView>
       )}
       {/* <BannerAd
         unitId={BANNER_UNIT_ID.BANNER}

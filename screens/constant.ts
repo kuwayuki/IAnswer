@@ -60,4 +60,20 @@ export const PROPMT_TEMPLATES = {
     PropmtUser:
       "画像はゴミです。解析して、ごみの種類を返却してください。titleには名称、bodyにはnull、answerにはごみの種類、explanationには説明、resultにはnullをお願いします。",
   } as PROPMT_TEMPLATE,
+  TRANSLATE: {
+    No: 6,
+    AppName: "IAnswerTranslate",
+    Explane:
+      "外国語を撮影してください。\r\n翻訳を行います。AIの精度によるので必ずしも正解しているわけではありません。",
+    PropmtUser:
+      "画像は外国語です。解析して、日本語にしてください。titleには「翻訳結果」、bodyには読み取った外国語、answerには翻訳結果、explanationにはnull、resultにはnullをお願いします。",
+  } as PROPMT_TEMPLATE,
+  PLANTS: {
+    No: 7,
+    AppName: "IAnswerPlants",
+    Explane:
+      "植物を撮影してください。\r\n植物の状態を評価します。AIの精度によるので必ずしも正解しているわけではありません。",
+    PropmtUser:
+      "画像は植物です。解析して、状態を確認してください。titleには植物名称、bodyには良し悪しの概要、answerには状態の詳細、explanationにはケアの方法、resultにはnullをお願いします。",
+  } as PROPMT_TEMPLATE,
 };

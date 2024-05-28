@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   StyleSheet,
   View,
@@ -6,6 +6,7 @@ import {
   Button,
   ScrollView,
   Image,
+  Dimensions,
 } from "react-native";
 import {
   useNavigation,
@@ -19,6 +20,7 @@ import {
   RootStackParamList,
 } from "../App";
 // import { AdMobInterstitial } from "expo-ads-admob";
+const { width: screenWidth } = Dimensions.get("window");
 
 const ResultScreen: React.FC = () => {
   const navigation =
@@ -26,11 +28,18 @@ const ResultScreen: React.FC = () => {
 
   const route = useRoute<ResultScreenRouteProp>();
   const { result, uri } = route.params;
-  console.log(uri);
+  const [imageSize, setImageSize] = useState<{
+    width: number;
+    height: number;
+  } | null>(null);
 
-  console.log(typeof result);
-  console.log(Array.isArray(result));
-  console.log(result);
+  useEffect(() => {
+    const size = Image.getSize(uri, (width, height) => {
+      return { width, height };
+    });
+    setImageSize(getImageStyle(size));
+  }, [uri]);
+
   if (!Array.isArray(result))
     return (
       <View style={styles.container}>
@@ -62,13 +71,32 @@ const ResultScreen: React.FC = () => {
       </View>
     );
   };
+  const getImageStyle = (imageSize: { width: number; height: number }) => {
+    if (!imageSize) {
+      return styles.preview;
+    }
+
+    const aspectRatio = imageSize.width / imageSize.height;
+    if (imageSize.width > screenWidth) {
+      return {
+        width: screenWidth,
+        height: screenWidth / aspectRatio,
+      };
+    }
+    return {
+      width: imageSize.width,
+      height: imageSize.height,
+    };
+  };
 
   return (
     <ScrollView style={styles.container}>
       {result.map((item: OpenAiResult, index: number) =>
         normalView(item, index)
       )}
-      <Image source={{ uri: uri }} style={styles.preview} />
+      <>
+        <Image source={{ uri: uri }} style={{ ...imageSize }} />
+      </>
     </ScrollView>
   );
 };
@@ -79,7 +107,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#f5f5f5",
   },
   preview: {
-    flex: 1,
+    width: screenWidth,
     height: 500,
   },
   resultItem: {

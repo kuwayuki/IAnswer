@@ -24,10 +24,6 @@
         }
       ]
     ],
-    "infoPlist": {
-      "NSUserTrackingUsageDescription": "「許可」を押すと、他社のデータも活用し、よりお客様に適した広告が表示されます。",
-      "NSMicrophoneUsageDescription": "This app uses the microphone to allow users to send orders via voice message."
-    },
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -41,7 +37,11 @@
       "config": {
         "googleMobileAdsAppId": "ca-app-pub-2103807205659646~3048157861"
       },
-      "bundleIdentifier": "com.kuwahara.IAnswer"
+      "bundleIdentifier": "com.kuwahara.IAnswer",
+      "infoPlist": {
+        "NSUserTrackingUsageDescription": "「許可」を押すと、他社のデータも活用し、よりお客様に適した広告が表示されます。",
+        "NSMicrophoneUsageDescription": "This app uses the microphone to allow users to send orders via voice message."
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -50,7 +50,8 @@
       },
       "permissions": [
         "android.permission.CAMERA",
-        "android.permission.RECORD_AUDIO"
+        "android.permission.RECORD_AUDIO",
+        "com.google.android.gms.permission.AD_ID"
       ]
     },
     "web": {
@@ -60,6 +61,12 @@
       "eas": {
         "projectId": "3845abf4-c362-4dbd-9e69-9816fc62c837"
       }
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/3845abf4-c362-4dbd-9e69-9816fc62c837"
     }
   },
   "react-native-google-mobile-ads": {

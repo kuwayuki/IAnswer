@@ -4,6 +4,7 @@ import { getLocalStorage, saveLocalStorage } from "./utils";
 
 const GUEST_PASSWORD = "sjhadiyans78213@";
 const USER_NAME = "username";
+const DAMMY_EMAIL = "ee68028@gmail.com";
 
 export async function authenticate(): Promise<void> {
   try {
@@ -39,6 +40,13 @@ async function authSignUp(): Promise<void> {
     const userInfo = await signUp({
       username: username,
       password: GUEST_PASSWORD,
+      options: {
+        userAttributes: {
+          email: DAMMY_EMAIL,
+        },
+        // optional
+        autoSignIn: true, // or SignInOptions e.g { authFlowType: "USER_SRP_AUTH" }
+      },
     });
     saveLocalStorage(USER_NAME, username);
     console.log(userInfo);

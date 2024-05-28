@@ -51,7 +51,7 @@ eas build --profile development-simulator --platform ios
 npm install --dev-client
 % pacakge を追加した場合には必ず再インストールすること！
 eas build --profile development --platform ios
-% QR コードを読み取る
+% QR コードを読み取る or Expo GO で読み取る
 npx expo start --dev-client
 % Expo で起動すると、上でインストールしたペリオチャートが起動する。
 
@@ -65,9 +65,7 @@ npm run start
 % eas submit --latest -p ios
 % eas update --branch production --message "Bug Fixed"
 
-eas build --profile development --platform ios
 npm install --dev-client
-npx expo start --dev-client
 
 ee68028@yahoo.ne.jp
 

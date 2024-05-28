@@ -1,29 +1,32 @@
 import { NavigationContainer, RouteProp } from "@react-navigation/native";
+import { Amplify } from "aws-amplify";
 import {
   StackNavigationProp,
   createStackNavigator,
 } from "@react-navigation/stack";
-import { Amplify } from "aws-amplify";
 import React, { useEffect, useMemo, useState } from "react";
 import CameraScreen from "./screens/CameraScreen";
 import { authenticate } from "./screens/GuestAuth";
 import ResultScreen from "./screens/ResultScreen";
 // import { AdMobInterstitial, setTestDeviceIDAsync } from "expo-ads-admob";
-import configure from "./amplifyconfiguration.json";
-import { Alert } from "react-native";
+import Constants from "expo-constants";
 import {
   getTrackingPermissionsAsync,
   requestTrackingPermissionsAsync,
 } from "expo-tracking-transparency";
-import { KEY, getLocalStorage, saveLocalStorage } from "./screens/utils";
-import Constants from "expo-constants";
+import { Alert } from "react-native";
+import configure from "./amplifyconfiguration.json";
 import { PROPMT_TEMPLATES } from "./screens/constant";
+import { KEY, getLocalStorage, saveLocalStorage } from "./screens/utils";
 
-const Stack = createStackNavigator();
+const Stack = createStackNavigator<RootStackParamList>();
 // ナビゲーションのパラメータ型を定義
 export type RootStackParamList = {
   Camera: undefined;
-  Result: { result: any; uri: string };
+  Result: {
+    result: any;
+    uri: string;
+  };
 };
 
 export type ResultScreenNavigationProp = StackNavigationProp<
