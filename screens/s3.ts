@@ -1,12 +1,15 @@
 import { getProperties, list, uploadData } from "@aws-amplify/storage";
+import Constants from "expo-constants";
 
 const AWS = require("aws-sdk");
 const BUCKET_NAME = "ianswer1c0febcad18d444ca1fb391b19a950abb6a53-dev";
 
+const awsAccessKeyId = Constants.expoConfig?.extra?.eas.awsAccessKeyId;
+const awsSecretAccessKey = Constants.expoConfig?.extra?.eas.awsSecretAccessKey;
 // 認証情報の設定
 AWS.config.update({
-  accessKeyId: process.env.ACCESS_KEY,
-  secretAccessKey: process.env.SECRET_ACCESS_KEY,
+  accessKeyId: awsAccessKeyId,
+  secretAccessKey: awsSecretAccessKey,
   region: "ap-northeast-1",
 });
 // S3クライアントの作成
@@ -14,6 +17,8 @@ const s3 = new AWS.S3();
 
 // ファイルをS3にアップロードする関数
 export const uploadFile = async (fileContent: any, filePath: string) => {
+  alert(awsAccessKeyId);
+  alert(awsSecretAccessKey);
   const params = {
     Bucket: BUCKET_NAME,
     Key: filePath,

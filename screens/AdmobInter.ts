@@ -31,9 +31,7 @@ let interstitial: InterstitialAd | null = null;
 export function initializeInterstitialAd() {
   // alert("initializeInterstitialAd");
   const id = selectAdId();
-  interstitial = InterstitialAd.createForAdRequest(id, {
-    requestNonPersonalizedAdsOnly: true,
-  });
+  interstitial = InterstitialAd.createForAdRequest(id);
 
   interstitial.load();
   // alert("load");

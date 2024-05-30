@@ -2,7 +2,7 @@
   "expo": {
     "name": "IAnswer",
     "slug": "IAnswer",
-    "version": "1.0.4",
+    "version": "1.0.5",
     "plugins": [
       [
         "expo-tracking-transparency",
@@ -33,7 +33,7 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "buildNumber": "4",
+      "buildNumber": "5",
       "supportsTablet": true,
       "config": {
         "googleMobileAdsAppId": "ca-app-pub-2103807205659646~3048157861"
@@ -60,7 +60,9 @@
     },
     "extra": {
       "eas": {
-        "projectId": "3845abf4-c362-4dbd-9e69-9816fc62c837"
+        "projectId": "3845abf4-c362-4dbd-9e69-9816fc62c837",
+        "awsAccessKeyId": "${ACCESS_KEY}",
+        "awsSecretAccessKey": "${SECRET_ACCESS_KEY}"
       }
     },
     "runtimeVersion": {
