@@ -6,7 +6,7 @@ import {
 } from "@react-navigation/stack";
 import React, { useEffect, useMemo, useState } from "react";
 import CameraScreen from "./screens/CameraScreen";
-import { authenticate } from "./screens/GuestAuth";
+import { USER_NAME_ID, authenticate } from "./screens/GuestAuth";
 import ResultScreen from "./screens/ResultScreen";
 // import { AdMobInterstitial, setTestDeviceIDAsync } from "expo-ads-admob";
 import Constants from "expo-constants";
@@ -15,9 +15,9 @@ import {
   requestTrackingPermissionsAsync,
 } from "expo-tracking-transparency";
 import { Alert } from "react-native";
-import configure from "./amplifyconfiguration.json";
 import { PROPMT_TEMPLATES } from "./screens/constant";
 import { KEY, getLocalStorage, saveLocalStorage } from "./screens/utils";
+import { confirmSignUp } from "@aws-amplify/auth";
 
 const Stack = createStackNavigator<RootStackParamList>();
 // ナビゲーションのパラメータ型を定義
@@ -68,7 +68,31 @@ export type OpenAiResult = {
   result: boolean;
 };
 
-Amplify.configure(configure);
+Amplify.configure({
+  Auth: {
+    Cognito: {
+      userPoolId: "ap-northeast-1_ko24HbtRe",
+      userPoolClientId: "7g9p34va70an8glcrcd9tc2fn",
+      identityPoolId: "ap-northeast-1:8aef5d24-b742-4b96-8734-1129d8e2179c",
+    },
+  },
+  API: {
+    REST: {
+      IAnswer: {
+        service: "IAnswer",
+        endpoint:
+          "https://3b1n19hsu4.execute-api.ap-northeast-1.amazonaws.com/Init",
+        region: "ap-northeast-1",
+      },
+    },
+  },
+  Storage: {
+    S3: {
+      bucket: "ianswer1c0febcad18d444ca1fb391b19a950abb6a53-dev",
+      region: "ap-northeast-1",
+    },
+  },
+});
 
 const App: React.FC = () => {
   const [aiType, setAiType] = useState(0);
@@ -101,16 +125,17 @@ const App: React.FC = () => {
     (async () => {
       const initalRead = await getLocalStorage(KEY.INITIAL_READ);
       if (!initalRead) {
-        Alert.alert(
-          "注意",
-          "こちらはAIを利用していますが、回答はすべてが正しいというわけではありません。\r\nまた、悪用は厳禁でお願いします。",
-          [
-            {
-              text: "OK",
-              onPress: () => saveLocalStorage(KEY.INITIAL_READ, "true"),
-            },
-          ]
-        );
+        saveLocalStorage(KEY.INITIAL_READ, "true");
+        // Alert.alert(
+        //   "注意",
+        //   "こちらはAIを利用していますが、回答はすべてが正しいというわけではありません。\r\nまた、悪用は厳禁でお願いします。",
+        //   [
+        //     {
+        //       text: "OK",
+        //       onPress: () => saveLocalStorage(KEY.INITIAL_READ, "true"),
+        //     },
+        //   ]
+        // );
       }
     })();
   }, []);
@@ -149,8 +174,8 @@ const App: React.FC = () => {
       // }
       // try {
       //   const signUpInfo = await confirmSignUp({
-      //     username: userNameInput,
-      //     confirmationCode: confirmationCodeInput,
+      //     username: USER_NAME_ID,
+      //     confirmationCode: "313140",
       //   });
       //   console.log(signUpInfo);
       // } catch (error) {
@@ -190,9 +215,7 @@ const App: React.FC = () => {
       // }
       await authenticate();
     };
-    startSignIn();
-
-    // initializeInterstitialAd();
+    // startSignIn();
   }, []);
 
   const appContextStateValue = useMemo(

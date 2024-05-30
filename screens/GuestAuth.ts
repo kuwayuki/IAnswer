@@ -1,42 +1,47 @@
-import { getCurrentUser, signIn, signUp } from "@aws-amplify/auth";
+import { getCurrentUser, signIn, signOut, signUp } from "@aws-amplify/auth";
 import { v4 as uuidv4 } from "uuid";
 import { getLocalStorage, saveLocalStorage } from "./utils";
 
 const GUEST_PASSWORD = "sjhadiyans78213@";
 const USER_NAME = "username";
+export const USER_NAME_ID = "IanswerTestUser01";
 const DAMMY_EMAIL = "ee68028@gmail.com";
 
 export async function authenticate(): Promise<void> {
   try {
-    await getCurrentUser();
+    console.log(await getCurrentUser());
   } catch (error) {
     const username = await getLocalStorage(USER_NAME);
     if (username) {
       await authSignIn(username);
     } else {
-      await authSignUp();
+      // await authSignUp();
     }
   }
 }
 
 async function authSignIn(username: string): Promise<void> {
   try {
-    await signIn({
+    const info = await signIn({
       username: username,
       password: GUEST_PASSWORD,
       options: {
         authFlowType: "USER_PASSWORD_AUTH",
       },
     });
+    console.log(info);
   } catch (error) {
-    console.log("error signing in", error);
-    await authSignUp();
+    // alert("error signing in");
+    // alert(error);
+    console.error(error);
+    // await authSignUp();
   }
 }
 
 async function authSignUp(): Promise<void> {
   try {
-    const username: string = uuidv4();
+    const username: string = USER_NAME_ID;
+    // const username: string = uuidv4();
     const userInfo = await signUp({
       username: username,
       password: GUEST_PASSWORD,
@@ -44,13 +49,13 @@ async function authSignUp(): Promise<void> {
         userAttributes: {
           email: DAMMY_EMAIL,
         },
-        // optional
-        autoSignIn: true, // or SignInOptions e.g { authFlowType: "USER_SRP_AUTH" }
       },
     });
     saveLocalStorage(USER_NAME, username);
     console.log(userInfo);
   } catch (error) {
+    // alert("error signing up");
+    // alert(JSON.stringify(error, null, 2));
     console.error("error signing up:", error);
   }
 }

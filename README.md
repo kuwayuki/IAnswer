@@ -49,7 +49,7 @@ eas build --profile development-simulator --platform ios
 
 % ビルドした状態でのみテストしたいとき(Purchase や Google-Admob)
 npm install --dev-client
-% pacakge を追加した場合には必ず再インストールすること！
+% pacakge を追加した場合には必ず再インストールすること！(ipa ファイルをデリバリーするとなぜか失敗...production なら旨くいった)
 eas build --profile development --platform ios
 % QR コードを読み取る or Expo GO で読み取る
 npx expo start --dev-client
@@ -71,8 +71,9 @@ ee68028@yahoo.ne.jp
 
 eas build --platform ios --auto-submit
 
-% ★OTA (初回だけ production で公開。次回以降は eas update で OTA)
+% ★OTA (初回だけ production で公開（TEST_FLIGHT でも可能）。次回以降は eas update で OTA)
 eas build --platform ios --profile production
+% ★OTA App Store Connect に配置
 eas submit --latest -p ios
 % OTA(以降はこれだけで OK)
 eas update --branch production --message "Bug Fixed"

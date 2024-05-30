@@ -1,5 +1,4 @@
 import { post } from "@aws-amplify/api";
-import { uploadData } from "@aws-amplify/storage";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { CameraType, CameraView, useCameraPermissions } from "expo-camera";
 import * as ImagePicker from "expo-image-picker";
@@ -7,7 +6,6 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 import {
   ActivityIndicator,
   Alert,
-  Button,
   Dimensions,
   Image,
   StyleSheet,
@@ -16,12 +14,8 @@ import {
   View,
 } from "react-native";
 import { ApiBodyType, AppContextState, RootStackParamList } from "../App";
-import RNPickerSelect from "react-native-picker-select";
 import { BANNER_UNIT_ID, PROPMT_TEMPLATE, PROPMT_TEMPLATES } from "./constant";
 // import { BannerAd, BannerAdSize } from "react-native-google-mobile-ads";
-import { KEY, getLocalStorage, saveLocalStorage } from "./utils";
-import { Icon } from "react-native-elements";
-import IconAtom from "./IconAtom";
 import Constants from "expo-constants";
 import {
   GestureEvent,
@@ -29,7 +23,18 @@ import {
   PinchGestureHandler,
   State,
 } from "react-native-gesture-handler";
+import DropDownPickerAtom from "./DropDownPickerAtom";
+import IconAtom from "./IconAtom";
+import { uploadFile } from "./s3";
+import { KEY, getLocalStorage, saveLocalStorage } from "./utils";
+import { initializeInterstitialAd, showInterstitialAd } from "./AdmobInter";
 // import { AdMobInterstitial } from "expo-ads-admob";
+import * as ImageManipulator from "expo-image-manipulator";
+import {
+  BannerAd,
+  BannerAdSize,
+  TestIds,
+} from "react-native-google-mobile-ads";
 
 const { width: screenWidth } = Dimensions.get("window");
 const CameraScreen: React.FC = () => {
@@ -40,6 +45,7 @@ const CameraScreen: React.FC = () => {
   const [status, requestStatusPermission] =
     ImagePicker.useMediaLibraryPermissions();
   const [photoUri, setPhotoUri] = useState<string | null>(null);
+  const [resizedPhotoUri, setResizedPhotoUri] = useState<string | null>(null);
   const [imageSize, setImageSize] = useState<{
     width: number;
     height: number;
@@ -69,6 +75,7 @@ const CameraScreen: React.FC = () => {
       } else {
         setMode(settingAiType);
       }
+      initializeInterstitialAd();
     })();
   }, []);
 
@@ -77,17 +84,15 @@ const CameraScreen: React.FC = () => {
       (template) => template.No === mode
     );
     setProompt(propmpt);
+    saveLocalStorage(KEY.AI_TYPE, mode);
   }, [mode]);
 
   if (!permission) {
-    // Camera permissions are still loading.
     return <View />;
   }
 
   if (!permission.granted) {
-    Alert.alert("許可", "カメラへのアクセスを許可しますか？", [
-      { text: "許可する", onPress: requestPermission },
-    ]);
+    requestPermission;
   }
 
   function toggleCameraFacing() {
@@ -95,20 +100,24 @@ const CameraScreen: React.FC = () => {
   }
 
   const handlePinchGesture = (event: GestureEvent<any>) => {
-    // console.log(event);
     if (event.nativeEvent.state === State.ACTIVE) {
-      // console.log(event.nativeEvent.scale);
       let newZoom = zoom + event.nativeEvent.velocity * 0.0002;
       if (newZoom < 0) newZoom = 0;
       if (newZoom > 1) newZoom = 1;
-      // console.log(newZoom);
       setZoom(newZoom);
     }
   };
 
   const takePicture = async () => {
+    // let isA = true;
+    // if (isA) {
+    //   showInterstitialAd();
+    //   return;
+    // }
+
     if (cameraRef) {
       const photo = await cameraRef.takePictureAsync();
+      // photo = await cropImage(photo!.uri);
       setPhotoUri(photo!.uri);
       Image.getSize(photo!.uri, (width, height) => {
         setImageSize({ width, height });
@@ -124,6 +133,21 @@ const CameraScreen: React.FC = () => {
         { text: "送信", onPress: () => uploadPhoto(photo!.uri) },
       ]);
     }
+  };
+
+  const cropImage = async (uri: string) => {
+    const manipResult = await ImageManipulator.manipulateAsync(
+      uri,
+      [
+        // { crop: { originX: 0, originY: 0, width: 1200, height: 1200 } },
+        {
+          extent: { backgroundColor: "blue", width: 800, height: 800 },
+        } as ImageManipulator.ActionExtent,
+      ],
+      { compress: 1, format: ImageManipulator.SaveFormat.JPEG }
+    );
+    setResizedPhotoUri(manipResult.uri);
+    return manipResult;
   };
 
   const getImageStyle = () => {
@@ -157,7 +181,6 @@ const CameraScreen: React.FC = () => {
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       quality: 0.1,
     });
-    console.log(pickerResult);
     if (!pickerResult.canceled) {
       const url = pickerResult.assets[0].uri;
       setPhotoUri(url);
@@ -182,6 +205,7 @@ const CameraScreen: React.FC = () => {
 
   const uploadPhoto = async (_photoUri?: string) => {
     try {
+      showInterstitialAd();
       let tmpPhotoUri = _photoUri ?? photoUri;
       if (!tmpPhotoUri) return;
       const size = _photoUri
@@ -191,46 +215,19 @@ const CameraScreen: React.FC = () => {
         : null;
       setLoading(true);
       const response = await fetch(tmpPhotoUri);
-      // console.log(response);
+      console.log(response);
       const blob = await response.blob();
       const fileName = tmpPhotoUri.split("/").pop() || "image.jpg";
-      // const resultDownload = await getProperties({
-      //   path: "public/test.jpg",
-      // });
-      // console.log(resultDownload);
-      // 認証を確認・取得
-      // try {
-      //   // const result = await getProperties({
-      //   //   // `identityId` will provide the ID of the currently authenticated user
-      //   //   path: ({ identityId }) => `private/${identityId}/album/2024/1.jpg`,
-      //   // });
 
-      //   const result = await list({ path: "public/" });
-      //   console.log(result);
-      // } catch (error) {
-      //   console.log("errorA");
-      //   console.error(error);
-      // }
       const filePath = `public/${fileName}`;
       try {
-        const result = await uploadData({
-          data: blob,
-          path: filePath,
-          options: {
-            onProgress: ({ transferredBytes, totalBytes }) => {
-              if (totalBytes) {
-                console.log(
-                  `Upload progress ${Math.round(
-                    (transferredBytes / totalBytes) * 100
-                  )} %`
-                );
-              }
-            },
-          },
-        }).result;
+        // const result = await uploadFileAmplify(blob, filePath);
+        const result = await uploadFile(blob, filePath);
+        console.log(result);
       } catch (error) {
-        console.log(JSON.stringify(error, null, 2));
-        alert("読み込みに失敗しました。");
+        console.error(JSON.stringify(error, null, 2));
+        alert(JSON.stringify(error, null, 2));
+        alert("S3読み込みに失敗しました。");
         return;
       }
 
@@ -246,7 +243,9 @@ const CameraScreen: React.FC = () => {
         },
       }).response;
       if (apiResponse.statusCode !== 200) {
-        alert("読み込みに失敗しました。");
+        alert(prompt!.PropmtUser);
+        alert(prompt!.PropmtSystem);
+        alert("API読み込みに失敗しました。");
         return;
       }
 
@@ -289,6 +288,7 @@ const CameraScreen: React.FC = () => {
       </View>
     );
   }
+
   return (
     <View style={styles.container}>
       {photoUri ? (
@@ -339,21 +339,20 @@ const CameraScreen: React.FC = () => {
                   style={styles.galleryButton}
                   onPress={openImagePickerAsync}
                 >
-                  <Text style={styles.galleryButtonText}>🖼</Text>
+                  <IconAtom
+                    name="picture"
+                    type="simple-line-icon"
+                    style={styles.galleryButtonText}
+                    size={24}
+                    onPress={openImagePickerAsync}
+                  />
                 </TouchableOpacity>
               </View>
               {appContextState.settingAiType === PROPMT_TEMPLATES.ALL.No && (
                 <View style={styles.pickerContainer}>
-                  <RNPickerSelect
+                  <DropDownPickerAtom
                     value={mode}
-                    onDonePress={() => setDisplayExplane(false)}
-                    onClose={() => setDisplayExplane(false)}
-                    onValueChange={(value: number) => {
-                      setMode(value > 0 ? value : 1);
-                      setFacing("back");
-                      setDisplayExplane(true);
-                      saveLocalStorage(KEY.AI_TYPE, value);
-                    }}
+                    setValue={setMode}
                     items={[
                       { label: "🖋テスト回答モード", value: 1 },
                       { label: "👗ファッションチェックモード", value: 2 },
@@ -363,10 +362,8 @@ const CameraScreen: React.FC = () => {
                       { label: "🗾翻訳モード", value: 6 },
                       { label: "🥀植物ケアモード", value: 7 },
                     ]}
-                    style={{
-                      inputIOS: styles.pickerText,
-                      inputAndroid: styles.pickerText,
-                    }} // 追加
+                    open={isDisplayExplane}
+                    setOpen={setDisplayExplane}
                   />
                 </View>
               )}
@@ -374,11 +371,11 @@ const CameraScreen: React.FC = () => {
           </PinchGestureHandler>
         </GestureHandlerRootView>
       )}
-      {/* <BannerAd
-        unitId={BANNER_UNIT_ID.BANNER}
+      <BannerAd
+        unitId={TestIds.BANNER}
+        // unitId={BANNER_UNIT_ID.BANNER}
         size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
-        requestOptions={{ keywords: ["Dental Equipment"] }}
-      /> */}
+      />
     </View>
   );
 };
@@ -453,20 +450,19 @@ const styles = StyleSheet.create({
   galleryButtonContainer: {
     position: "absolute",
     bottom: 85,
-    left: 30,
-    alignItems: "center",
-    justifyContent: "center",
+    left: 10,
   },
   galleryButton: {
     width: 50,
     height: 50,
     borderRadius: 25,
-    // backgroundColor: "white",
+    backgroundColor: "transparent",
     justifyContent: "center",
     alignItems: "center",
   },
   galleryButtonText: {
-    fontSize: 36,
+    fontSize: 32,
+    backgroundColor: "rgba(255, 255, 255, 0)",
   },
   pickerContainer: {
     position: "absolute",
@@ -479,7 +475,7 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   pickerText: {
-    color: "rgba(255, 255, 255, 0.3)", // 透明度を下げる
+    // color: "rgba(255, 255, 255, 0.3)", // 透明度を下げる
     textAlign: "center",
     fontSize: 18,
   },
