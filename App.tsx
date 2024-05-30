@@ -159,9 +159,7 @@ const App: React.FC = () => {
           [
             {
               text: "OK",
-              onPress: async () => {
-                await requestTrackingPermissionsAsync();
-              },
+              onPress: requestPermission,
             },
           ]
         );
