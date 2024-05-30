@@ -14,10 +14,19 @@ import {
   getTrackingPermissionsAsync,
   requestTrackingPermissionsAsync,
 } from "expo-tracking-transparency";
-import { Alert } from "react-native";
-import { PROPMT_TEMPLATES } from "./screens/constant";
+import { Alert, AppState, AppStateStatus, Linking } from "react-native";
+import { PROMPT_TEMPLATES } from "./screens/constant";
 import { KEY, getLocalStorage, saveLocalStorage } from "./screens/utils";
 import { confirmSignUp } from "@aws-amplify/auth";
+import {
+  CameraPermissionResponse,
+  MediaLibraryPermissionResponse,
+  PermissionStatus,
+  getCameraPermissionsAsync,
+  getMediaLibraryPermissionsAsync,
+  requestCameraPermissionsAsync,
+  requestMediaLibraryPermissionsAsync,
+} from "expo-image-picker";
 
 const Stack = createStackNavigator<RootStackParamList>();
 // ナビゲーションのパラメータ型を定義
@@ -39,12 +48,20 @@ export type ResultScreenRouteProp = RouteProp<RootStackParamList, "Result">;
 export type appContextState = {
   aiType: number;
   settingAiType: number;
+  isAppOpenRead: boolean;
+  isPremium: boolean;
+  permission: CameraPermissionResponse | null;
+  imagePermission: MediaLibraryPermissionResponse | null;
 };
 export const AppContextState = React.createContext({} as appContextState);
 
 export type appContextDispatch = {
   setAiType: (aiType: number) => void;
   setSettingAiType: (settingAiType: number) => void;
+  setAppOpenRead: (isAppOpenRead: boolean) => void;
+  setPremium: (isPremium: boolean) => void;
+  setPermission: (permission: CameraPermissionResponse) => void;
+  setImagePermission: (imagePermission: MediaLibraryPermissionResponse) => void;
 };
 export const AppContextDispatch = React.createContext({} as appContextDispatch);
 
@@ -96,10 +113,44 @@ Amplify.configure({
 
 const App: React.FC = () => {
   const [aiType, setAiType] = useState(0);
+  // 起動時読込フラグ
+  const [isAppOpenRead, setAppOpenRead] = useState(false);
+  const [isPremium, setPremium] = useState(true);
   const [settingAiType, setSettingAiType] = useState(0);
+  const [permission, setPermission] = useState<CameraPermissionResponse | null>(
+    null
+  );
+  const [imagePermission, setImagePermission] =
+    useState<MediaLibraryPermissionResponse | null>(null);
 
   useEffect(() => {
     (async () => {
+      const initialRead = await getLocalStorage(KEY.INITIAL_READ);
+      if (!initialRead) {
+        saveLocalStorage(KEY.INITIAL_READ, "true");
+        Alert.alert(
+          "利用方法",
+          "写真を撮影すると、AIが回答してくれます。テストの回答やゴミの分別など使用したいライフスタイルに応じてご利用ください。\r\n\r\n注意：回答はすべてが正しいというわけではありません。\r\nまた、悪用は厳禁でお願いします。",
+          [
+            {
+              text: "OK",
+              onPress: () => {
+                setAppOpenRead(true);
+              },
+            },
+          ]
+        );
+      } else {
+        setAppOpenRead(true);
+      }
+    })();
+  }, []);
+
+  useEffect(() => {
+    (async () => {
+      // まだ読み込めてない場合は何も表示しない
+      if (!isAppOpenRead) return;
+
       const { granted, canAskAgain } = await getTrackingPermissionsAsync();
       if (!granted && canAskAgain) {
         Alert.alert(
@@ -109,123 +160,114 @@ const App: React.FC = () => {
             {
               text: "OK",
               onPress: async () => {
-                const { status } = await requestTrackingPermissionsAsync();
-                if (status === "granted") {
-                  console.log("Yay! I have user permission to track data");
-                }
+                await requestTrackingPermissionsAsync();
               },
             },
           ]
         );
       }
     })();
-  }, []);
-
-  useEffect(() => {
-    (async () => {
-      const initalRead = await getLocalStorage(KEY.INITIAL_READ);
-      if (!initalRead) {
-        saveLocalStorage(KEY.INITIAL_READ, "true");
-        // Alert.alert(
-        //   "注意",
-        //   "こちらはAIを利用していますが、回答はすべてが正しいというわけではありません。\r\nまた、悪用は厳禁でお願いします。",
-        //   [
-        //     {
-        //       text: "OK",
-        //       onPress: () => saveLocalStorage(KEY.INITIAL_READ, "true"),
-        //     },
-        //   ]
-        // );
-      }
-    })();
-  }, []);
+  }, [isAppOpenRead]);
 
   useEffect(() => {
     const appName = Constants.expoConfig?.name;
-    const propmpt = Object.values(PROPMT_TEMPLATES).find(
+    const prompt = Object.values(PROMPT_TEMPLATES).find(
       (template) => template.AppName === appName
     );
-    setSettingAiType(propmpt!.No);
-    console.log(propmpt);
+    setSettingAiType(prompt!.No);
   }, []);
 
   useEffect(() => {
     console.log("APP Start");
     const startSignIn = async () => {
-      // const userNameInput = "y.kuwahara5";
-      // // const passwordInput = "interCOM12";
-      // const passwordInput = "kuwa1003";
-      // const confirmationCodeInput = "537200";
-      // try {
-      //   const signUpInfo = await signUp({
-      //     username: userNameInput,
-      //     password: passwordInput,
-      //     options: {
-      //       userAttributes: {
-      //         email: "ee68028@gmail.com",
-      //       },
-      //       // optional
-      //       // autoSignIn: true, // or SignInOptions e.g { authFlowType: "USER_SRP_AUTH" }
-      //     },
-      //   });
-      //   console.log(signUpInfo);
-      // } catch (error) {
-      //   console.log(error);
-      // }
-      // try {
-      //   const signUpInfo = await confirmSignUp({
-      //     username: USER_NAME_ID,
-      //     confirmationCode: "313140",
-      //   });
-      //   console.log(signUpInfo);
-      // } catch (error) {
-      //   console.log(error);
-      // }
-
-      // let loginInfo;
-      // try {
-      //   console.log("getCurrentUser");
-      //   loginInfo = await getCurrentUser();
-      //   console.log(loginInfo);
-      // } catch (error) {
-      //   console.log(JSON.stringify(error, null, 2));
-      // }
-
-      // if (!loginInfo) {
-      //   // try {
-      //   //   console.log("Sign Out");
-      //   //   const signInfo = await signOut();
-      //   //   console.log(signInfo);
-      //   // } catch (error) {
-      //   //   console.error(JSON.stringify(error, null, 2));
-      //   // }
-      //   try {
-      //     console.log("Sign In");
-      //     const signInfo = await signIn({
-      //       username: userNameInput,
-      //       password: passwordInput,
-      //       options: {
-      //         authFlowType: "USER_PASSWORD_AUTH",
-      //       },
-      //     });
-      //     console.log(signInfo);
-      //   } catch (error) {
-      //     console.error(JSON.stringify(error, null, 2));
-      //   }
-      // }
       await authenticate();
     };
     // startSignIn();
   }, []);
 
+  useEffect(() => {
+    const handleAppStateChange = async (nextAppState: AppStateStatus) => {
+      if (!isAppOpenRead) return;
+
+      if (nextAppState === "active" && !permission?.granted) {
+        await requestPermission();
+      }
+      if (nextAppState === "active" && !imagePermission?.granted) {
+        setImagePermission(await getMediaLibraryPermissionsAsync());
+      }
+    };
+    const subscription = AppState.addEventListener(
+      "change",
+      handleAppStateChange
+    );
+
+    return () => {
+      subscription.remove();
+    };
+  }, []);
+
+  useEffect(() => {
+    (async () => {
+      if (!isAppOpenRead) return;
+      await requestPermission();
+      setImagePermission(await getMediaLibraryPermissionsAsync());
+    })();
+  }, [isAppOpenRead]);
+
+  const requestPermission = async () => {
+    const cameraPermission = await getCameraPermissionsAsync();
+    setPermission(cameraPermission);
+    if (!cameraPermission.granted) {
+      if (cameraPermission.status === PermissionStatus.UNDETERMINED) {
+        const tmpPermission = await requestCameraPermissionsAsync();
+        setPermission(tmpPermission);
+      } else {
+        Alert.alert(
+          "カメラの許可が必要です",
+          "このアプリでカメラを使用するには、カメラの許可が必要です。設定画面で許可を変更してください。",
+          [
+            { text: "キャンセル", style: "cancel" },
+            {
+              text: "設定画面へ",
+              onPress: () => Linking.openURL("app-settings:"),
+            },
+          ]
+        );
+      }
+    }
+  };
+
   const appContextStateValue = useMemo(
-    () => ({ aiType, settingAiType }),
-    [aiType, settingAiType]
+    () => ({
+      aiType,
+      settingAiType,
+      isAppOpenRead,
+      isPremium,
+      permission,
+      imagePermission,
+    }),
+    [
+      aiType,
+      settingAiType,
+      isAppOpenRead,
+      permission,
+      imagePermission,
+      isPremium,
+    ]
   );
 
   return (
     <AppContextState.Provider value={appContextStateValue}>
-      <AppContextDispatch.Provider value={{ setAiType, setSettingAiType }}>
+      <AppContextDispatch.Provider
+        value={{
+          setAiType,
+          setSettingAiType,
+          setAppOpenRead,
+          setPremium,
+          setPermission,
+          setImagePermission,
+        }}
+      >
         <NavigationContainer>
           <Stack.Navigator initialRouteName="Camera">
             <Stack.Screen

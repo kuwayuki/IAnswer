@@ -16,7 +16,7 @@ export type PROPMT_TEMPLATE = {
 
 const PROPMT_SYSTEM =
   "必ず配列のみ返却してください。構成は{No: 1, title: '問１', body: '1 + 1', answer: '2', explanation: '1 + 1 = 2 です。', result: true}のJson形式でお願いします。";
-export const PROPMT_TEMPLATES = {
+export const PROMPT_TEMPLATES = {
   ALL: {
     No: 0,
     AppName: "IAnswer",

@@ -8,13 +8,19 @@ import {
   Alert,
   Dimensions,
   Image,
+  Linking,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from "react-native";
-import { ApiBodyType, AppContextState, RootStackParamList } from "../App";
-import { BANNER_UNIT_ID, PROPMT_TEMPLATE, PROPMT_TEMPLATES } from "./constant";
+import {
+  ApiBodyType,
+  AppContextDispatch,
+  AppContextState,
+  RootStackParamList,
+} from "../App";
+import { BANNER_UNIT_ID, PROPMT_TEMPLATE, PROMPT_TEMPLATES } from "./constant";
 // import { BannerAd, BannerAdSize } from "react-native-google-mobile-ads";
 import Constants from "expo-constants";
 import {
@@ -39,11 +45,9 @@ import {
 const { width: screenWidth } = Dimensions.get("window");
 const CameraScreen: React.FC = () => {
   const appContextState = useContext(AppContextState);
+  const appContextDispatch = useContext(AppContextDispatch);
   const [cameraRef, setCameraRef] = useState<CameraView | null>(null);
   const [facing, setFacing] = useState<CameraType>("back");
-  const [permission, requestPermission] = useCameraPermissions();
-  const [status, requestStatusPermission] =
-    ImagePicker.useMediaLibraryPermissions();
   const [photoUri, setPhotoUri] = useState<string | null>(null);
   const [resizedPhotoUri, setResizedPhotoUri] = useState<string | null>(null);
   const [imageSize, setImageSize] = useState<{
@@ -63,37 +67,29 @@ const CameraScreen: React.FC = () => {
   useEffect(() => {
     (async () => {
       const appName = Constants.expoConfig?.name;
-      const propmpt = Object.values(PROPMT_TEMPLATES).find(
+      const prompt = Object.values(PROMPT_TEMPLATES).find(
         (template) => template.AppName === appName
       );
-      const settingAiType = propmpt!.No;
-      if (settingAiType === PROPMT_TEMPLATES.ALL.No) {
+      const settingAiType = prompt!.No;
+      if (settingAiType === PROMPT_TEMPLATES.ALL.No) {
         const aiType = await getLocalStorage(KEY.AI_TYPE);
         setMode(
-          aiType !== undefined ? Number(aiType) : PROPMT_TEMPLATES.TEST.No
+          aiType !== undefined ? Number(aiType) : PROMPT_TEMPLATES.TEST.No
         );
       } else {
         setMode(settingAiType);
       }
-      initializeInterstitialAd();
+      if (!appContextState.isPremium) initializeInterstitialAd();
     })();
   }, []);
 
   useEffect(() => {
-    const propmpt = Object.values(PROPMT_TEMPLATES).find(
+    const propmpt = Object.values(PROMPT_TEMPLATES).find(
       (template) => template.No === mode
     );
     setProompt(propmpt);
     saveLocalStorage(KEY.AI_TYPE, mode);
   }, [mode]);
-
-  if (!permission) {
-    return <View />;
-  }
-
-  if (!permission.granted) {
-    requestPermission;
-  }
 
   function toggleCameraFacing() {
     setFacing((current) => (current === "back" ? "front" : "back"));
@@ -168,11 +164,27 @@ const CameraScreen: React.FC = () => {
   };
 
   const openImagePickerAsync = async () => {
-    const permissionResult =
-      await ImagePicker.requestMediaLibraryPermissionsAsync();
-
-    if (permissionResult.granted === false) {
-      requestStatusPermission;
+    if (!appContextState.imagePermission?.granted) {
+      if (
+        appContextState.imagePermission?.status ===
+        ImagePicker.PermissionStatus.UNDETERMINED
+      ) {
+        const tmpPermission =
+          await ImagePicker.requestMediaLibraryPermissionsAsync();
+        appContextDispatch.setImagePermission(tmpPermission);
+      } else {
+        Alert.alert(
+          "イメージビューの許可が必要です",
+          "参照するには許可が必要です。設定画面で許可を変更してください。",
+          [
+            { text: "キャンセル", style: "cancel" },
+            {
+              text: "設定画面へ",
+              onPress: () => Linking.openURL("app-settings:"),
+            },
+          ]
+        );
+      }
       return;
     }
 
@@ -205,7 +217,7 @@ const CameraScreen: React.FC = () => {
 
   const uploadPhoto = async (_photoUri?: string) => {
     try {
-      showInterstitialAd();
+      if (!appContextState.isPremium) showInterstitialAd();
       let tmpPhotoUri = _photoUri ?? photoUri;
       if (!tmpPhotoUri) return;
       const size = _photoUri
@@ -287,6 +299,13 @@ const CameraScreen: React.FC = () => {
         <Text>解析中...</Text>
       </View>
     );
+  } else if (!appContextState.permission?.granted) {
+    // return (
+    //   <View style={styles.loadingContainer}>
+    //     <ActivityIndicator size="large" color="#000000" />
+    //     <Text>解析中...</Text>
+    //   </View>
+    // );
   }
 
   return (
@@ -309,7 +328,7 @@ const CameraScreen: React.FC = () => {
               pictureSize="1280x720"
               ref={(ref) => setCameraRef(ref)}
             >
-              {mode === PROPMT_TEMPLATES.FASSION.No && (
+              {mode === PROMPT_TEMPLATES.FASSION.No && (
                 <TouchableOpacity
                   style={styles.toogle}
                   onPress={toggleCameraFacing}
@@ -348,7 +367,7 @@ const CameraScreen: React.FC = () => {
                   />
                 </TouchableOpacity>
               </View>
-              {appContextState.settingAiType === PROPMT_TEMPLATES.ALL.No && (
+              {appContextState.settingAiType === PROMPT_TEMPLATES.ALL.No && (
                 <View style={styles.pickerContainer}>
                   <DropDownPickerAtom
                     value={mode}
@@ -371,11 +390,13 @@ const CameraScreen: React.FC = () => {
           </PinchGestureHandler>
         </GestureHandlerRootView>
       )}
-      <BannerAd
-        unitId={TestIds.BANNER}
-        // unitId={BANNER_UNIT_ID.BANNER}
-        size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
-      />
+      {!appContextState.isPremium && (
+        <BannerAd
+          unitId={TestIds.BANNER}
+          // unitId={BANNER_UNIT_ID.BANNER}
+          size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
+        />
+      )}
     </View>
   );
 };
@@ -391,6 +412,11 @@ const styles = StyleSheet.create({
   preview: {
     flex: 1,
     width: "100%",
+  },
+  loading: {
+    position: "absolute",
+    justifyContent: "center",
+    alignItems: "center",
   },
   toogle: {
     top: 40,

@@ -7,8 +7,8 @@
       "distribution": "internal",
       "channel": "development",
       "env": {
-        "ACCESS_KEY": "${ACCESS_KEY}",
-        "SECRET_ACCESS_KEY": "${SECRET_ACCESS_KEY}"
+        "ACCESS_KEY": "$(ACCESS_KEY)",
+        "SECRET_ACCESS_KEY": "$(SECRET_ACCESS_KEY)"
       }
     },
     "preview": {
@@ -18,8 +18,8 @@
     "production": {
       "channel": "production",
       "env": {
-        "ACCESS_KEY": "${ACCESS_KEY}",
-        "SECRET_ACCESS_KEY": "${SECRET_ACCESS_KEY}"
+        "ACCESS_KEY": "$(ACCESS_KEY)",
+        "SECRET_ACCESS_KEY": "$(SECRET_ACCESS_KEY)"
       }
     },
     "development-simulator": {

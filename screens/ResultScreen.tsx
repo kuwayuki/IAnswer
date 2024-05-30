@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   StyleSheet,
   View,
@@ -15,16 +15,25 @@ import {
   NavigationProp,
 } from "@react-navigation/native";
 import {
+  AppContextState,
   OpenAiResult,
   ResultScreenRouteProp,
   RootStackParamList,
 } from "../App";
+import {
+  BannerAd,
+  BannerAdSize,
+  TestIds,
+} from "react-native-google-mobile-ads";
+import { TouchableOpacity } from "react-native-gesture-handler";
+import IconAtom from "./IconAtom";
 // import { AdMobInterstitial } from "expo-ads-admob";
 const { width: screenWidth } = Dimensions.get("window");
 
 const ResultScreen: React.FC = () => {
   const navigation =
     useNavigation<NavigationProp<RootStackParamList, "Result">>();
+  const appContextState = useContext(AppContextState);
 
   const route = useRoute<ResultScreenRouteProp>();
   const { result, uri } = route.params;
@@ -91,12 +100,41 @@ const ResultScreen: React.FC = () => {
 
   return (
     <ScrollView style={styles.container}>
+      {!appContextState.isPremium && (
+        <BannerAd
+          unitId={TestIds.BANNER}
+          // unitId={BANNER_UNIT_ID.BANNER}
+          size={BannerAdSize.BANNER}
+        />
+      )}
+      <TouchableOpacity
+        style={styles.toogle}
+        onPress={() => {
+          navigation.navigate("Camera");
+        }}
+      >
+        <IconAtom name="arrow-back" type="ionicon" size={20} />
+      </TouchableOpacity>
       {result.map((item: OpenAiResult, index: number) =>
         normalView(item, index)
+      )}
+      {!appContextState.isPremium && (
+        <BannerAd
+          unitId={TestIds.BANNER}
+          // unitId={BANNER_UNIT_ID.BANNER}
+          size={BannerAdSize.MEDIUM_RECTANGLE}
+        />
       )}
       <>
         <Image source={{ uri: uri }} style={{ ...imageSize }} />
       </>
+      {!appContextState.isPremium && (
+        <BannerAd
+          unitId={TestIds.BANNER}
+          // unitId={BANNER_UNIT_ID.BANNER}
+          size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
+        />
+      )}
     </ScrollView>
   );
 };
@@ -109,6 +147,12 @@ const styles = StyleSheet.create({
   preview: {
     width: screenWidth,
     height: 500,
+  },
+  toogle: {
+    position: "absolute",
+    top: 40,
+    left: 10,
+    zIndex: 20,
   },
   resultItem: {
     backgroundColor: "#ffffff",
