@@ -16,14 +16,14 @@ function selectAdId() {
   // const random = getRandomId(3);
   switch (random) {
     case 0:
-      return TestIds.INTERSTITIAL;
+      return BANNER_UNIT_ID.INTERSTIAL;
     case 1:
       return BANNER_UNIT_ID.INTERSTIAL;
     case 2:
       return BANNER_UNIT_ID.INTERSTIAL;
   }
-  return TestIds.INTERSTITIAL;
-  // return BANNER_UNIT_ID.INTERSTIAL;
+  // return TestIds.INTERSTITIAL;
+  return BANNER_UNIT_ID.INTERSTIAL;
 }
 
 let interstitial: InterstitialAd | null = null;

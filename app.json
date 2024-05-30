@@ -2,7 +2,7 @@
   "expo": {
     "name": "IAnswer",
     "slug": "IAnswer",
-    "version": "1.0.5",
+    "version": "1.0.6",
     "plugins": [
       [
         "expo-tracking-transparency",
@@ -33,7 +33,7 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "buildNumber": "5",
+      "buildNumber": "6",
       "supportsTablet": true,
       "config": {
         "googleMobileAdsAppId": "ca-app-pub-2103807205659646~3048157861"

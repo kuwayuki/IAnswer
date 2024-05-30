@@ -1,33 +1,27 @@
-import React, { useContext, useEffect, useState } from "react";
 import {
-  StyleSheet,
-  View,
-  Text,
-  Button,
-  ScrollView,
-  Image,
-  Dimensions,
-} from "react-native";
-import {
+  NavigationProp,
   useNavigation,
   useRoute,
-  RouteProp,
-  NavigationProp,
 } from "@react-navigation/native";
+import React, { useContext, useEffect, useState } from "react";
+import {
+  Dimensions,
+  Image,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { BannerAd, BannerAdSize } from "react-native-google-mobile-ads";
 import {
   AppContextState,
   OpenAiResult,
   ResultScreenRouteProp,
   RootStackParamList,
 } from "../App";
-import {
-  BannerAd,
-  BannerAdSize,
-  TestIds,
-} from "react-native-google-mobile-ads";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import IconAtom from "./IconAtom";
-// import { AdMobInterstitial } from "expo-ads-admob";
+import { BANNER_UNIT_ID } from "./constant";
 const { width: screenWidth } = Dimensions.get("window");
 
 const ResultScreen: React.FC = () => {
@@ -99,60 +93,75 @@ const ResultScreen: React.FC = () => {
   };
 
   return (
-    <ScrollView style={styles.container}>
-      {!appContextState.isPremium && (
-        <BannerAd
-          unitId={TestIds.BANNER}
-          // unitId={BANNER_UNIT_ID.BANNER}
-          size={BannerAdSize.BANNER}
-        />
-      )}
-      <TouchableOpacity
-        style={styles.toogle}
-        onPress={() => {
-          navigation.navigate("Camera");
-        }}
-      >
-        <IconAtom name="arrow-back" type="ionicon" size={20} />
-      </TouchableOpacity>
-      {result.map((item: OpenAiResult, index: number) =>
-        normalView(item, index)
-      )}
-      {!appContextState.isPremium && (
-        <BannerAd
-          unitId={TestIds.BANNER}
-          // unitId={BANNER_UNIT_ID.BANNER}
-          size={BannerAdSize.MEDIUM_RECTANGLE}
-        />
-      )}
-      <>
-        <Image source={{ uri: uri }} style={{ ...imageSize }} />
-      </>
-      {!appContextState.isPremium && (
-        <BannerAd
-          unitId={TestIds.BANNER}
-          // unitId={BANNER_UNIT_ID.BANNER}
-          size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
-        />
-      )}
-    </ScrollView>
+    <View style={styles.container}>
+      <ScrollView style={styles.scrollContainer}>
+        {!appContextState.isPremium && (
+          <BannerAd
+            // unitId={TestIds.BANNER}
+            unitId={BANNER_UNIT_ID.BANNER}
+            size={BannerAdSize.BANNER}
+          />
+        )}
+        {result.map((item: OpenAiResult, index: number) =>
+          normalView(item, index)
+        )}
+        {!appContextState.isPremium && (
+          <BannerAd
+            // unitId={TestIds.BANNER}
+            unitId={BANNER_UNIT_ID.BANNER}
+            size={BannerAdSize.MEDIUM_RECTANGLE}
+          />
+        )}
+        <>
+          <Image source={{ uri: uri }} style={{ ...imageSize }} />
+        </>
+        {!appContextState.isPremium && (
+          <BannerAd
+            // unitId={TestIds.BANNER}
+            unitId={BANNER_UNIT_ID.BANNER}
+            size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
+          />
+        )}
+      </ScrollView>
+      <View style={styles.toogleContainer}>
+        <TouchableOpacity
+          style={styles.toogle}
+          onPress={() => {
+            navigation.goBack();
+          }}
+        >
+          <IconAtom
+            color="blue"
+            name="arrow-back"
+            type="ionicon"
+            size={24}
+            style={{ backgroundColor: "rgba(255, 255, 255, 0)" }}
+          />
+        </TouchableOpacity>
+      </View>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f5f5f5",
+  },
+  scrollContainer: {
+    flex: 1,
+    top: 65,
   },
   preview: {
     width: screenWidth,
     height: 500,
   },
-  toogle: {
+  toogleContainer: {
     position: "absolute",
-    top: 40,
-    left: 10,
-    zIndex: 20,
+    backgroundColor: "rgba(255, 255, 255, 0)",
+  },
+  toogle: {
+    top: 30,
+    left: 5,
   },
   resultItem: {
     backgroundColor: "#ffffff",
@@ -167,6 +176,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
+    zIndex: 1,
   },
   titleContainer: {
     flexDirection: "row",

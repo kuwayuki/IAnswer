@@ -33,9 +33,8 @@ import DropDownPickerAtom from "./DropDownPickerAtom";
 import IconAtom from "./IconAtom";
 import { uploadFile } from "./s3";
 import { KEY, getLocalStorage, saveLocalStorage } from "./utils";
-import { initializeInterstitialAd, showInterstitialAd } from "./AdmobInter";
-// import { AdMobInterstitial } from "expo-ads-admob";
 import * as ImageManipulator from "expo-image-manipulator";
+import { initializeInterstitialAd, showInterstitialAd } from "./AdmobInter";
 import {
   BannerAd,
   BannerAdSize,
@@ -105,12 +104,6 @@ const CameraScreen: React.FC = () => {
   };
 
   const takePicture = async () => {
-    // let isA = true;
-    // if (isA) {
-    //   showInterstitialAd();
-    //   return;
-    // }
-
     if (cameraRef) {
       const photo = await cameraRef.takePictureAsync();
       // photo = await cropImage(photo!.uri);
@@ -330,17 +323,18 @@ const CameraScreen: React.FC = () => {
             >
               {mode === PROMPT_TEMPLATES.FASSION.No && (
                 <TouchableOpacity
-                  style={styles.toogle}
+                  style={styles.toogleFacing}
                   onPress={toggleCameraFacing}
                 >
-                  <IconAtom
-                    name="camera-reverse"
-                    type="ionicon"
-                    onPress={toggleCameraFacing}
-                    size={20}
-                  />
+                  <IconAtom name="camera-reverse" type="ionicon" size={20} />
                 </TouchableOpacity>
               )}
+              <TouchableOpacity
+                style={styles.toogle}
+                onPress={() => setDisplayExplane(!isDisplayExplane)}
+              >
+                <IconAtom name="help" type="ionicon" size={16} />
+              </TouchableOpacity>
               {isDisplayExplane && prompt?.Explane && (
                 <View style={styles.explaneContainer}>
                   <Text style={styles.explaneTitle}>{"説明"}</Text>
@@ -392,8 +386,8 @@ const CameraScreen: React.FC = () => {
       )}
       {!appContextState.isPremium && (
         <BannerAd
-          unitId={TestIds.BANNER}
-          // unitId={BANNER_UNIT_ID.BANNER}
+          // unitId={TestIds.BANNER}
+          unitId={BANNER_UNIT_ID.BANNER}
           size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
         />
       )}
@@ -418,7 +412,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  toogle: {
+  toogleFacing: {
     top: 40,
     right: 10,
     position: "absolute",
@@ -504,6 +498,13 @@ const styles = StyleSheet.create({
     // color: "rgba(255, 255, 255, 0.3)", // 透明度を下げる
     textAlign: "center",
     fontSize: 18,
+  },
+  toogle: {
+    bottom: 24,
+    left: 10,
+    backgroundColor: "rgba(255, 255, 255, 0)", // 透明度を下げる
+    position: "absolute",
+    alignSelf: "flex-end",
   },
 });
 

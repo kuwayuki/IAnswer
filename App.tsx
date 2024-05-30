@@ -115,7 +115,7 @@ const App: React.FC = () => {
   const [aiType, setAiType] = useState(0);
   // 起動時読込フラグ
   const [isAppOpenRead, setAppOpenRead] = useState(false);
-  const [isPremium, setPremium] = useState(true);
+  const [isPremium, setPremium] = useState(false);
   const [settingAiType, setSettingAiType] = useState(0);
   const [permission, setPermission] = useState<CameraPermissionResponse | null>(
     null
@@ -275,7 +275,11 @@ const App: React.FC = () => {
               component={CameraScreen}
               options={{ headerShown: false }}
             />
-            <Stack.Screen name="Result" component={ResultScreen} />
+            <Stack.Screen
+              name="Result"
+              component={ResultScreen}
+              options={{ headerShown: false }}
+            />
           </Stack.Navigator>
         </NavigationContainer>
       </AppContextDispatch.Provider>
