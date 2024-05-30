@@ -109,7 +109,7 @@ const ResultScreen: React.FC = () => {
           <BannerAd
             // unitId={TestIds.BANNER}
             unitId={BANNER_UNIT_ID.BANNER}
-            size={BannerAdSize.MEDIUM_RECTANGLE}
+            size={BannerAdSize.BANNER}
           />
         )}
         <>
@@ -119,7 +119,7 @@ const ResultScreen: React.FC = () => {
           <BannerAd
             // unitId={TestIds.BANNER}
             unitId={BANNER_UNIT_ID.BANNER}
-            size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
+            size={BannerAdSize.BANNER}
           />
         )}
       </ScrollView>

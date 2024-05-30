@@ -60,7 +60,7 @@ export function showInterstitialAd() {
   if (interstitial?.loaded) {
     interstitial.show();
   } else {
-    alert("Ad is not ready to be shown");
+    // alert("Ad is not ready to be shown");
     console.error("Ad is not ready to be shown");
   }
 }
