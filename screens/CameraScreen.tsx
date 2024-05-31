@@ -1,7 +1,11 @@
 import { post } from "@aws-amplify/api";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
-import { CameraType, CameraView, useCameraPermissions } from "expo-camera";
-import * as ImagePicker from "expo-image-picker";
+import {
+  CameraType,
+  CameraView,
+  PermissionStatus,
+  useCameraPermissions,
+} from "expo-camera";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import {
   ActivityIndicator,
@@ -20,7 +24,7 @@ import {
   AppContextState,
   RootStackParamList,
 } from "../App";
-import { BANNER_UNIT_ID, PROPMT_TEMPLATE, PROMPT_TEMPLATES } from "./constant";
+import { BANNER_UNIT_ID, PROMPT_TEMPLATE, PROMPT_TEMPLATES } from "./constant";
 // import { BannerAd, BannerAdSize } from "react-native-google-mobile-ads";
 import Constants from "expo-constants";
 import {
@@ -40,6 +44,11 @@ import {
   BannerAdSize,
   TestIds,
 } from "react-native-google-mobile-ads";
+import {
+  MediaTypeOptions,
+  launchImageLibraryAsync,
+  requestMediaLibraryPermissionsAsync,
+} from "expo-image-picker";
 
 const { width: screenWidth } = Dimensions.get("window");
 const CameraScreen: React.FC = () => {
@@ -55,7 +64,8 @@ const CameraScreen: React.FC = () => {
   } | null>(null);
   const [loading, setLoading] = useState(false);
   const [isDisplayExplane, setDisplayExplane] = useState(false);
-  const [prompt, setProompt] = useState<PROPMT_TEMPLATE>();
+  const [isOpenDropbox, setOpenDropbox] = useState(false);
+  const [prompt, setProompt] = useState<PROMPT_TEMPLATE>();
   const [mode, setMode] = useState<number>(0);
   const [zoom, setZoom] = useState(0);
   const pinchRef = useRef(null);
@@ -83,11 +93,16 @@ const CameraScreen: React.FC = () => {
   }, []);
 
   useEffect(() => {
+    if (mode === 0) return;
+
     const propmpt = Object.values(PROMPT_TEMPLATES).find(
       (template) => template.No === mode
     );
     setProompt(propmpt);
     saveLocalStorage(KEY.AI_TYPE, mode);
+
+    // 初回モード変更時に初回読込完了とする
+    if (appContextState.isInitialRead) appContextDispatch.setInitialRead(false);
   }, [mode]);
 
   function toggleCameraFacing() {
@@ -104,6 +119,7 @@ const CameraScreen: React.FC = () => {
   };
 
   const takePicture = async () => {
+    await appContextDispatch.requestPermission();
     if (cameraRef) {
       const photo = await cameraRef.takePictureAsync();
       // photo = await cropImage(photo!.uri);
@@ -160,10 +176,9 @@ const CameraScreen: React.FC = () => {
     if (!appContextState.imagePermission?.granted) {
       if (
         appContextState.imagePermission?.status ===
-        ImagePicker.PermissionStatus.UNDETERMINED
+        PermissionStatus.UNDETERMINED
       ) {
-        const tmpPermission =
-          await ImagePicker.requestMediaLibraryPermissionsAsync();
+        const tmpPermission = await requestMediaLibraryPermissionsAsync();
         appContextDispatch.setImagePermission(tmpPermission);
       } else {
         Alert.alert(
@@ -181,9 +196,9 @@ const CameraScreen: React.FC = () => {
       return;
     }
 
-    const pickerResult = await ImagePicker.launchImageLibraryAsync({
+    const pickerResult = await launchImageLibraryAsync({
       selectionLimit: 1,
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      mediaTypes: MediaTypeOptions.Images,
       quality: 0.1,
     });
     if (!pickerResult.canceled) {
@@ -242,14 +257,14 @@ const CameraScreen: React.FC = () => {
         options: {
           body: {
             key: filePath,
-            promptUser: prompt!.PropmtUser,
-            promptSystem: prompt!.PropmtSystem,
+            promptUser: prompt!.PromptUser,
+            promptSystem: prompt!.PromptSystem,
           } as ApiBodyType,
         },
       }).response;
       if (apiResponse.statusCode !== 200) {
-        alert(prompt!.PropmtUser);
-        alert(prompt!.PropmtSystem);
+        alert(prompt!.PromptUser);
+        alert(prompt!.PromptSystem);
         alert("API読み込みに失敗しました。");
         return;
       }
@@ -335,12 +350,15 @@ const CameraScreen: React.FC = () => {
               >
                 <IconAtom name="help" type="ionicon" size={16} />
               </TouchableOpacity>
-              {isDisplayExplane && prompt?.Explane && (
-                <View style={styles.explaneContainer}>
-                  <Text style={styles.explaneTitle}>{"説明"}</Text>
-                  <Text style={styles.explaneText}>{prompt?.Explane}</Text>
-                </View>
-              )}
+              {(isDisplayExplane ||
+                isOpenDropbox ||
+                appContextState.isInitialRead) &&
+                prompt?.Explane && (
+                  <View style={styles.explaneContainer}>
+                    <Text style={styles.explaneTitle}>{"説明"}</Text>
+                    <Text style={styles.explaneText}>{prompt?.Explane}</Text>
+                  </View>
+                )}
               <View style={styles.shutterButtonContainer}>
                 <TouchableOpacity
                   style={styles.shutterButton}
@@ -375,8 +393,8 @@ const CameraScreen: React.FC = () => {
                       { label: "🗾翻訳モード", value: 6 },
                       { label: "🥀植物ケアモード", value: 7 },
                     ]}
-                    open={isDisplayExplane}
-                    setOpen={setDisplayExplane}
+                    open={isOpenDropbox || appContextState.isInitialRead} // 初回起動時は選択させる
+                    setOpen={setOpenDropbox}
                   />
                 </View>
               )}

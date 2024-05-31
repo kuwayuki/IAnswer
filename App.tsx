@@ -1,23 +1,14 @@
 import { NavigationContainer, RouteProp } from "@react-navigation/native";
-import { Amplify } from "aws-amplify";
 import {
   StackNavigationProp,
   createStackNavigator,
 } from "@react-navigation/stack";
+import { Amplify } from "aws-amplify";
 import React, { useEffect, useMemo, useState } from "react";
 import CameraScreen from "./screens/CameraScreen";
-import { USER_NAME_ID, authenticate } from "./screens/GuestAuth";
+import { authenticate } from "./screens/GuestAuth";
 import ResultScreen from "./screens/ResultScreen";
-// import { AdMobInterstitial, setTestDeviceIDAsync } from "expo-ads-admob";
 import Constants from "expo-constants";
-import {
-  getTrackingPermissionsAsync,
-  requestTrackingPermissionsAsync,
-} from "expo-tracking-transparency";
-import { Alert, AppState, AppStateStatus, Linking } from "react-native";
-import { PROMPT_TEMPLATES } from "./screens/constant";
-import { KEY, getLocalStorage, saveLocalStorage } from "./screens/utils";
-import { confirmSignUp } from "@aws-amplify/auth";
 import {
   CameraPermissionResponse,
   MediaLibraryPermissionResponse,
@@ -25,8 +16,14 @@ import {
   getCameraPermissionsAsync,
   getMediaLibraryPermissionsAsync,
   requestCameraPermissionsAsync,
-  requestMediaLibraryPermissionsAsync,
 } from "expo-image-picker";
+import {
+  getTrackingPermissionsAsync,
+  requestTrackingPermissionsAsync,
+} from "expo-tracking-transparency";
+import { Alert, AppState, AppStateStatus, Linking } from "react-native";
+import { PROMPT_TEMPLATES } from "./screens/constant";
+import { KEY, getLocalStorage, saveLocalStorage } from "./screens/utils";
 
 const Stack = createStackNavigator<RootStackParamList>();
 // ナビゲーションのパラメータ型を定義
@@ -49,6 +46,7 @@ export type appContextState = {
   aiType: number;
   settingAiType: number;
   isAppOpenRead: boolean;
+  isInitialRead: boolean;
   isPremium: boolean;
   permission: CameraPermissionResponse | null;
   imagePermission: MediaLibraryPermissionResponse | null;
@@ -59,9 +57,11 @@ export type appContextDispatch = {
   setAiType: (aiType: number) => void;
   setSettingAiType: (settingAiType: number) => void;
   setAppOpenRead: (isAppOpenRead: boolean) => void;
+  setInitialRead: (isInitialRead: boolean) => void;
   setPremium: (isPremium: boolean) => void;
   setPermission: (permission: CameraPermissionResponse) => void;
   setImagePermission: (imagePermission: MediaLibraryPermissionResponse) => void;
+  requestPermission: () => Promise<void>;
 };
 export const AppContextDispatch = React.createContext({} as appContextDispatch);
 
@@ -115,6 +115,7 @@ const App: React.FC = () => {
   const [aiType, setAiType] = useState(0);
   // 起動時読込フラグ
   const [isAppOpenRead, setAppOpenRead] = useState(false);
+  const [isInitialRead, setInitialRead] = useState(false);
   const [isPremium, setPremium] = useState(false);
   const [settingAiType, setSettingAiType] = useState(0);
   const [permission, setPermission] = useState<CameraPermissionResponse | null>(
@@ -130,12 +131,12 @@ const App: React.FC = () => {
         saveLocalStorage(KEY.INITIAL_READ, "true");
         Alert.alert(
           "利用方法",
-          "写真を撮影すると、AIが回答してくれます。テストの回答やゴミの分別など使用したいライフスタイルに応じてご利用ください。\r\n\r\n注意：回答はすべてが正しいというわけではありません。\r\nまた、悪用は厳禁でお願いします。",
+          "写真を撮影すると、AIが回答してくれます。\r\nテストの回答、外国語の翻訳、ファッションチェック、食材からレシピの考案、料理のカロリー計算、ゴミの分別、植物のケア方法など使用したいライフスタイルに応じてご利用ください。\r\n\r\n注意：AIの回答はすべてが正しいというわけではありません。\r\nまた、悪用は厳禁でお願いします。",
           [
             {
               text: "OK",
               onPress: () => {
-                setAppOpenRead(true);
+                setInitialRead(true);
               },
             },
           ]
@@ -148,8 +149,7 @@ const App: React.FC = () => {
 
   useEffect(() => {
     (async () => {
-      // まだ読み込めてない場合は何も表示しない
-      if (!isAppOpenRead) return;
+      if (!isInitialRead) return;
 
       const { granted, canAskAgain } = await getTrackingPermissionsAsync();
       if (!granted && canAskAgain) {
@@ -166,8 +166,9 @@ const App: React.FC = () => {
           ]
         );
       }
+      setAppOpenRead(true);
     })();
-  }, [isAppOpenRead]);
+  }, [isInitialRead]);
 
   useEffect(() => {
     const appName = Constants.expoConfig?.name;
@@ -178,7 +179,6 @@ const App: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    console.log("APP Start");
     const startSignIn = async () => {
       await authenticate();
     };
@@ -186,9 +186,9 @@ const App: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    const handleAppStateChange = async (nextAppState: AppStateStatus) => {
-      if (!isAppOpenRead) return;
+    if (!isAppOpenRead) return;
 
+    const handleAppStateChange = async (nextAppState: AppStateStatus) => {
       if (nextAppState === "active" && !permission?.granted) {
         await requestPermission();
       }
@@ -204,7 +204,7 @@ const App: React.FC = () => {
     return () => {
       subscription.remove();
     };
-  }, []);
+  }, [isAppOpenRead]);
 
   useEffect(() => {
     (async () => {
@@ -242,6 +242,7 @@ const App: React.FC = () => {
       aiType,
       settingAiType,
       isAppOpenRead,
+      isInitialRead,
       isPremium,
       permission,
       imagePermission,
@@ -250,6 +251,7 @@ const App: React.FC = () => {
       aiType,
       settingAiType,
       isAppOpenRead,
+      isInitialRead,
       permission,
       imagePermission,
       isPremium,
@@ -263,9 +265,11 @@ const App: React.FC = () => {
           setAiType,
           setSettingAiType,
           setAppOpenRead,
+          setInitialRead,
           setPremium,
           setPermission,
           setImagePermission,
+          requestPermission,
         }}
       >
         <NavigationContainer>

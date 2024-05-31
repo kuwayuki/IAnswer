@@ -2,7 +2,19 @@
   "expo": {
     "name": "IAnswer",
     "slug": "IAnswer",
-    "version": "1.0.6",
+    "version": "1.0.7",
+    "ios": {
+      "buildNumber": "7",
+      "supportsTablet": true,
+      "config": {
+        "googleMobileAdsAppId": "ca-app-pub-2103807205659646~3048157861"
+      },
+      "bundleIdentifier": "com.kuwahara.IAnswer",
+      "infoPlist": {
+        "NSUserTrackingUsageDescription": "「許可」を押すと、他社のデータも活用し、よりお客様に適した広告が表示されます。",
+        "NSMicrophoneUsageDescription": "This app uses the microphone to allow users to send orders via voice message."
+      }
+    },
     "plugins": [
       [
         "expo-tracking-transparency",
@@ -31,18 +43,6 @@
       "image": "./assets/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
-    },
-    "ios": {
-      "buildNumber": "6",
-      "supportsTablet": true,
-      "config": {
-        "googleMobileAdsAppId": "ca-app-pub-2103807205659646~3048157861"
-      },
-      "bundleIdentifier": "com.kuwahara.IAnswer",
-      "infoPlist": {
-        "NSUserTrackingUsageDescription": "「許可」を押すと、他社のデータも活用し、よりお客様に適した広告が表示されます。",
-        "NSMicrophoneUsageDescription": "This app uses the microphone to allow users to send orders via voice message."
-      }
     },
     "android": {
       "adaptiveIcon": {
