@@ -191,10 +191,10 @@ const App: React.FC = () => {
     if (!isAppOpenRead) return;
 
     const handleAppStateChange = async (nextAppState: AppStateStatus) => {
-      if (nextAppState === "active" && !permission?.granted) {
+      if (nextAppState === "active" && !permission?.granted === false) {
         await requestPermission();
       }
-      if (nextAppState === "active" && !imagePermission?.granted) {
+      if (nextAppState === "active" && !imagePermission?.granted === false) {
         setImagePermission(await getMediaLibraryPermissionsAsync());
       }
     };

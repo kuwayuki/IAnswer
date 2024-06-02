@@ -350,15 +350,12 @@ const CameraScreen: React.FC = () => {
               >
                 <IconAtom name="help" type="ionicon" size={16} />
               </TouchableOpacity>
-              {(isDisplayExplane ||
-                isOpenDropbox ||
-                appContextState.isInitialRead) &&
-                prompt?.Explane && (
-                  <View style={styles.explaneContainer}>
-                    <Text style={styles.explaneTitle}>{"説明"}</Text>
-                    <Text style={styles.explaneText}>{prompt?.Explane}</Text>
-                  </View>
-                )}
+              {(isDisplayExplane || isOpenDropbox) && prompt?.Explane && (
+                <View style={styles.explaneContainer}>
+                  <Text style={styles.explaneTitle}>{"説明"}</Text>
+                  <Text style={styles.explaneText}>{prompt?.Explane}</Text>
+                </View>
+              )}
               <View style={styles.shutterButtonContainer}>
                 <TouchableOpacity
                   style={styles.shutterButton}
@@ -390,7 +387,7 @@ const CameraScreen: React.FC = () => {
                         label: template.Title,
                         value: template.No,
                       }))}
-                    open={isOpenDropbox || appContextState.isInitialRead} // 初回起動時は選択させる
+                    open={isOpenDropbox} // 初回起動時は選択させる
                     setOpen={setOpenDropbox}
                   />
                 </View>
