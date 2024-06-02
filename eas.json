@@ -7,8 +7,8 @@
       "distribution": "internal",
       "channel": "development",
       "env": {
-        "ACCESS_KEY": "$(ACCESS_KEY)",
-        "SECRET_ACCESS_KEY": "$(SECRET_ACCESS_KEY)"
+        "EXPO_PUBLIC_ACCESS_KEY": "$(EXPO_PUBLIC_ACCESS_KEY)",
+        "EXPO_PUBLIC_SECRET_KEY": "$(EXPO_PUBLIC_SECRET_KEY)"
       }
     },
     "preview": {
@@ -18,8 +18,8 @@
     "production": {
       "channel": "production",
       "env": {
-        "ACCESS_KEY": "$(ACCESS_KEY)",
-        "SECRET_ACCESS_KEY": "$(SECRET_ACCESS_KEY)"
+        "EXPO_PUBLIC_ACCESS_KEY": "$(EXPO_PUBLIC_ACCESS_KEY)",
+        "EXPO_PUBLIC_SECRET_KEY": "$(EXPO_PUBLIC_SECRET_KEY)"
       }
     },
     "development-simulator": {

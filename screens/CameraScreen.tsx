@@ -384,15 +384,12 @@ const CameraScreen: React.FC = () => {
                   <DropDownPickerAtom
                     value={mode}
                     setValue={setMode}
-                    items={[
-                      { label: "🖋テスト回答モード", value: 1 },
-                      { label: "👗ファッションチェックモード", value: 2 },
-                      { label: "🍳レシピモード", value: 3 },
-                      { label: "㎈カロリーモード", value: 4 },
-                      { label: "🚮ゴミ分別モード", value: 5 },
-                      { label: "🗾翻訳モード", value: 6 },
-                      { label: "🥀植物ケアモード", value: 7 },
-                    ]}
+                    items={Object.values(PROMPT_TEMPLATES)
+                      .filter((allExclude) => allExclude.No > 0)
+                      .map((template: PROMPT_TEMPLATE) => ({
+                        label: template.Title,
+                        value: template.No,
+                      }))}
                     open={isOpenDropbox || appContextState.isInitialRead} // 初回起動時は選択させる
                     setOpen={setOpenDropbox}
                   />

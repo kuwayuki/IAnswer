@@ -71,11 +71,11 @@ ee68028@yahoo.ne.jp
 
 eas build --platform ios --auto-submit
 
-% ★OTA (初回だけ production で公開（TEST_FLIGHT でも可能）。次回以降は eas update で OTA)
+% １．★OTA (初回だけ production で公開（TEST_FLIGHT でも可能）。次回以降は eas update で OTA)
 eas build --platform ios --profile production
-% ★OTA App Store Connect に配置
+% ２'．★OTA App Store Connect の最新ビルドに配置（Mac 不要！）
 eas submit --latest -p ios
-% OTA(以降はこれだけで OK)
+% ２．OTA(以降はこれだけで OK)：初回読込に２回起動する必要がある
 eas update --branch production --message "Bug Fixed"
 
 LOG ["3840x2160", "1920x1080", "1280x720", "640x480", "352x288", "Photo", "High", "Medium", "Low"]

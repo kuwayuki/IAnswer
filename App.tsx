@@ -161,12 +161,14 @@ const App: React.FC = () => {
               text: "OK",
               onPress: async () => {
                 await requestTrackingPermissionsAsync();
+                setAppOpenRead(true);
               },
             },
           ]
         );
+      } else {
+        setAppOpenRead(true);
       }
-      setAppOpenRead(true);
     })();
   }, [isInitialRead]);
 

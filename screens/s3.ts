@@ -8,8 +8,8 @@ const awsAccessKeyId = Constants.expoConfig?.extra?.eas.awsAccessKeyId;
 const awsSecretAccessKey = Constants.expoConfig?.extra?.eas.awsSecretAccessKey;
 // 認証情報の設定
 AWS.config.update({
-  accessKeyId: awsAccessKeyId,
-  secretAccessKey: awsSecretAccessKey,
+  accessKeyId: process.env.EXPO_PUBLIC_ACCESS_KEY,
+  secretAccessKey: process.env.EXPO_PUBLIC_SECRET_KEY,
   region: "ap-northeast-1",
 });
 // S3クライアントの作成
@@ -17,8 +17,8 @@ const s3 = new AWS.S3();
 
 // ファイルをS3にアップロードする関数
 export const uploadFile = async (fileContent: any, filePath: string) => {
-  alert(awsAccessKeyId);
-  alert(awsSecretAccessKey);
+  // alert(awsAccessKeyId);
+  // alert(awsSecretAccessKey);
   const params = {
     Bucket: BUCKET_NAME,
     Key: filePath,

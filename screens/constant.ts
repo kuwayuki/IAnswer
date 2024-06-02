@@ -8,6 +8,7 @@ export const BANNER_UNIT_ID = {
 
 export type PROMPT_TEMPLATE = {
   No: number;
+  Title: string;
   PromptUser?: string;
   PromptSystem?: string;
   AppName: string;
@@ -37,10 +38,12 @@ export const PROMPT_TEMPLATES = {
   ALL: {
     No: 0,
     AppName: "IAnswer",
+    Title: "全て",
   } as PROMPT_TEMPLATE,
   TEST: {
     No: 1,
     AppName: "IAnswerTest",
+    Title: "🖋テスト回答モード",
     Explane:
       "問題用紙を撮影してください。解説・回答を行います。\r\n５教科の中学生程度までですが、数学などは読み取れない記号などが存在します。",
     PromptUser:
@@ -49,6 +52,7 @@ export const PROMPT_TEMPLATES = {
   TRANSLATE: {
     No: 2,
     AppName: "IAnswerTranslate",
+    Title: "🗾翻訳モード",
     Explane:
       "外国語を撮影してください。\r\n翻訳を行います。AIの精度によるので必ずしも正解しているわけではありません。",
     PromptUser:
@@ -57,6 +61,7 @@ export const PROMPT_TEMPLATES = {
   FASSION: {
     No: 3,
     AppName: "IAnswerFassion",
+    Title: "👗ファッションチェックモード",
     Explane:
       "コーディネートを撮影してください。\r\n各ファッションに関しての評価を行います。",
     PromptUser:
@@ -65,6 +70,7 @@ export const PROMPT_TEMPLATES = {
   RECEPI: {
     No: 4,
     AppName: "IAnswerRecepi",
+    Title: "🍳レシピモード",
     Explane: "食材を撮影してください。\r\n食材からレシピを考案します。",
     PromptUser:
       "画像は食材です。一部または全てを利用してレシピを考案してください。titleには料理名、bodyには材料、answerには作り方、explanationには料理の説明、resultにはnullをお願いします。",
@@ -72,6 +78,7 @@ export const PROMPT_TEMPLATES = {
   CALORY: {
     No: 5,
     AppName: "IAnswerCalory",
+    Title: "㎈カロリーモード",
     Explane:
       "料理を撮影してください。\r\nカロリーを計算します。距離や大きさが把握できない可能性があるため、必ずしも正解しているわけではありません。",
     PromptUser:
@@ -80,6 +87,7 @@ export const PROMPT_TEMPLATES = {
   TRASH: {
     No: 6,
     AppName: "IAnswerTrash",
+    Title: "🚮ゴミ分別モード",
     Explane:
       "ゴミを撮影してください。\r\nゴミの分別を行います。ゴミの収集日に関しては自治体のルールに則ってください。",
     PromptUser:
@@ -88,6 +96,7 @@ export const PROMPT_TEMPLATES = {
   PLANTS: {
     No: 7,
     AppName: "IAnswerPlants",
+    Title: "🥀植物ケアモード",
     Explane: "植物を撮影してください。\r\n植物の状態を評価します。",
     PromptUser:
       "画像は植物です。解析して、状態を確認してください。titleには植物名称、bodyには良し悪しの概要、answerには状態の詳細、explanationにはケアの方法、resultにはnullをお願いします。",
