@@ -6,7 +6,13 @@ import {
   PermissionStatus,
   useCameraPermissions,
 } from "expo-camera";
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, {
+  ReactNode,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import {
   ActivityIndicator,
   Alert,
@@ -25,7 +31,6 @@ import {
   RootStackParamList,
 } from "../App";
 import { BANNER_UNIT_ID, PROMPT_TEMPLATE, PROMPT_TEMPLATES } from "./constant";
-// import { BannerAd, BannerAdSize } from "react-native-google-mobile-ads";
 import Constants from "expo-constants";
 import {
   GestureEvent,
@@ -38,17 +43,18 @@ import IconAtom from "./IconAtom";
 import { uploadFile } from "./s3";
 import { KEY, getLocalStorage, saveLocalStorage } from "./utils";
 import * as ImageManipulator from "expo-image-manipulator";
-import { initializeInterstitialAd, showInterstitialAd } from "./AdmobInter";
-import {
-  BannerAd,
-  BannerAdSize,
-  TestIds,
-} from "react-native-google-mobile-ads";
 import {
   MediaTypeOptions,
   launchImageLibraryAsync,
   requestMediaLibraryPermissionsAsync,
 } from "expo-image-picker";
+// TODO: Google Admob
+// import { initializeInterstitialAd, showInterstitialAd } from "./AdmobInter";
+// import {
+//   BannerAd,
+//   BannerAdSize,
+//   TestIds,
+// } from "react-native-google-mobile-ads";
 
 const { width: screenWidth } = Dimensions.get("window");
 const CameraScreen: React.FC = () => {
@@ -66,7 +72,7 @@ const CameraScreen: React.FC = () => {
   const [isDisplayExplane, setDisplayExplane] = useState(false);
   const [isOpenDropbox, setOpenDropbox] = useState(false);
   const [prompt, setProompt] = useState<PROMPT_TEMPLATE>();
-  const [mode, setMode] = useState<number>(0);
+  const [mode, setMode] = useState<number>(1);
   const [zoom, setZoom] = useState(0);
   const pinchRef = useRef(null);
 
@@ -88,7 +94,8 @@ const CameraScreen: React.FC = () => {
       } else {
         setMode(settingAiType);
       }
-      if (!appContextState.isPremium) initializeInterstitialAd();
+      // TODO: Google Admob
+      // if (!appContextState.isPremium) initializeInterstitialAd();
     })();
   }, []);
 
@@ -101,8 +108,7 @@ const CameraScreen: React.FC = () => {
     setProompt(propmpt);
     saveLocalStorage(KEY.AI_TYPE, mode);
 
-    // 初回モード変更時に初回読込完了とする
-    if (appContextState.isInitialRead) appContextDispatch.setInitialRead(false);
+    setDisplayExplane(false);
   }, [mode]);
 
   function toggleCameraFacing() {
@@ -110,6 +116,7 @@ const CameraScreen: React.FC = () => {
   }
 
   const handlePinchGesture = (event: GestureEvent<any>) => {
+    console.log(event);
     if (event.nativeEvent.state === State.ACTIVE) {
       let newZoom = zoom + event.nativeEvent.velocity * 0.0002;
       if (newZoom < 0) newZoom = 0;
@@ -225,7 +232,8 @@ const CameraScreen: React.FC = () => {
 
   const uploadPhoto = async (_photoUri?: string) => {
     try {
-      if (!appContextState.isPremium) showInterstitialAd();
+      // TODO: Google Admob
+      // if (!appContextState.isPremium) showInterstitialAd();
       let tmpPhotoUri = _photoUri ?? photoUri;
       if (!tmpPhotoUri) return;
       const size = _photoUri
@@ -316,14 +324,10 @@ const CameraScreen: React.FC = () => {
     // );
   }
 
-  return (
-    <View style={styles.container}>
-      {photoUri ? (
-        <>
-          <Image source={{ uri: photoUri }} style={getImageStyle()} />
-        </>
-      ) : (
-        <GestureHandlerRootView>
+  const CameraOrView = (child?: ReactNode) => {
+    if (appContextState.permission?.granted) {
+      return (
+        <GestureHandlerRootView style={styles.cameraOutLine}>
           <PinchGestureHandler
             onGestureEvent={handlePinchGesture}
             ref={pinchRef}
@@ -336,73 +340,106 @@ const CameraScreen: React.FC = () => {
               pictureSize="1280x720"
               ref={(ref) => setCameraRef(ref)}
             >
-              {mode === PROMPT_TEMPLATES.FASSION.No && (
-                <TouchableOpacity
-                  style={styles.toogleFacing}
-                  onPress={toggleCameraFacing}
-                >
-                  <IconAtom name="camera-reverse" type="ionicon" size={20} />
-                </TouchableOpacity>
-              )}
-              <TouchableOpacity
-                style={styles.toogle}
-                onPress={() => setDisplayExplane(!isDisplayExplane)}
-              >
-                <IconAtom name="help" type="ionicon" size={16} />
-              </TouchableOpacity>
-              {(isDisplayExplane || isOpenDropbox) && prompt?.Explane && (
-                <View style={styles.explaneContainer}>
-                  <Text style={styles.explaneTitle}>{"説明"}</Text>
-                  <Text style={styles.explaneText}>{prompt?.Explane}</Text>
-                </View>
-              )}
-              <View style={styles.shutterButtonContainer}>
-                <TouchableOpacity
-                  style={styles.shutterButton}
-                  onPress={takePicture}
-                ></TouchableOpacity>
-              </View>
-              <View style={styles.galleryButtonContainer}>
-                <TouchableOpacity
-                  style={styles.galleryButton}
-                  onPress={openImagePickerAsync}
-                >
-                  <IconAtom
-                    name="picture"
-                    type="simple-line-icon"
-                    style={styles.galleryButtonText}
-                    size={24}
-                    onPress={openImagePickerAsync}
-                  />
-                </TouchableOpacity>
-              </View>
-              {appContextState.settingAiType === PROMPT_TEMPLATES.ALL.No && (
-                <View style={styles.pickerContainer}>
-                  <DropDownPickerAtom
-                    value={mode}
-                    setValue={setMode}
-                    items={Object.values(PROMPT_TEMPLATES)
-                      .filter((allExclude) => allExclude.No > 0)
-                      .map((template: PROMPT_TEMPLATE) => ({
-                        label: template.Title,
-                        value: template.No,
-                      }))}
-                    open={isOpenDropbox} // 初回起動時は選択させる
-                    setOpen={setOpenDropbox}
-                  />
-                </View>
-              )}
+              {child}
             </CameraView>
           </PinchGestureHandler>
         </GestureHandlerRootView>
+      );
+    } else {
+      return (
+        <View style={styles.cameraOutLine}>
+          <View style={styles.camera}>{child}</View>
+        </View>
+      );
+    }
+  };
+
+  return (
+    <View style={styles.container}>
+      {photoUri ? (
+        <>
+          <Image source={{ uri: photoUri }} style={getImageStyle()} />
+        </>
+      ) : (
+        <View style={styles.container}>
+          {prompt?.ShortExplane && (
+            <View>
+              <Text style={styles.headerHelpText}>{prompt?.ShortExplane}</Text>
+            </View>
+          )}
+          {CameraOrView(
+            mode === PROMPT_TEMPLATES.FASSION.No ? (
+              <TouchableOpacity
+                style={styles.toogleFacing}
+                onPress={toggleCameraFacing}
+              >
+                <IconAtom name="camera-reverse" type="ionicon" size={20} />
+              </TouchableOpacity>
+            ) : undefined
+          )}
+          <TouchableOpacity
+            style={styles.toogle}
+            onPress={() => setDisplayExplane(!isDisplayExplane)}
+          >
+            <IconAtom
+              name="help"
+              type="ionicon"
+              size={24}
+              style={styles.toogleText}
+            />
+          </TouchableOpacity>
+          {(isDisplayExplane || isOpenDropbox) && prompt?.Explane && (
+            <View style={styles.explaneContainer}>
+              <Text style={styles.explaneTitle}>{"説明"}</Text>
+              <Text style={styles.explaneText}>{prompt?.Explane}</Text>
+            </View>
+          )}
+          <View style={styles.shutterButtonContainer}>
+            <TouchableOpacity
+              style={styles.shutterButton}
+              onPress={takePicture}
+            ></TouchableOpacity>
+          </View>
+          <View style={styles.galleryButtonContainer}>
+            <TouchableOpacity
+              style={styles.galleryButton}
+              onPress={openImagePickerAsync}
+            >
+              <IconAtom
+                name="picture"
+                type="simple-line-icon"
+                style={styles.galleryButtonText}
+                size={24}
+                onPress={openImagePickerAsync}
+              />
+            </TouchableOpacity>
+          </View>
+          {appContextState.settingAiType === PROMPT_TEMPLATES.ALL.No && (
+            <View style={styles.pickerContainer}>
+              <DropDownPickerAtom
+                value={mode}
+                setValue={setMode}
+                items={Object.values(PROMPT_TEMPLATES)
+                  .filter((allExclude) => allExclude.No > 0)
+                  .map((template: PROMPT_TEMPLATE) => ({
+                    label: template.Title,
+                    value: template.No,
+                  }))}
+                open={isOpenDropbox}
+                setOpen={setOpenDropbox}
+              />
+            </View>
+          )}
+        </View>
       )}
-      {!appContextState.isPremium && (
+      {/* {!appContextState.isPremium && (
+        // TODO: Google Admob
         <BannerAd
           // unitId={TestIds.BANNER}
           unitId={BANNER_UNIT_ID.BANNER}
           size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
         />
-      )}
+      )} */}
     </View>
   );
 };
@@ -410,10 +447,20 @@ const CameraScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // maxHeight: "80%",
+    backgroundColor: "#dcdcdc",
+  },
+  cameraOutLine: {
+    backgroundColor: "#f5f5f5",
+    marginTop: 64,
+    // marginBottom: 30,
+    flex: 1,
   },
   camera: {
+    margin: 8,
     flex: 1,
+    maxHeight: "76%",
+    alignItems: "center",
+    justifyContent: "center",
   },
   preview: {
     flex: 1,
@@ -424,9 +471,16 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
+  headerHelpText: {
+    top: 36,
+    position: "absolute",
+    alignSelf: "center",
+    fontSize: 16,
+    color: "rgba(0, 0, 0, 0.6)",
+  },
   toogleFacing: {
-    top: 40,
-    right: 10,
+    top: 8,
+    right: 8,
     position: "absolute",
     alignSelf: "flex-end",
   },
@@ -464,10 +518,11 @@ const styles = StyleSheet.create({
     borderColor: "gray", // 枠線の色を白に設定
   },
   explaneContainer: {
-    top: "30%",
+    position: "absolute",
+    top: "24%",
     left: "10%",
+    right: "10%",
     backgroundColor: "rgba(255, 255, 255, 0.7)", // 透明度を下げる
-    maxWidth: "80%",
   },
   explaneTitle: {
     fontSize: 20,
@@ -482,29 +537,26 @@ const styles = StyleSheet.create({
   galleryButtonContainer: {
     position: "absolute",
     bottom: 85,
-    left: 10,
   },
-  galleryButton: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
-    backgroundColor: "transparent",
-    justifyContent: "center",
-    alignItems: "center",
-  },
+  galleryButton: {},
   galleryButtonText: {
     fontSize: 32,
-    backgroundColor: "rgba(255, 255, 255, 0)",
+    width: 200,
+    height: 200,
+    top: 4,
+    left: 6,
+    justifyContent: "center",
+    alignItems: "center",
   },
   pickerContainer: {
     position: "absolute",
     bottom: 20,
-    left: 50,
-    right: 50,
     color: "white",
     backgroundColor: "rgba(255, 255, 255, 0)", // 透明度を下げる
     borderRadius: 10,
     padding: 10,
+    alignSelf: "center",
+    maxWidth: 280,
   },
   pickerText: {
     // color: "rgba(255, 255, 255, 0.3)", // 透明度を下げる
@@ -512,11 +564,18 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
   toogle: {
-    bottom: 24,
+    bottom: 0,
     left: 10,
     backgroundColor: "rgba(255, 255, 255, 0)", // 透明度を下げる
     position: "absolute",
     alignSelf: "flex-end",
+  },
+  toogleText: {
+    width: 200,
+    height: 200,
+    left: 3,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
 

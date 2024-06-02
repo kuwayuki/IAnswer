@@ -24,10 +24,12 @@ import {
 import { Alert, AppState, AppStateStatus, Linking } from "react-native";
 import { PROMPT_TEMPLATES } from "./screens/constant";
 import { KEY, getLocalStorage, saveLocalStorage } from "./screens/utils";
+import InitialScreen from "./screens/InitialScreen";
 
 const Stack = createStackNavigator<RootStackParamList>();
 // ナビゲーションのパラメータ型を定義
 export type RootStackParamList = {
+  Initial: undefined;
   Camera: undefined;
   Result: {
     result: any;
@@ -113,9 +115,10 @@ Amplify.configure({
 
 const App: React.FC = () => {
   const [aiType, setAiType] = useState(0);
-  // 起動時読込フラグ
-  const [isAppOpenRead, setAppOpenRead] = useState(false);
+  // インストール後初回読込フラグ
   const [isInitialRead, setInitialRead] = useState(false);
+  // 起動時読込を行うフラグ
+  const [isAppOpenRead, setAppOpenRead] = useState(false);
   const [isPremium, setPremium] = useState(false);
   const [settingAiType, setSettingAiType] = useState(0);
   const [permission, setPermission] = useState<CameraPermissionResponse | null>(
@@ -125,7 +128,7 @@ const App: React.FC = () => {
     useState<MediaLibraryPermissionResponse | null>(null);
 
   useEffect(() => {
-    (async () => {
+    const func = async () => {
       const initialRead = await getLocalStorage(KEY.INITIAL_READ);
       if (!initialRead) {
         saveLocalStorage(KEY.INITIAL_READ, "true");
@@ -142,15 +145,18 @@ const App: React.FC = () => {
           ]
         );
       } else {
+        // 起動読込開始
         setAppOpenRead(true);
       }
-    })();
+    };
+    func();
   }, []);
 
+  // 初回読込時だけ、トラッキングを表示
   useEffect(() => {
-    (async () => {
-      if (!isInitialRead) return;
+    if (!isInitialRead) return;
 
+    const func = async () => {
       const { granted, canAskAgain } = await getTrackingPermissionsAsync();
       if (!granted && canAskAgain) {
         Alert.alert(
@@ -161,15 +167,18 @@ const App: React.FC = () => {
               text: "OK",
               onPress: async () => {
                 await requestTrackingPermissionsAsync();
+                // 起動読込開始
                 setAppOpenRead(true);
               },
             },
           ]
         );
       } else {
+        // 起動読込開始
         setAppOpenRead(true);
       }
-    })();
+    };
+    func();
   }, [isInitialRead]);
 
   useEffect(() => {
@@ -180,40 +189,45 @@ const App: React.FC = () => {
     setSettingAiType(prompt!.No);
   }, []);
 
-  useEffect(() => {
-    const startSignIn = async () => {
-      await authenticate();
-    };
-    // startSignIn();
-  }, []);
+  // useEffect(() => {
+  //   const startSignIn = async () => {
+  //     await authenticate();
+  //   };
+  //   // startSignIn();
+  // }, []);
 
   useEffect(() => {
     if (!isAppOpenRead) return;
 
-    const handleAppStateChange = async (nextAppState: AppStateStatus) => {
-      if (nextAppState === "active" && !permission?.granted === false) {
-        await requestPermission();
-      }
-      if (nextAppState === "active" && !imagePermission?.granted === false) {
-        setImagePermission(await getMediaLibraryPermissionsAsync());
-      }
-    };
-    const subscription = AppState.addEventListener(
-      "change",
-      handleAppStateChange
-    );
-
-    return () => {
-      subscription.remove();
-    };
-  }, [isAppOpenRead]);
-
-  useEffect(() => {
-    (async () => {
-      if (!isAppOpenRead) return;
+    const func = async () => {
       await requestPermission();
       setImagePermission(await getMediaLibraryPermissionsAsync());
-    })();
+      // 初回読込完了
+      setInitialRead(false);
+      // 起動読込完了
+      setAppOpenRead(false);
+
+      // 以降はアプリを開く度に確認
+      const handleAppStateChange = async (nextAppState: AppStateStatus) => {
+        // 初回読み完了かつ、起動後読み込み完了
+        if (!isInitialRead && !isAppOpenRead && nextAppState === "active") {
+          if (!permission?.granted === false) {
+            await requestPermission();
+          }
+          if (!imagePermission?.granted === false) {
+            setImagePermission(await getMediaLibraryPermissionsAsync());
+          }
+        }
+      };
+      const subscription = AppState.addEventListener(
+        "change",
+        handleAppStateChange
+      );
+      return () => {
+        subscription.remove();
+      };
+    };
+    func();
   }, [isAppOpenRead]);
 
   const requestPermission = async () => {
@@ -275,7 +289,14 @@ const App: React.FC = () => {
         }}
       >
         <NavigationContainer>
-          <Stack.Navigator initialRouteName="Camera">
+          <Stack.Navigator
+            initialRouteName={isInitialRead ? "Initial" : "Camera"}
+          >
+            <Stack.Screen
+              name="Initial"
+              component={InitialScreen}
+              options={{ headerShown: false }}
+            />
             <Stack.Screen
               name="Camera"
               component={CameraScreen}

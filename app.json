@@ -2,9 +2,9 @@
   "expo": {
     "name": "IAnswer",
     "slug": "IAnswer",
-    "version": "1.0.7",
+    "version": "1.0.11",
     "ios": {
-      "buildNumber": "7",
+      "buildNumber": "11",
       "supportsTablet": true,
       "config": {
         "googleMobileAdsAppId": "ca-app-pub-2103807205659646~3048157861"
@@ -25,8 +25,8 @@
       [
         "expo-camera",
         {
-          "cameraPermission": "カメラへのアクセスを$(PRODUCT_NAME)に許可しますか？",
-          "microphonePermission": "マイクへのアクセスを$(PRODUCT_NAME)に許可しますか？"
+          "cameraPermission": "カメラへのアクセスを許可しますか？",
+          "microphonePermission": "マイクへのアクセスを許可しますか？"
         }
       ],
       [
