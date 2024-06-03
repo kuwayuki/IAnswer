@@ -49,12 +49,12 @@ import {
   requestMediaLibraryPermissionsAsync,
 } from "expo-image-picker";
 // TODO: Google Admob
-// import { initializeInterstitialAd, showInterstitialAd } from "./AdmobInter";
-// import {
-//   BannerAd,
-//   BannerAdSize,
-//   TestIds,
-// } from "react-native-google-mobile-ads";
+import { initializeInterstitialAd, showInterstitialAd } from "./AdmobInter";
+import {
+  BannerAd,
+  BannerAdSize,
+  TestIds,
+} from "react-native-google-mobile-ads";
 
 const { width: screenWidth } = Dimensions.get("window");
 const CameraScreen: React.FC = () => {
@@ -95,7 +95,9 @@ const CameraScreen: React.FC = () => {
         setMode(settingAiType);
       }
       // TODO: Google Admob
-      // if (!appContextState.isPremium) initializeInterstitialAd();
+      if (!appContextState.isPremium) {
+        initializeInterstitialAd(appContextDispatch.setShowedAdmob);
+      }
     })();
   }, []);
 
@@ -232,8 +234,14 @@ const CameraScreen: React.FC = () => {
 
   const uploadPhoto = async (_photoUri?: string) => {
     try {
+      setLoading(true);
       // TODO: Google Admob
-      // if (!appContextState.isPremium) showInterstitialAd();
+      if (!appContextState.isPremium) {
+        // 前回広告表示完了の場合は非同期、未完了の場合は同期（待機）
+        appContextState.isShowedAdmob
+          ? showInterstitialAd(appContextDispatch.setShowedAdmob)
+          : await showInterstitialAd(appContextDispatch.setShowedAdmob);
+      }
       let tmpPhotoUri = _photoUri ?? photoUri;
       if (!tmpPhotoUri) return;
       const size = _photoUri
@@ -241,7 +249,6 @@ const CameraScreen: React.FC = () => {
             setImageSize({ width, height });
           })
         : null;
-      setLoading(true);
       const response = await fetch(tmpPhotoUri);
       console.log(response);
       const blob = await response.blob();
@@ -424,6 +431,7 @@ const CameraScreen: React.FC = () => {
                   .map((template: PROMPT_TEMPLATE) => ({
                     label: template.Title,
                     value: template.No,
+                    icon: template.Icon,
                   }))}
                 open={isOpenDropbox}
                 setOpen={setOpenDropbox}
@@ -432,14 +440,14 @@ const CameraScreen: React.FC = () => {
           )}
         </View>
       )}
-      {/* {!appContextState.isPremium && (
+      {!appContextState.isPremium && (
         // TODO: Google Admob
         <BannerAd
           // unitId={TestIds.BANNER}
           unitId={BANNER_UNIT_ID.BANNER}
           size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
         />
-      )} */}
+      )}
     </View>
   );
 };
@@ -556,7 +564,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 10,
     alignSelf: "center",
-    maxWidth: 280,
+    maxWidth: 295,
   },
   pickerText: {
     // color: "rgba(255, 255, 255, 0.3)", // 透明度を下げる

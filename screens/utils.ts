@@ -24,3 +24,6 @@ export const saveLocalStorage = async (key: string, value: string | number) => {
     console.error(err);
   }
 };
+
+export const sleep = (ms: number) =>
+  new Promise((resolve) => setTimeout(resolve, ms));

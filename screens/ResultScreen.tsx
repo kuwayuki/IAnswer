@@ -22,7 +22,7 @@ import {
 import IconAtom from "./IconAtom";
 import { BANNER_UNIT_ID } from "./constant";
 // TODO: Google Admob
-// import { BannerAd, BannerAdSize } from "react-native-google-mobile-ads";
+import { BannerAd, BannerAdSize } from "react-native-google-mobile-ads";
 
 const { width: screenWidth } = Dimensions.get("window");
 const ResultScreen: React.FC = () => {
@@ -98,36 +98,36 @@ const ResultScreen: React.FC = () => {
       <ScrollView style={styles.scrollContainer}>
         {!appContextState.isPremium && (
           // TODO: Google Admob
-          <></>
-          // <BannerAd
-          //   // unitId={TestIds.BANNER}
-          //   unitId={BANNER_UNIT_ID.BANNER}
-          //   size={BannerAdSize.BANNER}
-          // />
+          // <></>
+          <BannerAd
+            // unitId={TestIds.BANNER}
+            unitId={BANNER_UNIT_ID.BANNER_2}
+            size={BannerAdSize.BANNER}
+          />
         )}
         {result.map((item: OpenAiResult, index: number) =>
           normalView(item, index)
         )}
         {!appContextState.isPremium && (
           // TODO: Google Admob
-          <></>
-          // <BannerAd
-          //   // unitId={TestIds.BANNER}
-          //   unitId={BANNER_UNIT_ID.BANNER}
-          //   size={BannerAdSize.BANNER}
-          // />
+          // <></>
+          <BannerAd
+            // unitId={TestIds.BANNER}
+            unitId={BANNER_UNIT_ID.BANNER_3}
+            size={BannerAdSize.BANNER}
+          />
         )}
         <>
           <Image source={{ uri: uri }} style={{ ...imageSize }} />
         </>
         {!appContextState.isPremium && (
           // TODO: Google Admob
-          <></>
-          // <BannerAd
-          //   // unitId={TestIds.BANNER}
-          //   unitId={BANNER_UNIT_ID.BANNER}
-          //   size={BannerAdSize.BANNER}
-          // />
+          // <></>
+          <BannerAd
+            // unitId={TestIds.BANNER}
+            unitId={BANNER_UNIT_ID.BANNER_4}
+            size={BannerAdSize.BANNER}
+          />
         )}
       </ScrollView>
       <View style={styles.toogleContainer}>

@@ -1,8 +1,21 @@
+import { ReactNode } from "react";
+import IconAtom from "./IconAtom";
+import { IconProps } from "react-native-elements";
+
 export const BANNER_UNIT_ID = {
   INTERSTIAL: "ca-app-pub-2103807205659646/7025650068",
+  INTERSTIAL_MOVIE: "ca-app-pub-2103807205659646/1735973989",
   // INTERSTIAL_2: "ca-app-pub-2103807205659646/2139213606",
   // INTERSTIAL_3: "ca-app-pub-2103807205659646/4180737796",
   BANNER: "ca-app-pub-2103807205659646/3853773383",
+  BANNER_2: "ca-app-pub-2103807205659646/3715270066",
+  BANNER_3: "ca-app-pub-2103807205659646/6582188129",
+  BANNER_4: "ca-app-pub-2103807205659646/1549353293",
+  BANNER_5: "ca-app-pub-2103807205659646/5269106455",
+  BANNER_6: "ca-app-pub-2103807205659646/2402188395",
+  BANNER_7: "ca-app-pub-2103807205659646/3136685568",
+  BANNER_8: "ca-app-pub-2103807205659646/1823603890",
+  BANNER_9: "ca-app-pub-2103807205659646/9236271621",
   APP_OPEN_1: "ca-app-pub-2103807205659646/1199351237",
 };
 
@@ -14,6 +27,7 @@ export type PROMPT_TEMPLATE = {
   AppName: string;
   Explane?: string;
   ShortExplane?: string;
+  Icon?: () => JSX.Element;
 };
 
 const PROPMT_SYSTEM =
@@ -34,6 +48,24 @@ const CustomPromptUser = (
     explanation ? explanation : "null"
   }」、resultにはnullをお願いします。`;
 };
+const COMMON_ICON_PROPS = {
+  style: {
+    backgroundColor: "rgba(255, 255, 255, 0)",
+    margin: 1,
+    padding: 0,
+  },
+  containerStyle: {
+    backgroundColor: "rgba(255, 255, 255, 0)",
+    margin: 1,
+    padding: 0,
+  },
+  iconStyle: {
+    backgroundColor: "rgba(255, 255, 255, 0)",
+    maxWidth: 22,
+    margin: 1,
+    padding: 0,
+  },
+} as IconProps;
 
 export const PROMPT_TEMPLATES = {
   ALL: {
@@ -44,7 +76,13 @@ export const PROMPT_TEMPLATES = {
   TEST: {
     No: 1,
     AppName: "IAnswerTest",
-    Title: "🖋テスト回答モード",
+    Title: "テスト回答モード",
+    Icon: () =>
+      IconAtom({
+        ...COMMON_ICON_PROPS,
+        name: "book-open-variant",
+        type: "material-community",
+      } as IconProps),
     Explane:
       "問題用紙を撮影してください。解説・回答を行います。\r\n５教科の中学生程度までですが、数学などは読み取れない記号などが存在します。",
     ShortExplane: "問題を回答を教えます",
@@ -54,7 +92,13 @@ export const PROMPT_TEMPLATES = {
   TRANSLATE: {
     No: 2,
     AppName: "IAnswerTranslate",
-    Title: "🗾翻訳モード",
+    Title: "翻訳モード",
+    Icon: () =>
+      IconAtom({
+        ...COMMON_ICON_PROPS,
+        name: "google-translate",
+        type: "material-community",
+      } as IconProps),
     Explane:
       "外国語を撮影してください。\r\n翻訳を行います。AIの精度によるので必ずしも正解しているわけではありません。",
     ShortExplane: "外国語を翻訳します",
@@ -64,7 +108,13 @@ export const PROMPT_TEMPLATES = {
   FASSION: {
     No: 3,
     AppName: "IAnswerFassion",
-    Title: "👗ファッションチェックモード",
+    Title: "ファッションチェックモード",
+    Icon: () =>
+      IconAtom({
+        ...COMMON_ICON_PROPS,
+        name: "tshirt-v",
+        type: "material-community",
+      } as IconProps),
     Explane:
       "コーディネートを撮影してください。\r\n各ファッションに関しての評価を行います。",
     ShortExplane: "ファッションを評価します",
@@ -74,7 +124,13 @@ export const PROMPT_TEMPLATES = {
   RECEPI: {
     No: 4,
     AppName: "IAnswerRecepi",
-    Title: "🍳レシピモード",
+    Title: "レシピモード",
+    Icon: () =>
+      IconAtom({
+        ...COMMON_ICON_PROPS,
+        name: "silverware-fork-knife",
+        type: "material-community",
+      } as IconProps),
     Explane: "食材を撮影してください。\r\n食材からレシピを考案します。",
     ShortExplane: "食材からレシピを考案します",
     PromptUser:
@@ -83,7 +139,13 @@ export const PROMPT_TEMPLATES = {
   CALORY: {
     No: 5,
     AppName: "IAnswerCalory",
-    Title: "㎈カロリーモード",
+    Title: "カロリーモード",
+    Icon: () =>
+      IconAtom({
+        ...COMMON_ICON_PROPS,
+        name: "scale",
+        type: "material-community",
+      } as IconProps),
     Explane:
       "料理を撮影してください。\r\nカロリーを計算します。距離や大きさが把握できない可能性があるため、必ずしも正解しているわけではありません。",
     ShortExplane: "料理のカロリーを算出します",
@@ -93,7 +155,13 @@ export const PROMPT_TEMPLATES = {
   TRASH: {
     No: 6,
     AppName: "IAnswerTrash",
-    Title: "🚮ゴミ分別モード",
+    Title: "ゴミ分別モード",
+    Icon: () =>
+      IconAtom({
+        ...COMMON_ICON_PROPS,
+        name: "trash-can",
+        type: "material-community",
+      } as IconProps),
     Explane:
       "ゴミを撮影してください。\r\nゴミの分別を行います。ゴミの収集日に関しては自治体のルールに則ってください。",
     ShortExplane: "ゴミを分別します",
@@ -103,7 +171,13 @@ export const PROMPT_TEMPLATES = {
   PLANTS: {
     No: 7,
     AppName: "IAnswerPlants",
-    Title: "🥀植物ケアモード",
+    Title: "植物ケアモード",
+    Icon: () =>
+      IconAtom({
+        ...COMMON_ICON_PROPS,
+        name: "flower-tulip",
+        type: "material-community",
+      } as IconProps),
     Explane: "植物を撮影してください。\r\n植物の状態を評価します。",
     ShortExplane: "植物の状態を診断します",
     PromptUser:

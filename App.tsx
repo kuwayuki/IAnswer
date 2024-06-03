@@ -49,6 +49,7 @@ export type appContextState = {
   settingAiType: number;
   isAppOpenRead: boolean;
   isInitialRead: boolean;
+  isShowedAdmob: boolean;
   isPremium: boolean;
   permission: CameraPermissionResponse | null;
   imagePermission: MediaLibraryPermissionResponse | null;
@@ -60,6 +61,7 @@ export type appContextDispatch = {
   setSettingAiType: (settingAiType: number) => void;
   setAppOpenRead: (isAppOpenRead: boolean) => void;
   setInitialRead: (isInitialRead: boolean) => void;
+  setShowedAdmob: (isShowedAdmob: boolean) => void;
   setPremium: (isPremium: boolean) => void;
   setPermission: (permission: CameraPermissionResponse) => void;
   setImagePermission: (imagePermission: MediaLibraryPermissionResponse) => void;
@@ -119,6 +121,8 @@ const App: React.FC = () => {
   const [isInitialRead, setInitialRead] = useState(false);
   // 起動時読込を行うフラグ
   const [isAppOpenRead, setAppOpenRead] = useState(false);
+  // 広告動画見終わりフラグ
+  const [isShowedAdmob, setShowedAdmob] = useState(true);
   const [isPremium, setPremium] = useState(false);
   const [settingAiType, setSettingAiType] = useState(0);
   const [permission, setPermission] = useState<CameraPermissionResponse | null>(
@@ -259,6 +263,7 @@ const App: React.FC = () => {
       settingAiType,
       isAppOpenRead,
       isInitialRead,
+      isShowedAdmob,
       isPremium,
       permission,
       imagePermission,
@@ -268,6 +273,7 @@ const App: React.FC = () => {
       settingAiType,
       isAppOpenRead,
       isInitialRead,
+      isShowedAdmob,
       permission,
       imagePermission,
       isPremium,
@@ -282,6 +288,7 @@ const App: React.FC = () => {
           setSettingAiType,
           setAppOpenRead,
           setInitialRead,
+          setShowedAdmob,
           setPremium,
           setPermission,
           setImagePermission,
