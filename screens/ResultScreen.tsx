@@ -108,15 +108,6 @@ const ResultScreen: React.FC = () => {
         {result.map((item: OpenAiResult, index: number) =>
           normalView(item, index)
         )}
-        {!appContextState.isPremium && (
-          // TODO: Google Admob
-          // <></>
-          <BannerAd
-            // unitId={TestIds.BANNER}
-            unitId={BANNER_UNIT_ID.BANNER_3}
-            size={BannerAdSize.BANNER}
-          />
-        )}
         <>
           <Image source={{ uri: uri }} style={{ ...imageSize }} />
         </>

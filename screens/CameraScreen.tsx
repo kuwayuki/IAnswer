@@ -55,6 +55,10 @@ import {
   BannerAdSize,
   TestIds,
 } from "react-native-google-mobile-ads";
+import {
+  rewardInitializeInterstitialAd,
+  showRewardInterstitialAd,
+} from "./AdmobRewardInter";
 
 const { width: screenWidth } = Dimensions.get("window");
 const CameraScreen: React.FC = () => {
@@ -96,7 +100,8 @@ const CameraScreen: React.FC = () => {
       }
       // TODO: Google Admob
       if (!appContextState.isPremium) {
-        initializeInterstitialAd(appContextDispatch.setShowedAdmob);
+        rewardInitializeInterstitialAd(appContextDispatch.setShowedAdmob);
+        // initializeInterstitialAd(appContextDispatch.setShowedAdmob);
       }
     })();
   }, []);
@@ -239,8 +244,8 @@ const CameraScreen: React.FC = () => {
       if (!appContextState.isPremium) {
         // 前回広告表示完了の場合は非同期、未完了の場合は同期（待機）
         appContextState.isShowedAdmob
-          ? showInterstitialAd(appContextDispatch.setShowedAdmob)
-          : await showInterstitialAd(appContextDispatch.setShowedAdmob);
+          ? showRewardInterstitialAd(appContextDispatch.setShowedAdmob)
+          : await showRewardInterstitialAd(appContextDispatch.setShowedAdmob);
       }
       let tmpPhotoUri = _photoUri ?? photoUri;
       if (!tmpPhotoUri) return;

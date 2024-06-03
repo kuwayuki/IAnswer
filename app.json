@@ -2,16 +2,16 @@
   "expo": {
     "name": "IAnswer",
     "slug": "IAnswer",
-    "version": "1.0.12",
+    "version": "1.0.13",
     "ios": {
-      "buildNumber": "12",
+      "buildNumber": "13",
       "supportsTablet": true,
       "config": {
         "googleMobileAdsAppId": "ca-app-pub-2103807205659646~3048157861"
       },
       "bundleIdentifier": "com.kuwahara.IAnswer",
       "infoPlist": {
-        "NSUserTrackingUsageDescription": "「許可」を押すと、他社のデータも活用し、よりお客様に適した広告が表示されます。",
+        "NSUserTrackingUsageDescription": "他社のデータを活用して広告を表示するために、トラッキングの許可をお願いします。",
         "NSMicrophoneUsageDescription": "This app uses the microphone to allow users to send orders via voice message."
       }
     },
@@ -19,20 +19,20 @@
       [
         "expo-tracking-transparency",
         {
-          "userTrackingPermission": "「許可」を押すと、他社のデータも活用し、よりお客様に適した広告が表示されます。"
+          "userTrackingPermission": "他社のデータを活用して広告を表示するために、トラッキングの許可をお願いします。"
         }
       ],
       [
         "expo-camera",
         {
-          "cameraPermission": "カメラへのアクセスを許可しますか？",
-          "microphonePermission": "マイクへのアクセスを許可しますか？"
+          "cameraPermission": "撮影写真を解析するために、カメラへのアクセスが必要です。",
+          "microphonePermission": "このアプリは、音声メッセージで注文を送信するためにマイクを使用します。"
         }
       ],
       [
         "expo-image-picker",
         {
-          "photosPermission": "写真の共有のためにアプリが写真へアクセスします。"
+          "photosPermission": "保存済みの写真を解析するために写真ライブラリへのアクセスが必要です。"
         }
       ]
     ],

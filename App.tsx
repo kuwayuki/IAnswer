@@ -163,24 +163,10 @@ const App: React.FC = () => {
     const func = async () => {
       const { granted, canAskAgain } = await getTrackingPermissionsAsync();
       if (!granted && canAskAgain) {
-        Alert.alert(
-          "許可することで広告が最適化",
-          "トラッキングを許可することで、マネーフォロー内の広告が適切に最適化され、関連性の高い広告が表示されます。\n\nまた、アプリ作者に広告収入が発生するので、このアプリの改善に使用します。",
-          [
-            {
-              text: "OK",
-              onPress: async () => {
-                await requestTrackingPermissionsAsync();
-                // 起動読込開始
-                setAppOpenRead(true);
-              },
-            },
-          ]
-        );
-      } else {
-        // 起動読込開始
-        setAppOpenRead(true);
+        await requestTrackingPermissionsAsync();
       }
+      // 起動読込開始
+      setAppOpenRead(true);
     };
     func();
   }, [isInitialRead]);
