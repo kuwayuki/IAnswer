@@ -2,6 +2,10 @@ import { ReactNode } from "react";
 import IconAtom from "./IconAtom";
 import { IconProps } from "react-native-elements";
 
+export const MAX_LIMIT = {
+  ADMOB: 5,
+};
+
 export const BANNER_UNIT_ID = {
   INTERSTIAL: "ca-app-pub-2103807205659646/7025650068",
   INTERSTIAL_MOVIE: "ca-app-pub-2103807205659646/1735973989",

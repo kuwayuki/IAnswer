@@ -30,10 +30,15 @@ function selectAdId() {
 }
 
 let interstitial: RewardedInterstitialAd | null = null;
-let isAdmobing: boolean = false;
+let isRewarded: boolean = true;
+
+export function getReward() {
+  return isRewarded;
+}
 
 export function rewardInitializeInterstitialAd(
-  setAdClosed: (is: boolean) => void
+  setAdClosed: (is: boolean) => void,
+  isLoadedShow?: boolean
 ) {
   // alert("initializeInterstitialAd");
   const id = selectAdId();
@@ -45,24 +50,26 @@ export function rewardInitializeInterstitialAd(
   // イベントリスナーの追加
   interstitial.addAdEventListener(RewardedAdEventType.LOADED, () => {
     console.log("Ad Loaded");
+    if (isLoadedShow) {
+      interstitial!.show();
+    }
     // alert("Ad Loaded");
   });
 
   interstitial.addAdEventListener(RewardedAdEventType.EARNED_REWARD, () => {
     console.log("Ad Rewarded");
-    setAdClosed(true);
-    isAdmobing = true;
-    interstitial?.load();
+    rewardedSet(true, setAdClosed);
+    interstitial?.load(); // 広告をリロード
   });
 
   interstitial.addAdEventListener(AdEventType.CLOSED, (error) => {
     console.error("Ad Load Closed: ", error);
-    interstitial?.load();
+    interstitial?.load(); // 広告をリロード
   });
 
   interstitial.addAdEventListener(AdEventType.ERROR, (error) => {
     console.error("Ad Load Error: ", error);
-    interstitial?.load();
+    interstitial?.load(); // 広告をリロード
   });
 }
 
@@ -81,20 +88,48 @@ async function waitLoad(): Promise<boolean> {
   return false;
 }
 
+/**
+ * ロード済で即時抗告表示したい場合
+ * @param setAdClosed
+ */
 export async function showRewardInterstitialAd(
   setAdClosed: (is: boolean) => void
 ) {
-  const isLoad = await waitLoad();
-  if (isLoad) {
-    setAdClosed(false);
-    isAdmobing = false;
+  if (interstitial?.loaded) {
+    rewardedSet(false, setAdClosed);
     interstitial!.show();
-
-    const start = Date.now();
-    const timeout = 60 * 1000; // 60 seconds
-    while (true) {
-      await sleep(1000);
-      if (isAdmobing || Date.now() - start > timeout) break;
-    }
+  } else {
+    // 再読み込み&広告表示
+    rewardInitializeInterstitialAd(setAdClosed, true);
   }
 }
+
+function rewardedSet(isRewarded: boolean, setAdClosed: (is: boolean) => void) {
+  setAdClosed(isRewarded);
+  isRewarded = isRewarded;
+}
+
+// /**
+//  * ロード済で即時抗告表示したい場合
+//  * @param setAdClosed
+//  */
+// export async function showRewardInterstitialAd(
+//   setAdClosed: (is: boolean) => void
+// ) {
+//   const isLoad = await waitLoad();
+//   if (isLoad) {
+//     setAdClosed(false);
+//     isAdmobing = false;
+//     isRewarded = false;
+//     interstitial!.show();
+
+//     const start = Date.now();
+//     const timeout = 80 * 1000;
+//     while (true) {
+//       await sleep(1000);
+//       if (isAdmobing || Date.now() - start > timeout) break;
+//     }
+//   } else {
+//     rewardInitializeInterstitialAd(setAdClosed);
+//   }
+// }

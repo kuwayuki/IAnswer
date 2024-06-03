@@ -41,7 +41,12 @@ import {
 import DropDownPickerAtom from "./DropDownPickerAtom";
 import IconAtom from "./IconAtom";
 import { uploadFile } from "./s3";
-import { KEY, getLocalStorage, saveLocalStorage } from "./utils";
+import {
+  KEY,
+  checkOverMaxLimit,
+  getLocalStorage,
+  saveLocalStorage,
+} from "./utils";
 import * as ImageManipulator from "expo-image-manipulator";
 import {
   MediaTypeOptions,
@@ -56,6 +61,7 @@ import {
   TestIds,
 } from "react-native-google-mobile-ads";
 import {
+  getReward,
   rewardInitializeInterstitialAd,
   showRewardInterstitialAd,
 } from "./AdmobRewardInter";
@@ -239,13 +245,13 @@ const CameraScreen: React.FC = () => {
 
   const uploadPhoto = async (_photoUri?: string) => {
     try {
+      // 最大回数を超えている場合は戻る
+      if (await checkOverMaxLimit()) return;
+
       setLoading(true);
       // TODO: Google Admob
       if (!appContextState.isPremium) {
-        // 前回広告表示完了の場合は非同期、未完了の場合は同期（待機）
-        appContextState.isShowedAdmob
-          ? showRewardInterstitialAd(appContextDispatch.setShowedAdmob)
-          : await showRewardInterstitialAd(appContextDispatch.setShowedAdmob);
+        showRewardInterstitialAd(appContextDispatch.setShowedAdmob);
       }
       let tmpPhotoUri = _photoUri ?? photoUri;
       if (!tmpPhotoUri) return;
