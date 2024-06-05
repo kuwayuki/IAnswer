@@ -2,9 +2,9 @@
   "expo": {
     "name": "IAnswer",
     "slug": "IAnswer",
-    "version": "1.0.13",
+    "version": "1.0.15",
     "ios": {
-      "buildNumber": "13",
+      "buildNumber": "15",
       "supportsTablet": true,
       "config": {
         "googleMobileAdsAppId": "ca-app-pub-2103807205659646~3048157861"

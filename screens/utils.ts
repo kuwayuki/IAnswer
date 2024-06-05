@@ -45,6 +45,8 @@ export const checkOverMaxLimit = async (): Promise<boolean> => {
     await saveLocalStorage(KEY.EXECUTED_COUNT, parseInt(storedCount, 10) + 1);
     return false;
   } else {
+    // return false;
+    // TODO: 後で治す
     alert("今日はこれ以上実行できません。");
     return true;
   }

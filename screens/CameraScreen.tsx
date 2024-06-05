@@ -53,6 +53,7 @@ import {
   launchImageLibraryAsync,
   requestMediaLibraryPermissionsAsync,
 } from "expo-image-picker";
+import { Buffer } from "buffer";
 // TODO: Google Admob
 import { initializeInterstitialAd, showInterstitialAd } from "./AdmobInter";
 import {
@@ -104,8 +105,8 @@ const CameraScreen: React.FC = () => {
       } else {
         setMode(settingAiType);
       }
-      // TODO: Google Admob
       if (!appContextState.isPremium) {
+        // TODO: Google Admob
         rewardInitializeInterstitialAd(appContextDispatch.setShowedAdmob);
         // initializeInterstitialAd(appContextDispatch.setShowedAdmob);
       }
@@ -212,8 +213,8 @@ const CameraScreen: React.FC = () => {
             },
           ]
         );
+        return;
       }
-      return;
     }
 
     const pickerResult = await launchImageLibraryAsync({
@@ -255,8 +256,8 @@ const CameraScreen: React.FC = () => {
       }
       let tmpPhotoUri = _photoUri ?? photoUri;
       if (!tmpPhotoUri) return;
-      const size = _photoUri
-        ? Image.getSize(_photoUri, (width, height) => {
+      const size = tmpPhotoUri
+        ? Image.getSize(tmpPhotoUri, (width, height) => {
             setImageSize({ width, height });
           })
         : null;
@@ -277,6 +278,12 @@ const CameraScreen: React.FC = () => {
         return;
       }
 
+      console.log(prompt!.PromptUser);
+      console.log(prompt!.PromptSystem);
+
+      const today = new Date().toISOString().split("T")[0];
+      const base64EncodedDate = Buffer.from(today).toString("base64");
+
       const apiResponse = await post({
         apiName: "IAnswer",
         path: "/image/upload",
@@ -285,12 +292,11 @@ const CameraScreen: React.FC = () => {
             key: filePath,
             promptUser: prompt!.PromptUser,
             promptSystem: prompt!.PromptSystem,
+            Authorization: `Bearer ${base64EncodedDate}`,
           } as ApiBodyType,
         },
       }).response;
       if (apiResponse.statusCode !== 200) {
-        alert(prompt!.PromptUser);
-        alert(prompt!.PromptSystem);
         alert("API読み込みに失敗しました。");
         return;
       }
@@ -312,11 +318,13 @@ const CameraScreen: React.FC = () => {
           body = JSON.parse(formattedResult);
         } catch (error) {
           console.error(error);
+          alert("解析できませんでした。");
+          return;
         }
       }
       navigation.navigate("Result", {
         result: body,
-        uri: _photoUri!,
+        uri: tmpPhotoUri!,
       });
     } catch (error) {
       console.log(error);
@@ -326,21 +334,21 @@ const CameraScreen: React.FC = () => {
     }
   };
 
-  if (loading) {
-    return (
-      <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#000000" />
-        <Text>解析中...</Text>
-      </View>
-    );
-  } else if (!appContextState.permission?.granted) {
-    // return (
-    //   <View style={styles.loadingContainer}>
-    //     <ActivityIndicator size="large" color="#000000" />
-    //     <Text>解析中...</Text>
-    //   </View>
-    // );
-  }
+  // if (loading) {
+  //   return (
+  //     <View style={styles.loadingContainer}>
+  //       <ActivityIndicator size="large" color="#000000" />
+  //       <Text>解析中...</Text>
+  //     </View>
+  //   );
+  // } else if (!appContextState.permission?.granted) {
+  //   // return (
+  //   //   <View style={styles.loadingContainer}>
+  //   //     <ActivityIndicator size="large" color="#000000" />
+  //   //     <Text>解析中...</Text>
+  //   //   </View>
+  //   // );
+  // }
 
   const CameraOrView = (child?: ReactNode) => {
     if (appContextState.permission?.granted) {
@@ -355,7 +363,7 @@ const CameraScreen: React.FC = () => {
               facing={facing}
               mute={true}
               zoom={zoom}
-              pictureSize="1280x720"
+              pictureSize="640x480"
               ref={(ref) => setCameraRef(ref)}
             >
               {child}
@@ -377,6 +385,12 @@ const CameraScreen: React.FC = () => {
       {photoUri ? (
         <>
           <Image source={{ uri: photoUri }} style={getImageStyle()} />
+          {loading && (
+            <View style={styles.loadingContainer}>
+              <ActivityIndicator size="large" color="#000000" />
+              <Text>解析中...</Text>
+            </View>
+          )}
         </>
       ) : (
         <View style={styles.container}>
@@ -453,6 +467,7 @@ const CameraScreen: React.FC = () => {
       )}
       {!appContextState.isPremium && (
         // TODO: Google Admob
+        // <></>
         <BannerAd
           // unitId={TestIds.BANNER}
           unitId={BANNER_UNIT_ID.BANNER}

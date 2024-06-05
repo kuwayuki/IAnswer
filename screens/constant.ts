@@ -108,7 +108,7 @@ export const PROMPT_TEMPLATES = {
     Explane:
       "外国語を撮影してください。\r\n翻訳を行います。AIの精度によるので必ずしも正解しているわけではありません。",
     ShortExplane: "外国語を翻訳します",
-    PromptUser: `画像は外国語です。解析して、日本語にしてください。titleには「翻訳結果」、bodyには読み取った外国語、answerには${DETAIL_OR_EASY}翻訳結果、explanationにはnull、resultにはnullをお願いします。`,
+    PromptUser: `画像は外国語です。解析して、日本語にしてください。titleには「翻訳結果」、bodyには読み取った外国語、answerには${DETAIL_OR_EASY}翻訳結果、explanationにはnull、resultはnullをお願いします。`,
     // PromptUser: `画像は外国語です。解析して、日本語にしてください。titleには「翻訳結果」、bodyには読み取った外国語、answerには翻訳結果、explanationにはnull、resultにはnullをお願いします。`,
   } as PROMPT_TEMPLATE,
   FASSION: {
@@ -124,7 +124,7 @@ export const PROMPT_TEMPLATES = {
     Explane:
       "コーディネートを撮影してください。\r\n各ファッションに関しての評価を行います。",
     ShortExplane: "ファッションを評価します",
-    PromptUser: `あなたはプロのファッションデザイナーです。全体的な服の組み合わせを考慮しつつファッションセンスを解析して、結果を返却してください。titleには服の種類（パンツ、靴など）、bodyには服の詳細の種類（サンダル、スニーカーなど）、answerには良い、悪いなどの概要評価、explanationには改善点、resultには合っているか否かをお願いします。最初の配列にはtitleには「総評」、bodyには点数（100点満点）、answerには良い、悪いなどの概要評価、explanationには${DETAIL_OR_EASY}全体的な改善点、resultにはnullでお願いします。`,
+    PromptUser: `あなたはプロのファッションデザイナーです。全体的な服の組み合わせを考慮しつつファッションセンスを解析して、厳しめの評価を返却してください。titleには服の種類（パンツ、靴など）、bodyには服の詳細の種類（サンダル、スニーカーなど）、answerには良い、悪いなどの概要評価、explanationには改善点、resultには合っているか否かをお願いします。最初の配列にはtitleには「総評」、bodyには点数（100点満点）、answerには良い、悪いなどの概要評価、explanationには${DETAIL_OR_EASY}改善点、resultは良ければtrue・普通ならnull・普通以下ならfalseでお願いします。`,
   } as PROMPT_TEMPLATE,
   RECEPI: {
     No: 4,

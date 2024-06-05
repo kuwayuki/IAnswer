@@ -38,6 +38,7 @@ const ResultScreen: React.FC = () => {
   } | null>(null);
 
   useEffect(() => {
+    if (!uri) return;
     const size = Image.getSize(uri, (width, height) => {
       return { width, height };
     });
@@ -121,9 +122,9 @@ const ResultScreen: React.FC = () => {
           />
         )}
       </ScrollView>
-      <View style={styles.toogleContainer}>
+      <View style={styles.headerContainer}>
         <TouchableOpacity
-          style={styles.toogle}
+          style={styles.toogleContainer}
           onPress={() => {
             navigation.goBack();
           }}
@@ -132,8 +133,8 @@ const ResultScreen: React.FC = () => {
             color="blue"
             name="arrow-back"
             type="ionicon"
-            size={24}
-            style={{ backgroundColor: "rgba(255, 255, 255, 0)" }}
+            size={28}
+            style={styles.toogle}
           />
         </TouchableOpacity>
       </View>
@@ -153,13 +154,20 @@ const styles = StyleSheet.create({
     width: screenWidth,
     height: 500,
   },
-  toogleContainer: {
+  headerContainer: {
     position: "absolute",
+  },
+  toogleContainer: {
+    top: 50,
+    left: 5,
     backgroundColor: "rgba(255, 255, 255, 0)",
+    alignSelf: "flex-start",
   },
   toogle: {
-    top: 30,
-    left: 5,
+    width: 200,
+    height: 200,
+    justifyContent: "center",
+    alignItems: "center",
   },
   resultItem: {
     backgroundColor: "#ffffff",
