@@ -32,7 +32,7 @@ function selectAdId() {
 let interstitial: RewardedInterstitialAd | null = null;
 let isRewarded: boolean = true;
 
-export function getReward() {
+export function isRewardedEnd() {
   return isRewarded;
 }
 
@@ -51,6 +51,7 @@ export function rewardInitializeInterstitialAd(
   interstitial.addAdEventListener(RewardedAdEventType.LOADED, () => {
     console.log("Ad Loaded");
     if (isLoadedShow) {
+      rewardedSet(false, setAdClosed);
       interstitial!.show();
     }
     // alert("Ad Loaded");

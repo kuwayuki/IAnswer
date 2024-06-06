@@ -51,3 +51,10 @@ export const checkOverMaxLimit = async (): Promise<boolean> => {
     return true;
   }
 };
+
+export const returnMaxLimit = async (): Promise<void> => {
+  const storedCount = await getLocalStorage(KEY.EXECUTED_COUNT);
+  if (storedCount) {
+    await saveLocalStorage(KEY.EXECUTED_COUNT, parseInt(storedCount, 10) - 1);
+  }
+};

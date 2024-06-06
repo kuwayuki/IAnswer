@@ -45,6 +45,7 @@ import {
   KEY,
   checkOverMaxLimit,
   getLocalStorage,
+  returnMaxLimit,
   saveLocalStorage,
 } from "./utils";
 import * as ImageManipulator from "expo-image-manipulator";
@@ -62,7 +63,7 @@ import {
   TestIds,
 } from "react-native-google-mobile-ads";
 import {
-  getReward,
+  isRewardedEnd,
   rewardInitializeInterstitialAd,
   showRewardInterstitialAd,
 } from "./AdmobRewardInter";
@@ -124,6 +125,62 @@ const CameraScreen: React.FC = () => {
 
     setDisplayExplane(false);
   }, [mode]);
+
+  const [modes, setModes] = useState<number[]>([]); // modes配列のステートを管理する
+  const GeneralPattern = [3, 4, 5, 7];
+  const SubPremiumPattern = [7, 6, 5, 3];
+  const PremiumPattern = [1, 2, 3, 5];
+  useEffect(() => {
+    // 配列が4要素以上にならないように調整し、新しいステートを設定
+    setModes((prevModes) => {
+      const updatedModes =
+        prevModes.length >= 4
+          ? [...prevModes.slice(1), mode]
+          : [...prevModes, mode];
+      return updatedModes;
+    });
+  }, [mode]);
+
+  useEffect(() => {
+    if (modes.length !== 4) return;
+
+    if (GeneralPattern.every((value, index) => value === modes[index])) {
+      Alert.alert("裏コード", "一般モード", [
+        { text: "キャンセル", style: "cancel" },
+        {
+          text: "🤖💻：👨？",
+          onPress: () => {
+            appContextDispatch.setSubPremium(false);
+            appContextDispatch.setPremium(false);
+          },
+        },
+      ]);
+    } else if (
+      SubPremiumPattern.every((value, index) => value === modes[index])
+    ) {
+      Alert.alert("裏コード", "サブプレミアムモード", [
+        { text: "キャンセル", style: "cancel" },
+        {
+          text: "🤖💻：👸？",
+          onPress: () => {
+            appContextDispatch.setSubPremium(true);
+            appContextDispatch.setPremium(false);
+          },
+        },
+      ]);
+    } else if (PremiumPattern.every((value, index) => value === modes[index])) {
+      Alert.alert("裏コード", "プレミアムモード", [
+        { text: "キャンセル", style: "cancel" },
+        {
+          text: "🤖💻：👑？",
+          onPress: () => {
+            appContextDispatch.setSubPremium(false);
+            appContextDispatch.setPremium(true);
+          },
+        },
+      ]);
+    }
+  }, [modes, appContextDispatch]);
 
   function toggleCameraFacing() {
     setFacing((current) => (current === "back" ? "front" : "back"));
@@ -245,9 +302,12 @@ const CameraScreen: React.FC = () => {
   };
 
   const uploadPhoto = async (_photoUri?: string) => {
+    const isGeneral =
+      !appContextState.isPremium && !appContextState.isSubPremium;
+
     try {
-      // 最大回数を超えている場合は戻る
-      if (await checkOverMaxLimit()) return;
+      // プレミアム会員ではなくて、最大回数を超えている場合は戻る
+      if (isGeneral && (await checkOverMaxLimit())) return;
 
       setLoading(true);
       // TODO: Google Admob
@@ -273,8 +333,7 @@ const CameraScreen: React.FC = () => {
         console.log(result);
       } catch (error) {
         console.error(JSON.stringify(error, null, 2));
-        alert(JSON.stringify(error, null, 2));
-        alert("S3読み込みに失敗しました。");
+        returnMaxLimit();
         return;
       }
 
@@ -298,9 +357,14 @@ const CameraScreen: React.FC = () => {
       }).response;
       if (apiResponse.statusCode !== 200) {
         alert("API読み込みに失敗しました。");
+        // returnMaxLimit();
         return;
       }
-
+      if (!appContextState.isPremium && !isRewardedEnd()) {
+        alert("動画を中断しました。");
+        // returnMaxLimit();
+        return;
+      }
       const bodyJson = await apiResponse.body.json();
       console.log(bodyJson);
       console.log(typeof bodyJson);

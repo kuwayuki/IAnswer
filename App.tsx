@@ -51,6 +51,7 @@ export type appContextState = {
   isInitialRead: boolean;
   isShowedAdmob: boolean;
   isPremium: boolean;
+  isSubPremium: boolean;
   permission: CameraPermissionResponse | null;
   imagePermission: MediaLibraryPermissionResponse | null;
 };
@@ -63,6 +64,7 @@ export type appContextDispatch = {
   setInitialRead: (isInitialRead: boolean) => void;
   setShowedAdmob: (isShowedAdmob: boolean) => void;
   setPremium: (isPremium: boolean) => void;
+  setSubPremium: (isSubPremium: boolean) => void;
   setPermission: (permission: CameraPermissionResponse) => void;
   setImagePermission: (imagePermission: MediaLibraryPermissionResponse) => void;
   requestPermission: () => Promise<void>;
@@ -124,6 +126,7 @@ const App: React.FC = () => {
   // 広告動画見終わりフラグ
   const [isShowedAdmob, setShowedAdmob] = useState(true);
   const [isPremium, setPremium] = useState(false);
+  const [isSubPremium, setSubPremium] = useState(false);
   const [settingAiType, setSettingAiType] = useState(0);
   const [permission, setPermission] = useState<CameraPermissionResponse | null>(
     null
@@ -251,6 +254,7 @@ const App: React.FC = () => {
       isInitialRead,
       isShowedAdmob,
       isPremium,
+      isSubPremium,
       permission,
       imagePermission,
     }),
@@ -263,6 +267,7 @@ const App: React.FC = () => {
       permission,
       imagePermission,
       isPremium,
+      isSubPremium,
     ]
   );
 
@@ -276,6 +281,7 @@ const App: React.FC = () => {
           setInitialRead,
           setShowedAdmob,
           setPremium,
+          setSubPremium,
           setPermission,
           setImagePermission,
           requestPermission,
