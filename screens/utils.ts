@@ -6,6 +6,13 @@ export const KEY = {
   INITIAL_READ: "INITIAL_READ",
   LAST_EXECUTED_AD: "LAST_EXECUTED_AD",
   EXECUTED_COUNT: "EXECUTED_COUNT",
+  DEBUG_MODE: "DEBUG_MODE",
+};
+
+export const DEBUG_MODE = {
+  GENERAL: 1,
+  SUB_PREMIUM: 2,
+  PREMIUM: 3,
 };
 export const getLocalStorage = async (
   key: string

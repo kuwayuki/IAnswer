@@ -42,6 +42,7 @@ import DropDownPickerAtom from "./DropDownPickerAtom";
 import IconAtom from "./IconAtom";
 import { uploadFile } from "./s3";
 import {
+  DEBUG_MODE,
   KEY,
   checkOverMaxLimit,
   getLocalStorage,
@@ -152,6 +153,7 @@ const CameraScreen: React.FC = () => {
           onPress: () => {
             appContextDispatch.setSubPremium(false);
             appContextDispatch.setPremium(false);
+            saveLocalStorage(KEY.DEBUG_MODE, DEBUG_MODE.GENERAL);
           },
         },
       ]);
@@ -165,6 +167,7 @@ const CameraScreen: React.FC = () => {
           onPress: () => {
             appContextDispatch.setSubPremium(true);
             appContextDispatch.setPremium(false);
+            saveLocalStorage(KEY.DEBUG_MODE, DEBUG_MODE.SUB_PREMIUM);
           },
         },
       ]);
@@ -176,6 +179,7 @@ const CameraScreen: React.FC = () => {
           onPress: () => {
             appContextDispatch.setSubPremium(false);
             appContextDispatch.setPremium(true);
+            saveLocalStorage(KEY.DEBUG_MODE, DEBUG_MODE.PREMIUM);
           },
         },
       ]);

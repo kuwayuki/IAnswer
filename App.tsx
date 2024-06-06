@@ -23,7 +23,12 @@ import {
 } from "expo-tracking-transparency";
 import { Alert, AppState, AppStateStatus, Linking } from "react-native";
 import { PROMPT_TEMPLATES } from "./screens/constant";
-import { KEY, getLocalStorage, saveLocalStorage } from "./screens/utils";
+import {
+  DEBUG_MODE,
+  KEY,
+  getLocalStorage,
+  saveLocalStorage,
+} from "./screens/utils";
 import InitialScreen from "./screens/InitialScreen";
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -222,6 +227,25 @@ const App: React.FC = () => {
     };
     func();
   }, [isAppOpenRead]);
+
+  useEffect(() => {
+    const func = async () => {
+      const debug = await getLocalStorage(KEY.DEBUG_MODE);
+      if (debug) {
+        if (Number(debug) === DEBUG_MODE.GENERAL) {
+          setSubPremium(false);
+          setPremium(false);
+        } else if (Number(debug) === DEBUG_MODE.SUB_PREMIUM) {
+          setSubPremium(true);
+          setPremium(false);
+        } else if (Number(debug) === DEBUG_MODE.PREMIUM) {
+          setSubPremium(false);
+          setPremium(true);
+        }
+      }
+    };
+    func();
+  }, []);
 
   const requestPermission = async () => {
     const cameraPermission = await getCameraPermissionsAsync();
