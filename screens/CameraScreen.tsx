@@ -58,13 +58,8 @@ import {
 import { Buffer } from "buffer";
 // TODO: Google Admob
 import { initializeInterstitialAd, showInterstitialAd } from "./AdmobInter";
+import { BannerAd, BannerAdSize } from "react-native-google-mobile-ads";
 import {
-  BannerAd,
-  BannerAdSize,
-  TestIds,
-} from "react-native-google-mobile-ads";
-import {
-  isRewardedEnd,
   rewardInitializeInterstitialAd,
   showRewardInterstitialAd,
 } from "./AdmobRewardInter";
@@ -88,6 +83,9 @@ const CameraScreen: React.FC = () => {
   const [mode, setMode] = useState<number>(1);
   const [zoom, setZoom] = useState(0);
   const pinchRef = useRef(null);
+
+  const [bodyResult, setBodyResult] = useState<string | null>(null);
+  const [photoUriResult, setPhotoUriResult] = useState<string | null>(null);
 
   const navigation =
     useNavigation<NavigationProp<RootStackParamList, "Camera">>();
@@ -114,6 +112,23 @@ const CameraScreen: React.FC = () => {
       }
     })();
   }, []);
+
+  // 結果画面へ遷移処理
+  useEffect(() => {
+    if (!bodyResult || !photoUriResult) return;
+    // 広告をまだ見てない場合は待機
+    if (!appContextState.isPremium && appContextState.isShowedAdmob === null)
+      return;
+
+    if (appContextState.isPremium || appContextState.isShowedAdmob) {
+      navigation.navigate("Result", {
+        result: bodyResult,
+        uri: photoUriResult,
+      });
+      setBodyResult(null);
+      setPhotoUriResult(null);
+    }
+  }, [bodyResult, photoUriResult, appContextState.isShowedAdmob]);
 
   useEffect(() => {
     if (mode === 0) return;
@@ -364,11 +379,6 @@ const CameraScreen: React.FC = () => {
         // returnMaxLimit();
         return;
       }
-      if (!appContextState.isPremium && !isRewardedEnd()) {
-        alert("動画を中断しました。");
-        // returnMaxLimit();
-        return;
-      }
       const bodyJson = await apiResponse.body.json();
       console.log(bodyJson);
       console.log(typeof bodyJson);
@@ -390,10 +400,8 @@ const CameraScreen: React.FC = () => {
           return;
         }
       }
-      navigation.navigate("Result", {
-        result: body,
-        uri: tmpPhotoUri!,
-      });
+      setBodyResult(body);
+      setPhotoUriResult(tmpPhotoUri);
     } catch (error) {
       console.log(error);
     } finally {

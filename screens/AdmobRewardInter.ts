@@ -30,14 +30,9 @@ function selectAdId() {
 }
 
 let interstitial: RewardedInterstitialAd | null = null;
-let isRewarded: boolean = true;
-
-export function isRewardedEnd() {
-  return isRewarded;
-}
 
 export function rewardInitializeInterstitialAd(
-  setAdClosed: (is: boolean) => void,
+  setAdClosed: (is: boolean | null) => void,
   isLoadedShow?: boolean
 ) {
   // alert("initializeInterstitialAd");
@@ -51,7 +46,7 @@ export function rewardInitializeInterstitialAd(
   interstitial.addAdEventListener(RewardedAdEventType.LOADED, () => {
     console.log("Ad Loaded");
     if (isLoadedShow) {
-      rewardedSet(false, setAdClosed);
+      setAdClosed(null);
       interstitial!.show();
     }
     // alert("Ad Loaded");
@@ -59,19 +54,38 @@ export function rewardInitializeInterstitialAd(
 
   interstitial.addAdEventListener(RewardedAdEventType.EARNED_REWARD, () => {
     console.log("Ad Rewarded");
-    rewardedSet(true, setAdClosed);
+    setAdClosed(true);
     interstitial?.load(); // 広告をリロード
   });
 
   interstitial.addAdEventListener(AdEventType.CLOSED, (error) => {
     console.error("Ad Load Closed: ", error);
+    console.error(JSON.stringify(error, null, 2));
+    setAdClosed(false);
     interstitial?.load(); // 広告をリロード
   });
 
   interstitial.addAdEventListener(AdEventType.ERROR, (error) => {
     console.error("Ad Load Error: ", error);
+    setAdClosed(true);
     interstitial?.load(); // 広告をリロード
   });
+}
+
+/**
+ * ロード済で即時抗告表示したい場合
+ * @param setAdClosed
+ */
+export async function showRewardInterstitialAd(
+  setAdClosed: (is: boolean | null) => void
+) {
+  if (interstitial?.loaded) {
+    setAdClosed(null);
+    interstitial!.show();
+  } else {
+    // 再読み込み&広告表示
+    rewardInitializeInterstitialAd(setAdClosed, true);
+  }
 }
 
 async function waitLoad(): Promise<boolean> {
@@ -87,27 +101,6 @@ async function waitLoad(): Promise<boolean> {
     if (Date.now() - start > loadTimeout) break;
   }
   return false;
-}
-
-/**
- * ロード済で即時抗告表示したい場合
- * @param setAdClosed
- */
-export async function showRewardInterstitialAd(
-  setAdClosed: (is: boolean) => void
-) {
-  if (interstitial?.loaded) {
-    rewardedSet(false, setAdClosed);
-    interstitial!.show();
-  } else {
-    // 再読み込み&広告表示
-    rewardInitializeInterstitialAd(setAdClosed, true);
-  }
-}
-
-function rewardedSet(isRewarded: boolean, setAdClosed: (is: boolean) => void) {
-  setAdClosed(isRewarded);
-  isRewarded = isRewarded;
 }
 
 // /**
