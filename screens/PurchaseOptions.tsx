@@ -54,14 +54,12 @@ const PurchaseOptions: React.FC = () => {
 
   const fetchProducts = async () => {
     try {
-      const offerings = await Purchases.getOfferings();
-      if (offerings.current !== null) {
-        // Offerings が存在する場合、最初のパッケージを取得
-        return offerings.current.availablePackages;
-      }
-      return [];
+      const products = await Purchases.getProducts(
+        pointPacks.map((point) => point.id)
+      );
+      return products;
     } catch (error) {
-      console.error("Error fetching offerings", error);
+      console.error("Error fetching products", error);
       return [];
     }
   };
@@ -69,12 +67,10 @@ const PurchaseOptions: React.FC = () => {
   const purchaseProduct = async (productId: string): Promise<boolean> => {
     try {
       const packages = await fetchProducts();
-      const desiredPackage = packages.find(
-        (p) => p.product.identifier === productId
-      );
-      if (desiredPackage) {
-        await Purchases.purchasePackage(desiredPackage);
-        return true; // 購入が成功したことを示す
+      const desiredProduct = packages.find((p) => p.identifier === productId);
+      if (desiredProduct) {
+        await Purchases.purchaseStoreProduct(desiredProduct);
+        return true;
       }
     } catch (error: any) {
       if (!error.userCancelled) {
