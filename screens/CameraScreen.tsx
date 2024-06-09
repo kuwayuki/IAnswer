@@ -13,6 +13,7 @@ import React, {
   useRef,
   useState,
 } from "react";
+import * as StoreReview from "expo-store-review";
 import {
   ActivityIndicator,
   Alert,
@@ -44,7 +45,9 @@ import { uploadFile } from "./s3";
 import {
   DEBUG_MODE,
   KEY,
+  pointsChange,
   checkOverMaxLimit,
+  checkOverMaxLimitPoints,
   getLocalStorage,
   returnMaxLimit,
   saveLocalStorage,
@@ -56,6 +59,7 @@ import {
   requestMediaLibraryPermissionsAsync,
 } from "expo-image-picker";
 import { Buffer } from "buffer";
+import ConfirmDialog from "./ConfirmDialog";
 // TODO: Google Admob
 import { initializeInterstitialAd, showInterstitialAd } from "./AdmobInter";
 import { BannerAd, BannerAdSize } from "react-native-google-mobile-ads";
@@ -87,6 +91,8 @@ const CameraScreen: React.FC = () => {
   const [bodyResult, setBodyResult] = useState<string | null>(null);
   const [photoUriResult, setPhotoUriResult] = useState<string | null>(null);
 
+  const [visible, setVisible] = useState(false);
+
   const navigation =
     useNavigation<NavigationProp<RootStackParamList, "Camera">>();
 
@@ -108,7 +114,7 @@ const CameraScreen: React.FC = () => {
       if (!appContextState.isPremium) {
         // TODO: Google Admob
         rewardInitializeInterstitialAd(appContextDispatch.setShowedAdmob);
-        // initializeInterstitialAd(appContextDispatch.setShowedAdmob);
+        initializeInterstitialAd(appContextDispatch.setShowedAdmob);
       }
     })();
   }, []);
@@ -116,6 +122,7 @@ const CameraScreen: React.FC = () => {
   // 結果画面へ遷移処理
   useEffect(() => {
     if (!bodyResult || !photoUriResult) return;
+
     // 広告をまだ見てない場合は待機
     if (!appContextState.isPremium && appContextState.isShowedAdmob === null)
       return;
@@ -168,6 +175,7 @@ const CameraScreen: React.FC = () => {
           onPress: () => {
             appContextDispatch.setSubPremium(false);
             appContextDispatch.setPremium(false);
+            pointsChange(5);
             saveLocalStorage(KEY.DEBUG_MODE, DEBUG_MODE.GENERAL);
           },
         },
@@ -224,16 +232,8 @@ const CameraScreen: React.FC = () => {
       Image.getSize(photo!.uri, (width, height) => {
         setImageSize({ width, height });
       });
-      Alert.alert("写真を送信", "この写真を送信しますか？", [
-        {
-          text: "キャンセル",
-          style: "cancel",
-          onPress: () => {
-            setPhotoUri(null);
-          },
-        },
-        { text: "送信", onPress: () => uploadPhoto(photo!.uri) },
-      ]);
+      // 確認ダイアログの表示
+      setVisible(true);
     }
   };
 
@@ -304,33 +304,47 @@ const CameraScreen: React.FC = () => {
       Image.getSize(url, (width, height) => {
         setImageSize({ width, height });
       });
-      Alert.alert("写真を送信", "この写真を送信しますか？", [
-        {
-          text: "キャンセル",
-          style: "cancel",
-          onPress: () => {
-            setPhotoUri(null);
-          },
-        },
-        {
-          text: "送信",
-          onPress: () => uploadPhoto(pickerResult.assets[0].uri),
-        },
-      ]);
+      // 確認ダイアログの表示
+      setVisible(true);
     }
   };
 
-  const uploadPhoto = async (_photoUri?: string) => {
-    const isGeneral =
-      !appContextState.isPremium && !appContextState.isSubPremium;
+  const storeReview = async () => {
+    try {
+      if (await StoreReview.hasAction()) {
+        // alert("評価で★５を付けると、１回分のチケットが付与されます。");
+        await StoreReview.requestReview();
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
+  const uploadPhoto = async (_photoUri?: string, isPointUse = false) => {
     try {
       // プレミアム会員ではなくて、最大回数を超えている場合は戻る
-      if (isGeneral && (await checkOverMaxLimit())) return;
+      if (
+        (!isPointUse && (await checkOverMaxLimit())) ||
+        (isPointUse && (await checkOverMaxLimitPoints()))
+      ) {
+        if (!isPointUse) await storeReview();
+        Alert.alert(
+          isPointUse ? "チケットが足りません" : "今日の上限を超えています",
+          "チケットを購入しますか？",
+          [
+            { text: "キャンセル", style: "cancel" },
+            {
+              text: "購入する",
+              onPress: () => navigation.navigate("Setting"),
+            },
+          ]
+        );
+        return;
+      }
 
       setLoading(true);
-      // TODO: Google Admob
-      if (!appContextState.isPremium) {
+      if (!isPointUse) {
+        // TODO: Google Admob
         showRewardInterstitialAd(appContextDispatch.setShowedAdmob);
       }
       let tmpPhotoUri = _photoUri ?? photoUri;
@@ -391,17 +405,19 @@ const CameraScreen: React.FC = () => {
       // console.log(bodyJson as ApiResponseType);
 
       if (typeof body === "string") {
-        const formattedResult = body.replace(/'/g, '"'); // シングルクォートをダブルクォートに変換
+        // const formattedResult = body.replace(/'/g, '"'); // シングルクォートをダブルクォートに変換
+        // console.log(formattedResult);
         try {
-          body = JSON.parse(formattedResult);
+          body = JSON.parse(body);
         } catch (error) {
           console.error(error);
-          alert("解析できませんでした。");
-          return;
+          // alert("解析できませんでした。");
+          // return;
         }
       }
       setBodyResult(body);
       setPhotoUriResult(tmpPhotoUri);
+      if (isPointUse) await pointsChange(-1);
     } catch (error) {
       console.log(error);
     } finally {
@@ -476,14 +492,14 @@ const CameraScreen: React.FC = () => {
             </View>
           )}
           {CameraOrView(
-            mode === PROMPT_TEMPLATES.FASSION.No ? (
-              <TouchableOpacity
-                style={styles.toogleFacing}
-                onPress={toggleCameraFacing}
-              >
-                <IconAtom name="camera-reverse" type="ionicon" size={20} />
-              </TouchableOpacity>
-            ) : undefined
+            // mode === PROMPT_TEMPLATES.FASSION.No ? (
+            <TouchableOpacity
+              style={styles.toogleFacing}
+              onPress={toggleCameraFacing}
+            >
+              <IconAtom name="camera-reverse" type="ionicon" size={20} />
+            </TouchableOpacity>
+            // ) : undefined
           )}
           <TouchableOpacity
             style={styles.toogle}
@@ -509,16 +525,23 @@ const CameraScreen: React.FC = () => {
             ></TouchableOpacity>
           </View>
           <View style={styles.galleryButtonContainer}>
-            <TouchableOpacity
-              style={styles.galleryButton}
-              onPress={openImagePickerAsync}
-            >
+            <TouchableOpacity onPress={openImagePickerAsync}>
               <IconAtom
                 name="picture"
                 type="simple-line-icon"
                 style={styles.galleryButtonText}
                 size={24}
                 onPress={openImagePickerAsync}
+              />
+            </TouchableOpacity>
+          </View>
+          <View style={styles.settingButtonContainer}>
+            <TouchableOpacity onPress={() => navigation.navigate("Setting")}>
+              <IconAtom
+                name="settings"
+                type="material"
+                size={19}
+                style={styles.settingButtonText}
               />
             </TouchableOpacity>
           </View>
@@ -550,6 +573,22 @@ const CameraScreen: React.FC = () => {
           size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
         />
       )}
+      {ConfirmDialog({
+        visible,
+        setVisible,
+        onClickMain: async () => {
+          setVisible(false);
+          await uploadPhoto(undefined, true);
+        },
+        onClickSub: async () => {
+          setVisible(false);
+          await uploadPhoto(undefined, false);
+        },
+        onClickCancel: async () => {
+          setPhotoUri(null);
+          setVisible(false);
+        },
+      })}
     </View>
   );
 };
@@ -648,8 +687,21 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: 85,
   },
-  galleryButton: {},
   galleryButtonText: {
+    fontSize: 32,
+    width: 200,
+    height: 200,
+    top: 4,
+    left: 6,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  settingButtonContainer: {
+    position: "absolute",
+    bottom: 93,
+    right: 20,
+  },
+  settingButtonText: {
     fontSize: 32,
     width: 200,
     height: 200,

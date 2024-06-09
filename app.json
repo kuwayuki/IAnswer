@@ -2,9 +2,9 @@
   "expo": {
     "name": "IAnswer",
     "slug": "IAnswer",
-    "version": "1.0.16",
+    "version": "1.0.18",
     "ios": {
-      "buildNumber": "16",
+      "buildNumber": "18",
       "supportsTablet": true,
       "config": {
         "googleMobileAdsAppId": "ca-app-pub-2103807205659646~3048157861"
@@ -34,7 +34,8 @@
         {
           "photosPermission": "保存済みの写真を解析するために写真ライブラリへのアクセスが必要です。"
         }
-      ]
+      ],
+      "expo-secure-store"
     ],
     "orientation": "portrait",
     "icon": "./assets/icon.png",

@@ -62,3 +62,9 @@ eas submit --latest -p ios
 eas update --branch production --message "Bug Fixed"
 
 LOG ["3840x2160", "1920x1080", "1280x720", "640x480", "352x288", "Photo", "High", "Medium", "Low"]
+
+1000Token
+= 0.02 = 0.005 + 0.015
+
+Revenue
+https://app.revenuecat.com/overview

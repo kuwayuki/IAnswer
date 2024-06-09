@@ -124,7 +124,8 @@ export const PROMPT_TEMPLATES = {
     Explane:
       "コーディネートを撮影してください。\r\n各ファッションに関しての評価を行います。",
     ShortExplane: "ファッションを評価します",
-    PromptUser: `あなたはプロのファッションデザイナーです。全体的なファッションセンスを解析して、厳しめの評価してください。titleには服の種類（パンツ、靴など）、bodyには服の詳細の種類（サンダル、スニーカーなど）、answerには良い、悪いなどの概要評価、explanationには改善点、resultにはnullをお願いします。最初の配列にはtitleには「総評」、bodyには点数（100点満点）、answerには良い、悪いなどの概要評価、explanationには${DETAIL_OR_EASY}改善点、resultはnullでお願いします。`,
+    PromptUser: `あなたはプロのファッションデザイナーです。全体的なファッションセンスから厳しめに評価してください。titleには「総評」、bodyには点数（100点満点）、answerには良い、悪いなどの概要評価、explanationには${DETAIL_OR_EASY}改善点、resultはnullでお願いします。`,
+    // PromptUser: `あなたはプロのファッションデザイナーです。全体的なファッションセンスを解析して、厳しめの評価してください。titleには服の種類（パンツ、靴など）、bodyには服の詳細の種類（サンダル、スニーカーなど）、answerには良い、悪いなどの概要評価、explanationには改善点、resultにはnullをお願いします。最初の配列にはtitleには「総評」、bodyには点数（100点満点）、answerには良い、悪いなどの概要評価、explanationには${DETAIL_OR_EASY}改善点、resultはnullでお願いします。`,
   } as PROMPT_TEMPLATE,
   RECEPI: {
     No: 4,
@@ -183,5 +184,48 @@ export const PROMPT_TEMPLATES = {
     Explane: "植物を撮影してください。\r\n植物の状態を評価します。",
     ShortExplane: "植物の状態を診断します",
     PromptUser: `画像は植物です。解析して、状態を確認してください。titleには植物名称、bodyには良し悪しの概要、answerには${DETAIL_OR_EASY}植物の状態、explanationには${DETAIL_OR_EASY}ケアの方法、resultにはnullをお願いします。`,
+  } as PROMPT_TEMPLATE,
+  FACE_REVIEW: {
+    No: 8,
+    AppName: "IAnswerFace",
+    Title: "顔診断モード",
+    Icon: () =>
+      IconAtom({
+        ...COMMON_ICON_PROPS,
+        name: "face-retouching-natural",
+        type: "material",
+      } as IconProps),
+    Explane:
+      "顔を撮影してください。\r\nイケメン、美人度などを点数評価します。AIの独断で採点したものなので、気にしないでください。",
+    ShortExplane: "顔を採点します",
+    PromptUser: `画像は顔です。顔が整っているか、イケメン、美人、可愛いなどを基準に厳しめに点数評価してください。titleには「評価」、bodyには点数（100点満点）、answerには良い、悪いなどの概要評価、explanationには${DETAIL_OR_EASY}評価と説明、resultはnullでお願いします。`,
+  } as PROMPT_TEMPLATE,
+  HAIR_REVIEW: {
+    No: 9,
+    AppName: "IAnswerHair",
+    Title: "髪型診断モード",
+    Icon: () =>
+      IconAtom({
+        ...COMMON_ICON_PROPS,
+        name: "face-man-profile",
+        type: "material-community",
+      } as IconProps),
+    Explane: "顔を撮影してください。\r\n髪型のセットを点数評価します。",
+    ShortExplane: "髪型のセットを採点します",
+    PromptUser: `画像は顔です。髪型が顔にあっているか厳しめに評価してください。titleには「評価」、bodyには点数（100点満点）、answerには良い、悪いなどの概要評価、explanationには${DETAIL_OR_EASY}改善点と説明、resultはnullでお願いします。`,
+  } as PROMPT_TEMPLATE,
+  MAKE_REVIEW: {
+    No: 10,
+    AppName: "IAnswerFace",
+    Title: "メイク診断モード",
+    Icon: () =>
+      IconAtom({
+        ...COMMON_ICON_PROPS,
+        name: "face-woman-outline",
+        type: "material-community",
+      } as IconProps),
+    Explane: "顔を撮影してください。\r\nメイクセットを点数評価します。",
+    ShortExplane: "メイクセットを採点します",
+    PromptUser: `画像は顔です。メイクセットが顔にあっているか厳しめに評価してください。titleには「評価」、bodyには点数（100点満点）、answerには良い、悪いなどの概要評価、explanationには${DETAIL_OR_EASY}改善点と説明、resultはnullでお願いします。`,
   } as PROMPT_TEMPLATE,
 };

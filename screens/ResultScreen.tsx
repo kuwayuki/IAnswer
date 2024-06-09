@@ -76,7 +76,9 @@ const ResultScreen: React.FC = () => {
       </View>
     );
   };
-  const getImageStyle = (imageSize: { width: number; height: number }) => {
+  const getImageStyle = (imageSize?: { width: number; height: number }) => {
+    console.log("getImageStyle");
+    console.log(imageSize);
     if (!imageSize) {
       return styles.preview;
     }

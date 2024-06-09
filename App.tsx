@@ -30,6 +30,8 @@ import {
   saveLocalStorage,
 } from "./screens/utils";
 import InitialScreen from "./screens/InitialScreen";
+import SettingScreen from "./screens/SettingScreen";
+import PurchaseOptions from "./screens/PurchaseOptions";
 
 const Stack = createStackNavigator<RootStackParamList>();
 // ナビゲーションのパラメータ型を定義
@@ -40,6 +42,8 @@ export type RootStackParamList = {
     result: any;
     uri: string;
   };
+  Setting: undefined;
+  Purchase: undefined;
 };
 
 export type ResultScreenNavigationProp = StackNavigationProp<
@@ -323,13 +327,23 @@ const App: React.FC = () => {
             <Stack.Screen
               name="Camera"
               component={CameraScreen}
-              options={{ headerShown: false }}
+              options={{ headerShown: false, title: "カメラ" }}
             />
             <Stack.Screen
               name="Result"
               component={ResultScreen}
-              options={{ headerShown: false }}
+              options={{ headerShown: false, title: "結果" }}
             />
+            <Stack.Screen
+              name="Setting"
+              component={SettingScreen}
+              options={{ title: "設定" }}
+            />
+            {/* <Stack.Screen
+              name="Purchase"
+              component={PurchaseOptions}
+              options={{ headerShown: false }}
+            /> */}
           </Stack.Navigator>
         </NavigationContainer>
       </AppContextDispatch.Provider>
