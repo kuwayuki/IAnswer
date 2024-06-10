@@ -175,7 +175,6 @@ const CameraScreen: React.FC = () => {
           onPress: () => {
             appContextDispatch.setSubPremium(false);
             appContextDispatch.setPremium(false);
-            pointsChange(5);
             saveLocalStorage(KEY.DEBUG_MODE, DEBUG_MODE.GENERAL);
           },
         },
@@ -203,6 +202,7 @@ const CameraScreen: React.FC = () => {
             appContextDispatch.setSubPremium(false);
             appContextDispatch.setPremium(true);
             saveLocalStorage(KEY.DEBUG_MODE, DEBUG_MODE.PREMIUM);
+            pointsChange(5);
           },
         },
       ]);
@@ -312,8 +312,9 @@ const CameraScreen: React.FC = () => {
   const storeReview = async () => {
     try {
       if (await StoreReview.hasAction()) {
-        // alert("評価で★５を付けると、１回分のチケットが付与されます。");
+        alert("評価で★５を付けて頂けると、１回分のチケットが付与されます。");
         await StoreReview.requestReview();
+        await pointsChange(1);
       }
     } catch (error) {
       console.log(error);

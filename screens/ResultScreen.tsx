@@ -42,7 +42,11 @@ const ResultScreen: React.FC = () => {
     const size = Image.getSize(uri, (width, height) => {
       return { width, height };
     });
-    setImageSize(getImageStyle(size));
+    try {
+      setImageSize(getImageStyle(size));
+    } catch (error) {
+      setImageSize(getImageStyle(size));
+    }
   }, [uri]);
 
   if (!Array.isArray(result))

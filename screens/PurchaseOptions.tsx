@@ -28,7 +28,7 @@ type PointPack = {
 // 1回5円ほど...10:50, 100: 500
 const pointPacks: PointPack[] = [
   { id: "price_1", points: 3, price: 100 }, // 14 (+50)
-  { id: "price_2", points: 10, price: 300, bonusPoints: 2 }, // 42 (+160)
+  { id: "price_2", points: 10, price: 300, bonusPoints: 1 }, // 42 (+160)
   { id: "price_3", points: 20, price: 500, bonusPoints: 5 }, // 70 (+250)
   { id: "price_4", points: 45, price: 1000, bonusPoints: 15 }, // 140 (+490)
   { id: "price_5", points: 100, price: 2000, bonusPoints: 40 }, // 280 (+900)
