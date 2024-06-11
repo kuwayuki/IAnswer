@@ -1,0 +1,109 @@
+{
+  "propmpt_system": "Por favor, retorne apenas um array. O formato deve ser JSON como {No: 1, title: 'Pergunta 1', body: '1 + 1', answer: '2', explanation: '1 + 1 = 2.', result: true}.",
+  "custom_prompt_user": "A imagem é de {{name}}. Por favor, analise e retorne {{result}}. Para título, use '{{title}}'; para corpo, use '{{body}}'; para resposta, use '{{answer}}'; para explicação, use '{{explanation}}'; e para resultado, use null.",
+  "detail_or_easy": "conciso",
+  "all": "Tudo",
+  "camera": "Câmera",
+  "result": "Resultado",
+  "settings": "Configurações",
+  "test_answer_mode": "Modo de Resposta de Teste",
+  "translate_mode": "Modo de Tradução",
+  "fashion_check_mode": "Modo de Verificação de Moda",
+  "recipe_mode": "Modo de Receita",
+  "calory_mode": "Modo de Calorias",
+  "trash_separation_mode": "Modo de Separação de Lixo",
+  "plant_care_mode": "Modo de Cuidado de Plantas",
+  "face_diagnosis_mode": "Modo de Diagnóstico Facial",
+  "hair_diagnosis_mode": "Modo de Diagnóstico de Cabelo",
+  "makeup_diagnosis_mode": "Modo de Diagnóstico de Maquiagem",
+  "prompt_user_descriptions": {
+    "test": "A imagem é de uma folha de teste. Por favor, analise as perguntas e retorne os resultados. Para título, use o título da pergunta; para corpo, use o texto da pergunta; para resposta, forneça a resposta; para explicação, dê uma explicação {{detail_or_easy}} da solução; para resultado, indique se está correto ou não. Se a resposta não for fornecida, marque como incorreto.",
+    "translate": "A imagem está em uma língua estrangeira. Por favor, analise e traduza para o japonês. Para título, use 'Resultado da Tradução'; para corpo, use o texto estrangeiro; para resposta, forneça a tradução {{detail_or_easy}}; para explicação, use null; para resultado, use null.",
+    "fashion": "Você é um designer de moda profissional. Por favor, avalie estritamente o senso de moda geral. Para título, use 'Avaliação Geral'; para corpo, forneça uma pontuação (de 100); para resposta, forneça uma avaliação geral, como bom ou ruim; para explicação, forneça pontos de melhoria {{detail_or_easy}}; para resultado, use null.",
+    "recipe": "A imagem é de ingredientes. Por favor, use alguns ou todos eles para criar uma receita. Para título, use o nome do prato; para corpo, liste os ingredientes; para resposta, forneça a receita; para explicação, dê uma explicação {{detail_or_easy}} do prato; para resultado, use null.",
+    "calory": "A imagem é de comida ou ingredientes. Por favor, analise e retorne a contagem de calorias. Para título, use 'Total de Calorias'; para corpo, use null; para resposta, forneça a contagem de calorias; para explicação, dê uma explicação {{detail_or_easy}} das calorias; para resultado, use null.",
+    "trash": "A imagem é de lixo. Por favor, analise e retorne o tipo de lixo. Para título, use o nome; para corpo, use null; para resposta, forneça o tipo de lixo; para explicação, forneça uma explicação {{detail_or_easy}}; para resultado, use null.",
+    "plants": "A imagem é de uma planta. Por favor, analise e verifique sua condição. Para título, use o nome da planta; para corpo, forneça uma avaliação geral de sua condição; para resposta, forneça o estado {{detail_or_easy}} da planta; para explicação, forneça instruções de cuidados {{detail_or_easy}}; para resultado, use null.",
+    "face_review": "A imagem é de um rosto. Por favor, avalie estritamente sua atratividade com base em critérios como bonito, lindo, fofo, etc., e dê uma pontuação. Para título, use 'Avaliação'; para corpo, forneça uma pontuação (de 100); para resposta, forneça uma avaliação geral, como bom ou ruim; para explicação, forneça uma avaliação e explicação {{detail_or_easy}}; para resultado, use null.",
+    "hair_review": "A imagem é de um rosto. Por favor, avalie estritamente como o penteado combina com o rosto. Para título, use 'Avaliação'; para corpo, forneça uma pontuação (de 100); para resposta, forneça uma avaliação geral, como bom ou ruim; para explicação, forneça pontos de melhoria e explicação {{detail_or_easy}}; para resultado, use null.",
+    "makeup_review": "A imagem é de um rosto. Por favor, avalie estritamente como a maquiagem combina com o rosto. Para título, use 'Avaliação'; para corpo, forneça uma pontuação (de 100); para resposta, forneça uma avaliação geral, como bom ou ruim; para explicação, forneça pontos de melhoria e explicação {{detail_or_easy}}; para resultado, use null."
+  },
+  "explane": {
+    "test": "Por favor, tire uma foto da folha de teste. Vamos fornecer explicações e respostas. É limitado às cinco matérias do nível fundamental, mas alguns símbolos em matemática podem não ser legíveis.",
+    "translate": "Por favor, tire uma foto do texto em língua estrangeira. Vamos traduzi-lo. Devido à precisão da IA, pode não estar sempre correto.",
+    "fashion": "Por favor, tire uma foto do seu traje. Vamos avaliar cada item de moda.",
+    "recipe": "Por favor, tire uma foto dos ingredientes. Vamos criar uma receita usando os ingredientes.",
+    "calory": "Por favor, tire uma foto da comida. Vamos calcular as calorias. Devido a possíveis imprecisões na medição de distância e tamanho, pode não estar sempre correto.",
+    "trash": "Por favor, tire uma foto do lixo. Vamos separar o lixo. Siga as regras do seu governo local para os dias de coleta.",
+    "plants": "Por favor, tire uma foto da planta. Vamos avaliar sua condição.",
+    "face_review": "Por favor, tire uma foto do seu rosto. Vamos avaliá-lo com base em critérios como bonito, lindo, fofo, etc. Esta é uma avaliação de IA, então, por favor, não leve a sério.",
+    "hair_review": "Por favor, tire uma foto do seu rosto. Vamos avaliar o seu penteado.",
+    "makeup_review": "Por favor, tire uma foto do seu rosto. Vamos avaliar a sua maquiagem."
+  },
+  "short_explane": {
+    "test": "Vamos dizer as respostas às perguntas.",
+    "translate": "Vamos traduzir a língua estrangeira.",
+    "fashion": "Vamos avaliar a sua moda.",
+    "recipe": "Vamos criar uma receita usando os ingredientes.",
+    "calory": "Vamos calcular as calorias da comida.",
+    "trash": "Vamos separar o lixo.",
+    "plants": "Vamos diagnosticar a condição da planta.",
+    "face_review": "Vamos avaliar o seu rosto.",
+    "hair_review": "Vamos avaliar o seu penteado.",
+    "makeup_review": "Vamos avaliar a sua maquiagem."
+  },
+  "instructions": {
+    "part1": "Instruções",
+    "part2": "Tire uma foto, e a IA responderá.",
+    "part3": "Use para respostas de testes, tradução de línguas estrangeiras, verificação de moda, criação de receitas a partir de ingredientes, cálculo de calorias dos alimentos, separação de lixo, cuidado de plantas e muito mais, de acordo com suas necessidades de estilo de vida.",
+    "part4": "Nota: As respostas da IA podem não estar sempre corretas.",
+    "part5": "Além disso, o uso indevido é estritamente proibido."
+  },
+  "permissions": {
+    "camera_required": "Permissão de câmera é necessária.",
+    "camera_usage": "Este aplicativo requer acesso à câmera para tirar fotos. Por favor, altere as permissões nas configurações."
+  },
+  "actions": {
+    "cancel": "Cancelar",
+    "go_to_settings": "Ir para Configurações",
+    "analysis_result": "Resultado da Análise",
+    "answer": "Resposta",
+    "explanation": "Explicação",
+    "ticket": "Bilhete",
+    "purchase_ticket": "O {{NAME}} comprado pode ser usado além do limite diário de uso de IA. Além disso, os anúncios não serão exibidos, para que você possa ver os resultados mais rapidamente.",
+    "ticket_note": "Nota: Ao consumir {{NAME}}, os anúncios em vídeo não aparecerão, mas pode levar algum tempo para analisar.",
+    "bonus": "Bônus"
+  },
+  "subscription": {
+    "per_month": "/mês"
+  },
+  "legal": {
+    "terms_of_use": "Termos de Uso",
+    "privacy_policy": "Política de Privacidade"
+  },
+  "search": {
+    "filter": "Filtro de Pesquisa",
+    "select_item": "Selecionar Item"
+  },
+  "analysis": {
+    "analyze_image": "Analisar Imagem",
+    "use_ticket_for_analysis": "Usar Bilhete para Análise",
+    "number_of_tickets": "Número de Bilhetes",
+    "watch_ad_for_analysis": "Assistir Anúncio para Análise"
+  },
+  "permissions_alerts": {
+    "image_view_permission": "Permissão de Visualização de Imagem Necessária",
+    "refer_permission": "Permissão necessária para referenciar. Por favor, altere as permissões nas configurações."
+  },
+  "rewards": {
+    "five_star_rating": "Se você der uma avaliação de 5 estrelas, receberá um bilhete."
+  },
+  "errors": {
+    "not_enough_tickets": "Bilhetes insuficientes.",
+    "daily_limit_exceeded": "Você excedeu o limite de hoje.",
+    "purchase_tickets": "Gostaria de comprar bilhetes?",
+    "purchase": "Comprar",
+    "api_load_failed": "Falha ao carregar API.",
+    "analyzing": "Analisando..."
+  }
+}

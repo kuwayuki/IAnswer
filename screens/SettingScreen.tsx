@@ -1,22 +1,7 @@
-import {
-  NavigationProp,
-  useNavigation,
-  useRoute,
-} from "@react-navigation/native";
-import React, { useContext, useState } from "react";
-import {
-  Dimensions,
-  ScrollView,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-} from "react-native";
-import {
-  AppContextState,
-  ResultScreenRouteProp,
-  RootStackParamList,
-} from "../App";
-import IconAtom from "./IconAtom";
+import { NavigationProp, useNavigation } from "@react-navigation/native";
+import React, { useContext } from "react";
+import { Dimensions, ScrollView, StyleSheet, View } from "react-native";
+import { AppContextState, RootStackParamList } from "../App";
 import PurchaseOptions from "./PurchaseOptions";
 
 const { width: screenWidth } = Dimensions.get("window");

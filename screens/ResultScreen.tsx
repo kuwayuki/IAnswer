@@ -23,6 +23,7 @@ import IconAtom from "./IconAtom";
 import { BANNER_UNIT_ID } from "./constant";
 // TODO: Google Admob
 import { BannerAd, BannerAdSize } from "react-native-google-mobile-ads";
+import { i18n } from "./locales/i18n";
 
 const { width: screenWidth } = Dimensions.get("window");
 const ResultScreen: React.FC = () => {
@@ -52,7 +53,10 @@ const ResultScreen: React.FC = () => {
   if (!Array.isArray(result))
     return (
       <View style={styles.container}>
-        <Text style={styles.resultItem}>解析結果: {result}</Text>
+        <Text style={styles.resultItem}>
+          {i18n.t("actions.analysis_result")}
+          {result}
+        </Text>
       </View>
     );
 
@@ -70,13 +74,16 @@ const ResultScreen: React.FC = () => {
         {item.body && <Text style={styles.body}>{item.body}</Text>}
         {item.answer && (
           <Text style={item.result ? styles.answer : styles.answer_failed}>
-            回答: {item.answer}
+            {i18n.t("actions.answer")}
+            {item.answer}
           </Text>
         )}
         {item.explanation && (
-          <Text style={styles.explanation}>解説: {item.explanation}</Text>
+          <Text style={styles.explanation}>
+            {i18n.t("actions.explanation")}
+            {item.explanation}
+          </Text>
         )}
-        {/* <Text style={styles.result}>結果: {item.result ? "〇" : "×"}</Text> */}
       </View>
     );
   };

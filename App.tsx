@@ -6,6 +6,7 @@ import {
 import { Amplify } from "aws-amplify";
 import React, { useEffect, useMemo, useState } from "react";
 import CameraScreen from "./screens/CameraScreen";
+import { getLocales, getCalendars } from "expo-localization";
 import { authenticate } from "./screens/GuestAuth";
 import ResultScreen from "./screens/ResultScreen";
 import Constants from "expo-constants";
@@ -32,6 +33,9 @@ import {
 import InitialScreen from "./screens/InitialScreen";
 import SettingScreen from "./screens/SettingScreen";
 import PurchaseOptions from "./screens/PurchaseOptions";
+import { i18n } from "./screens/locales/i18n";
+// import i18n from "./screens/locales/i18n";
+// import en from "./screens/locales/en/translation.json";
 
 const Stack = createStackNavigator<RootStackParamList>();
 // ナビゲーションのパラメータ型を定義
@@ -149,8 +153,8 @@ const App: React.FC = () => {
       if (!initialRead) {
         saveLocalStorage(KEY.INITIAL_READ, "true");
         Alert.alert(
-          "利用方法",
-          "写真を撮影すると、AIが回答してくれます。\r\nテストの回答、外国語の翻訳、ファッションチェック、食材からレシピの考案、料理のカロリー計算、ゴミの分別、植物のケア方法など使用したいライフスタイルに応じてご利用ください。\r\n\r\n注意：AIの回答はすべてが正しいというわけではありません。\r\nまた、悪用は厳禁でお願いします。",
+          i18n.t("instructions.part1"),
+          i18n.t("instructions.part2"),
           [
             {
               text: "OK",
@@ -260,12 +264,12 @@ const App: React.FC = () => {
         setPermission(tmpPermission);
       } else {
         Alert.alert(
-          "カメラの許可が必要です",
-          "このアプリでカメラを使用するには、カメラの許可が必要です。設定画面で許可を変更してください。",
+          i18n.t("permissions.camera_required"),
+          i18n.t("permissions.camera_usage"),
           [
-            { text: "キャンセル", style: "cancel" },
+            { text: i18n.t("actions.cancel"), style: "cancel" },
             {
-              text: "設定画面へ",
+              text: i18n.t("actions.go_to_settings"),
               onPress: () => Linking.openURL("app-settings:"),
             },
           ]
@@ -327,17 +331,17 @@ const App: React.FC = () => {
             <Stack.Screen
               name="Camera"
               component={CameraScreen}
-              options={{ headerShown: false, title: "カメラ" }}
+              options={{ headerShown: false, title: i18n.t("camera") }}
             />
             <Stack.Screen
               name="Result"
               component={ResultScreen}
-              options={{ headerShown: false, title: "結果" }}
+              options={{ headerShown: false, title: i18n.t("result") }}
             />
             <Stack.Screen
               name="Setting"
               component={SettingScreen}
-              options={{ title: "設定" }}
+              options={{ title: i18n.t("settings") }}
             />
             {/* <Stack.Screen
               name="Purchase"

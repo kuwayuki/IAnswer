@@ -67,6 +67,7 @@ import {
   showRewardInterstitialAd,
 } from "./AdmobRewardInter";
 import { aiAnswer } from "./api";
+import { i18n } from "./locales/i18n";
 
 const { width: screenWidth } = Dimensions.get("window");
 const CameraScreen: React.FC = () => {
@@ -279,12 +280,12 @@ const CameraScreen: React.FC = () => {
         appContextDispatch.setImagePermission(tmpPermission);
       } else {
         Alert.alert(
-          "イメージビューの許可が必要です",
-          "参照するには許可が必要です。設定画面で許可を変更してください。",
+          i18n.t("permissions_alerts.image_view_permission"),
+          i18n.t("permissions_alerts.refer_permission"),
           [
-            { text: "キャンセル", style: "cancel" },
+            { text: i18n.t("actions.cancel"), style: "cancel" },
             {
-              text: "設定画面へ",
+              text: i18n.t("actions.go_to_settings"),
               onPress: () => Linking.openURL("app-settings:"),
             },
           ]
@@ -315,7 +316,7 @@ const CameraScreen: React.FC = () => {
         const isReviewed = getLocalStorage(KEY.INIT_REVIEW);
         if (!isReviewed) {
           await saveLocalStorage(KEY.INIT_REVIEW, "true");
-          alert("評価で★５を付けて頂けると、１回分のチケットが付与されます。");
+          alert(i18n.t("rewards.five_star_rating"));
           await StoreReview.requestReview();
           await pointsChange(1);
         }
@@ -334,12 +335,14 @@ const CameraScreen: React.FC = () => {
       ) {
         if (!isPointUse) await storeReview();
         Alert.alert(
-          isPointUse ? "チケットが足りません" : "今日の上限を超えています",
-          "チケットを購入しますか？",
+          isPointUse
+            ? i18n.t("errors.not_enough_tickets")
+            : i18n.t("errors.daily_limit_exceeded"),
+          i18n.t("errors.purchase_tickets"),
           [
-            { text: "キャンセル", style: "cancel" },
+            { text: i18n.t("actions.cancel"), style: "cancel" },
             {
-              text: "購入する",
+              text: i18n.t("errors.purchase"),
               onPress: () => navigation.navigate("Setting"),
             },
           ]
@@ -387,7 +390,7 @@ const CameraScreen: React.FC = () => {
         prompt!.PromptSystem
       );
       if (apiResponse.statusCode !== 200) {
-        alert("API読み込みに失敗しました。");
+        alert(i18n.t("errors.api_load_failed"));
         // returnMaxLimit();
         return;
       }
@@ -478,7 +481,7 @@ const CameraScreen: React.FC = () => {
           {loading && (
             <View style={styles.loadingContainer}>
               <ActivityIndicator size="large" color="#000000" />
-              <Text>解析中...</Text>
+              <Text>{i18n.t("errors.analyzing")}</Text>
             </View>
           )}
         </>
@@ -512,7 +515,9 @@ const CameraScreen: React.FC = () => {
           </TouchableOpacity>
           {(isDisplayExplane || isOpenDropbox) && prompt?.Explane && (
             <View style={styles.explaneContainer}>
-              <Text style={styles.explaneTitle}>{"説明"}</Text>
+              <Text style={styles.explaneTitle}>
+                {i18n.t("errors.explane")}
+              </Text>
               <Text style={styles.explaneText}>{prompt?.Explane}</Text>
             </View>
           )}

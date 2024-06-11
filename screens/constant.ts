@@ -1,6 +1,7 @@
 import { ReactNode } from "react";
 import IconAtom from "./IconAtom";
 import { IconProps } from "react-native-elements";
+import { i18n } from "./locales/i18n";
 
 export const MAX_LIMIT = {
   ADMOB: 5,
@@ -35,8 +36,7 @@ export type PROMPT_TEMPLATE = {
   Icon?: () => JSX.Element;
 };
 
-const PROPMT_SYSTEM =
-  "必ず配列のみ返却してください。構成は{No: 1, title: '問１', body: '1 + 1', answer: '2', explanation: '1 + 1 = 2 です。', result: true}のJson形式でお願いします。";
+const PROPMT_SYSTEM = i18n.t("propmpt_system");
 
 const CustomPromptUser = (
   name: string,
@@ -46,13 +46,14 @@ const CustomPromptUser = (
   answer?: string,
   explanation?: string
 ) => {
-  return `画像は${name}です。解析して、${result}を返却してください。titleには「${
-    title ? title : "null"
-  }」、bodyには「${body ? body : "null"}」、answerには「${
-    answer ? answer : "null"
-  }」、explanationには「${
-    explanation ? explanation : "null"
-  }」、resultにはnullをお願いします。`;
+  return i18n.t("custom_prompt_user", {
+    name: name,
+    result: result ? result : "null",
+    title: title ? title : "null",
+    body: body ? body : "null",
+    answer: answer ? answer : "null",
+    explanation: explanation ? explanation : "null",
+  });
 };
 const COMMON_ICON_PROPS = {
   style: {
@@ -73,159 +74,171 @@ const COMMON_ICON_PROPS = {
   },
 } as IconProps;
 
-const DETAIL_OR_EASY = "簡潔な";
+const DETAIL_OR_EASY = i18n.t("detail_or_easy");
 export const PROMPT_TEMPLATES = {
   ALL: {
     No: 0,
     AppName: "IAnswer",
-    Title: "全て",
+    Title: i18n.t("all"),
   } as PROMPT_TEMPLATE,
   TEST: {
     No: 1,
     AppName: "IAnswerTest",
-    Title: "テスト回答モード",
+    Title: i18n.t("test_answer_mode"),
     Icon: () =>
       IconAtom({
         ...COMMON_ICON_PROPS,
         name: "book-open-variant",
         type: "material-community",
       } as IconProps),
-    Explane:
-      "問題用紙を撮影してください。解説・回答を行います。\r\n５教科の中学生程度までですが、数学などは読み取れない記号などが存在します。",
-    ShortExplane: "問題の回答を教えます",
-    PromptUser: `画像は問題用紙です。問題文を解析して、結果を返却してください。titleには問題のタイトル、bodyには問題文、answerには答え、explanationには${DETAIL_OR_EASY}問題の解き方、resultには合っているか否かをお願いします。答えが書いてない箇所は否にしてください。`,
+    Explane: i18n.t("explane.test"),
+    ShortExplane: i18n.t("short_explane.test"),
+    PromptUser: i18n.t("prompt_user_descriptions.test", {
+      detail_or_easy: DETAIL_OR_EASY,
+    }),
   } as PROMPT_TEMPLATE,
   TRANSLATE: {
     No: 2,
     AppName: "IAnswerTranslate",
-    Title: "翻訳モード",
+    Title: i18n.t("translate_mode"),
     Icon: () =>
       IconAtom({
         ...COMMON_ICON_PROPS,
         name: "google-translate",
         type: "material-community",
       } as IconProps),
-    Explane:
-      "外国語を撮影してください。\r\n翻訳を行います。AIの精度によるので必ずしも正解しているわけではありません。",
-    ShortExplane: "外国語を翻訳します",
-    PromptUser: `画像は外国語です。解析して、日本語にしてください。titleには「翻訳結果」、bodyには読み取った外国語、answerには${DETAIL_OR_EASY}翻訳結果、explanationにはnull、resultはnullをお願いします。`,
-    // PromptUser: `画像は外国語です。解析して、日本語にしてください。titleには「翻訳結果」、bodyには読み取った外国語、answerには翻訳結果、explanationにはnull、resultにはnullをお願いします。`,
+    Explane: i18n.t("explane.translate"),
+    ShortExplane: i18n.t("short_explane.translate"),
+    PromptUser: i18n.t("prompt_user_descriptions.translate", {
+      detail_or_easy: DETAIL_OR_EASY,
+    }),
   } as PROMPT_TEMPLATE,
   FASSION: {
     No: 3,
     AppName: "IAnswerFassion",
-    Title: "ファッションチェックモード",
+    Title: i18n.t("fashion_check_mode"),
     Icon: () =>
       IconAtom({
         ...COMMON_ICON_PROPS,
         name: "tshirt-v",
         type: "material-community",
       } as IconProps),
-    Explane:
-      "コーディネートを撮影してください。\r\n各ファッションに関しての評価を行います。",
-    ShortExplane: "ファッションを評価します",
-    PromptUser: `あなたはプロのファッションデザイナーです。全体的なファッションセンスから厳しめに評価してください。titleには「総評」、bodyには点数（100点満点）、answerには良い、悪いなどの概要評価、explanationには${DETAIL_OR_EASY}改善点、resultはnullでお願いします。`,
-    // PromptUser: `あなたはプロのファッションデザイナーです。全体的なファッションセンスを解析して、厳しめの評価してください。titleには服の種類（パンツ、靴など）、bodyには服の詳細の種類（サンダル、スニーカーなど）、answerには良い、悪いなどの概要評価、explanationには改善点、resultにはnullをお願いします。最初の配列にはtitleには「総評」、bodyには点数（100点満点）、answerには良い、悪いなどの概要評価、explanationには${DETAIL_OR_EASY}改善点、resultはnullでお願いします。`,
+    Explane: i18n.t("explane.fashion"),
+    ShortExplane: i18n.t("short_explane.fashion"),
+    PromptUser: i18n.t("prompt_user_descriptions.fashion", {
+      detail_or_easy: DETAIL_OR_EASY,
+    }),
   } as PROMPT_TEMPLATE,
   RECEPI: {
     No: 4,
     AppName: "IAnswerRecepi",
-    Title: "レシピモード",
+    Title: i18n.t("recipe_mode"),
     Icon: () =>
       IconAtom({
         ...COMMON_ICON_PROPS,
         name: "silverware-fork-knife",
         type: "material-community",
       } as IconProps),
-    Explane: "食材を撮影してください。\r\n食材からレシピを考案します。",
-    ShortExplane: "食材からレシピを考案します",
-    PromptUser: `画像は食材です。一部または全てを利用してレシピを考案してください。titleには料理名、bodyには材料、answerには作り方、explanationには${DETAIL_OR_EASY}料理の説明、resultにはnullをお願いします。`,
+    Explane: i18n.t("explane.recipe"),
+    ShortExplane: i18n.t("short_explane.recipe"),
+    PromptUser: i18n.t("prompt_user_descriptions.recipe", {
+      detail_or_easy: DETAIL_OR_EASY,
+    }),
   } as PROMPT_TEMPLATE,
   CALORY: {
     No: 5,
     AppName: "IAnswerCalory",
-    Title: "カロリーモード",
+    Title: i18n.t("calory_mode"),
     Icon: () =>
       IconAtom({
         ...COMMON_ICON_PROPS,
         name: "scale",
         type: "material-community",
       } as IconProps),
-    Explane:
-      "料理を撮影してください。\r\nカロリーを計算します。距離や大きさが把握できない可能性があるため、必ずしも正解しているわけではありません。",
-    ShortExplane: "料理のカロリーを算出します",
-    PromptUser: `画像は料理または食材です。解析して、カロリーを返却してください。titleには「総カロリー数」、bodyにはnull、answerにはカロリー数、explanationにはカロリーの${DETAIL_OR_EASY}説明、resultにはnullをお願いします。`,
+    Explane: i18n.t("explane.calory"),
+    ShortExplane: i18n.t("short_explane.calory"),
+    PromptUser: i18n.t("prompt_user_descriptions.calory", {
+      detail_or_easy: DETAIL_OR_EASY,
+    }),
   } as PROMPT_TEMPLATE,
   TRASH: {
     No: 6,
     AppName: "IAnswerTrash",
-    Title: "ゴミ分別モード",
+    Title: i18n.t("trash_separation_mode"),
     Icon: () =>
       IconAtom({
         ...COMMON_ICON_PROPS,
         name: "trash-can",
         type: "material-community",
       } as IconProps),
-    Explane:
-      "ゴミを撮影してください。\r\nゴミの分別を行います。ゴミの収集日に関しては自治体のルールに則ってください。",
-    ShortExplane: "ゴミを分別します",
-    PromptUser: `画像はゴミです。解析して、ごみの種類を返却してください。titleには名称、bodyにはnull、answerにはごみの種類、explanationには${DETAIL_OR_EASY}説明、resultにはnullをお願いします。`,
+    Explane: i18n.t("explane.trash"),
+    ShortExplane: i18n.t("short_explane.trash"),
+    PromptUser: i18n.t("prompt_user_descriptions.trash", {
+      detail_or_easy: DETAIL_OR_EASY,
+    }),
   } as PROMPT_TEMPLATE,
   PLANTS: {
     No: 7,
     AppName: "IAnswerPlants",
-    Title: "植物ケアモード",
+    Title: i18n.t("plant_care_mode"),
     Icon: () =>
       IconAtom({
         ...COMMON_ICON_PROPS,
         name: "flower-tulip",
         type: "material-community",
       } as IconProps),
-    Explane: "植物を撮影してください。\r\n植物の状態を評価します。",
-    ShortExplane: "植物の状態を診断します",
-    PromptUser: `画像は植物です。解析して、状態を確認してください。titleには植物名称、bodyには良し悪しの概要、answerには${DETAIL_OR_EASY}植物の状態、explanationには${DETAIL_OR_EASY}ケアの方法、resultにはnullをお願いします。`,
+    Explane: i18n.t("explane.plants"),
+    ShortExplane: i18n.t("short_explane.plants"),
+    PromptUser: i18n.t("prompt_user_descriptions.plants", {
+      detail_or_easy: DETAIL_OR_EASY,
+    }),
   } as PROMPT_TEMPLATE,
   FACE_REVIEW: {
     No: 8,
     AppName: "IAnswerFace",
-    Title: "顔診断モード",
+    Title: i18n.t("face_diagnosis_mode"),
     Icon: () =>
       IconAtom({
         ...COMMON_ICON_PROPS,
         name: "face-retouching-natural",
         type: "material",
       } as IconProps),
-    Explane:
-      "顔を撮影してください。\r\nイケメン、美人度などを点数評価します。AIの独断で採点したものなので、気にしないでください。",
-    ShortExplane: "顔を採点します",
-    PromptUser: `画像は顔です。顔が整っているか、イケメン、美人、可愛いなどを基準に厳しめに点数評価してください。titleには「評価」、bodyには点数（100点満点）、answerには良い、悪いなどの概要評価、explanationには${DETAIL_OR_EASY}評価と説明、resultはnullでお願いします。`,
+    Explane: i18n.t("explane.face_review"),
+    ShortExplane: i18n.t("short_explane.face_review"),
+    PromptUser: i18n.t("prompt_user_descriptions.face_review", {
+      detail_or_easy: DETAIL_OR_EASY,
+    }),
   } as PROMPT_TEMPLATE,
   HAIR_REVIEW: {
     No: 9,
     AppName: "IAnswerHair",
-    Title: "髪型診断モード",
+    Title: i18n.t("hair_diagnosis_mode"),
     Icon: () =>
       IconAtom({
         ...COMMON_ICON_PROPS,
         name: "face-man-profile",
         type: "material-community",
       } as IconProps),
-    Explane: "顔を撮影してください。\r\n髪型のセットを点数評価します。",
-    ShortExplane: "髪型のセットを採点します",
-    PromptUser: `画像は顔です。髪型が顔にあっているか厳しめに評価してください。titleには「評価」、bodyには点数（100点満点）、answerには良い、悪いなどの概要評価、explanationには${DETAIL_OR_EASY}改善点と説明、resultはnullでお願いします。`,
+    Explane: i18n.t("explane.hair_review"),
+    ShortExplane: i18n.t("short_explane.hair_review"),
+    PromptUser: i18n.t("prompt_user_descriptions.hair_review", {
+      detail_or_easy: DETAIL_OR_EASY,
+    }),
   } as PROMPT_TEMPLATE,
   MAKE_REVIEW: {
     No: 10,
     AppName: "IAnswerFace",
-    Title: "メイク診断モード",
+    Title: i18n.t("makeup_diagnosis_mode"),
     Icon: () =>
       IconAtom({
         ...COMMON_ICON_PROPS,
         name: "face-woman-outline",
         type: "material-community",
       } as IconProps),
-    Explane: "顔を撮影してください。\r\nメイクセットを点数評価します。",
-    ShortExplane: "メイクセットを採点します",
-    PromptUser: `画像は顔です。メイクセットが顔にあっているか厳しめに評価してください。titleには「評価」、bodyには点数（100点満点）、answerには良い、悪いなどの概要評価、explanationには${DETAIL_OR_EASY}改善点と説明、resultはnullでお願いします。`,
+    Explane: i18n.t("explane.makeup_review"),
+    ShortExplane: i18n.t("short_explane.makeup_review"),
+    PromptUser: i18n.t("prompt_user_descriptions.makeup_review", {
+      detail_or_easy: DETAIL_OR_EASY,
+    }),
   } as PROMPT_TEMPLATE,
 };

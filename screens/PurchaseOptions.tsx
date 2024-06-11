@@ -1,22 +1,16 @@
-import React, { useContext, useEffect, useState } from "react";
+import { openURL } from "expo-linking";
+import React, { useEffect } from "react";
 import {
-  View,
+  ScrollView,
+  StyleSheet,
   Text,
   TouchableOpacity,
-  StyleSheet,
-  ScrollView,
-  Image,
-  Alert,
+  View,
 } from "react-native";
-import { openURL } from "expo-linking";
+import Purchases, { LOG_LEVEL } from "react-native-purchases";
 import IconAtom from "./IconAtom";
 import { pointsChange } from "./utils";
-import { AppContextState } from "../App";
-import Purchases, {
-  CustomerInfo,
-  PurchasesOffering,
-  LOG_LEVEL,
-} from "react-native-purchases";
+import { i18n } from "./locales/i18n";
 
 type PointPack = {
   id: string;
@@ -40,7 +34,6 @@ const subscriptionPointPacks: PointPack[] = [
   // { id: "sub_3", points: 130, price: 2000 },
 ];
 
-const NAME = "チケット";
 const PurchaseOptions: React.FC = () => {
   // const [currentOffering, setCurrentOffering] =
   // useState<PurchasesOffering | null>(null);
@@ -90,12 +83,14 @@ const PurchaseOptions: React.FC = () => {
     <ScrollView style={styles.optionsContainer}>
       <View style={{ margin: 8 }}>
         <Text style={styles.optionTitle}>
-          購入した{NAME}
-          は1日のAI利用制限を超えて使用できます。また、広告が表示されないため、結果を確認するまでの時間が短くなります。
+          {i18n.t("actions.purchase_ticket", {
+            NAME: i18n.t("actions.ticket"),
+          })}
         </Text>
         <Text style={styles.optionWarning}>
-          注意：{NAME}
-          消費時は動画広告はでませんが、解析には多少の時間がかかります。
+          {i18n.t("actions.ticket_note", {
+            NAME: i18n.t("actions.ticket"),
+          })}
         </Text>
       </View>
       {pointPacks.map((pack) => (
@@ -109,7 +104,7 @@ const PurchaseOptions: React.FC = () => {
             />
             <Text style={styles.optionText}>
               {pack.points}
-              {NAME}
+              {i18n.t("actions.ticket")}
             </Text>
           </View>
           <TouchableOpacity
@@ -120,8 +115,9 @@ const PurchaseOptions: React.FC = () => {
           </TouchableOpacity>
           {pack.bonusPoints && (
             <Text style={styles.bonusText}>
-              ボーナス: {pack.bonusPoints}
-              {NAME}
+              {i18n.t("actions.bonus")}
+              {pack.bonusPoints}
+              {i18n.t("actions.ticket")}
             </Text>
           )}
         </View>
@@ -129,12 +125,14 @@ const PurchaseOptions: React.FC = () => {
       {subscriptionPointPacks?.length > 0 && (
         <View style={{ margin: 8, paddingTop: 16 }}>
           <Text style={styles.optionTitle}>
-            本アプリで購入した{NAME}
-            は、1日のAI利用制限を超えて使用できます。また、広告が表示されないため、結果を確認までの時間が短くなります。
+            {i18n.t("actions.purchase_ticket", {
+              NAME: i18n.t("actions.ticket"),
+            })}
           </Text>
           <Text style={styles.optionWarning}>
-            注意：1月で利用できなかった{NAME}
-            は翌月に繰り越せません。また、消費時は動画広告はでませんが、解析には多少の時間がかかります。
+            {i18n.t("actions.ticket_note", {
+              NAME: i18n.t("actions.ticket"),
+            })}
           </Text>
         </View>
       )}
@@ -149,7 +147,8 @@ const PurchaseOptions: React.FC = () => {
             />
             <Text style={styles.optionText}>
               {pack.points}
-              {NAME}/月
+              {i18n.t("actions.ticket")}
+              {i18n.t("subscription.per_month")}
             </Text>
           </View>
           <TouchableOpacity
@@ -160,8 +159,9 @@ const PurchaseOptions: React.FC = () => {
           </TouchableOpacity>
           {pack.bonusPoints && (
             <Text style={styles.bonusText}>
-              ボーナス: {pack.bonusPoints}
-              {NAME}
+              {i18n.t("actions.bonus")}
+              {pack.bonusPoints}
+              {i18n.t("actions.ticket")}
             </Text>
           )}
         </View>
@@ -172,14 +172,16 @@ const PurchaseOptions: React.FC = () => {
             openURL("https://kuwank.hatenablog.com/entry/2024/06/03/141839")
           }
         >
-          <Text style={styles.linkText}>利用規約　</Text>
+          <Text style={styles.linkText}>{i18n.t("legal.terms_of_use")}　</Text>
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() =>
             openURL("https://kuwank.hatenablog.com/entry/2024/06/03/141528")
           }
         >
-          <Text style={styles.linkText}>　プライバシーポリシー</Text>
+          <Text style={styles.linkText}>
+            　{i18n.t("legal.privacy_policy")}
+          </Text>
         </TouchableOpacity>
       </View>
     </ScrollView>

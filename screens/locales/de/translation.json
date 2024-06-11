@@ -1,0 +1,109 @@
+{
+  "propmpt_system": "Bitte geben Sie nur ein Array zurück. Das Format sollte JSON wie {No: 1, title: 'Frage 1', body: '1 + 1', answer: '2', explanation: '1 + 1 = 2.', result: true} sein.",
+  "custom_prompt_user": "Das Bild ist von {{name}}. Bitte analysieren und geben Sie {{result}} zurück. Für den Titel verwenden Sie '{{title}}'; für den Text verwenden Sie '{{body}}'; für die Antwort verwenden Sie '{{answer}}'; für die Erklärung verwenden Sie '{{explanation}}'; und für das Ergebnis verwenden Sie null.",
+  "detail_or_easy": "prägnant",
+  "all": "Alle",
+  "camera": "Kamera",
+  "result": "Ergebnis",
+  "settings": "Einstellungen",
+  "test_answer_mode": "Testantwort-Modus",
+  "translate_mode": "Übersetzungsmodus",
+  "fashion_check_mode": "Modus für Modecheck",
+  "recipe_mode": "Rezeptmodus",
+  "calory_mode": "Kalorienmodus",
+  "trash_separation_mode": "Mülltrennungsmodus",
+  "plant_care_mode": "Pflanzenpflegemodus",
+  "face_diagnosis_mode": "Gesicht-Diagnosemodus",
+  "hair_diagnosis_mode": "Haar-Diagnosemodus",
+  "makeup_diagnosis_mode": "Make-up-Diagnosemodus",
+  "prompt_user_descriptions": {
+    "test": "Das Bild ist von einem Testblatt. Bitte analysieren Sie die Fragen und geben Sie die Ergebnisse zurück. Für den Titel verwenden Sie den Fragetitel; für den Text verwenden Sie den Fragetext; für die Antwort geben Sie die Antwort; für die Erklärung geben Sie eine {{detail_or_easy}} Erklärung der Lösung; für das Ergebnis geben Sie an, ob es korrekt ist oder nicht. Wenn die Antwort nicht angegeben ist, markieren Sie sie als falsch.",
+    "translate": "Das Bild ist in einer Fremdsprache. Bitte analysieren und ins Japanische übersetzen. Für den Titel verwenden Sie 'Übersetzungsergebnis'; für den Text verwenden Sie den fremdsprachigen Text; für die Antwort geben Sie die {{detail_or_easy}} Übersetzung; für die Erklärung verwenden Sie null; für das Ergebnis verwenden Sie null.",
+    "fashion": "Sie sind ein professioneller Modedesigner. Bitte bewerten Sie streng das allgemeine Modebewusstsein. Für den Titel verwenden Sie 'Gesamtbewertung'; für den Text geben Sie eine Punktzahl (von 100); für die Antwort geben Sie eine allgemeine Bewertung wie gut oder schlecht; für die Erklärung geben Sie {{detail_or_easy}} Verbesserungspunkte; für das Ergebnis verwenden Sie null.",
+    "recipe": "Das Bild ist von Zutaten. Bitte verwenden Sie einige oder alle, um ein Rezept zu erstellen. Für den Titel verwenden Sie den Namen des Gerichts; für den Text listen Sie die Zutaten auf; für die Antwort geben Sie das Rezept; für die Erklärung geben Sie eine {{detail_or_easy}} Erklärung des Gerichts; für das Ergebnis verwenden Sie null.",
+    "calory": "Das Bild ist von Lebensmitteln oder Zutaten. Bitte analysieren und geben Sie die Kalorienzahl zurück. Für den Titel verwenden Sie 'Gesamtkalorienzahl'; für den Text verwenden Sie null; für die Antwort geben Sie die Kalorienzahl; für die Erklärung geben Sie eine {{detail_or_easy}} Erklärung der Kalorien; für das Ergebnis verwenden Sie null.",
+    "trash": "Das Bild ist von Müll. Bitte analysieren und geben Sie den Mülltyp zurück. Für den Titel verwenden Sie den Namen; für den Text verwenden Sie null; für die Antwort geben Sie den Mülltyp; für die Erklärung geben Sie eine {{detail_or_easy}} Erklärung; für das Ergebnis verwenden Sie null.",
+    "plants": "Das Bild ist von einer Pflanze. Bitte analysieren und prüfen Sie deren Zustand. Für den Titel verwenden Sie den Pflanzennamen; für den Text geben Sie eine allgemeine Bewertung des Zustands; für die Antwort geben Sie den {{detail_or_easy}} Zustand der Pflanze; für die Erklärung geben Sie {{detail_or_easy}} Pflegeanweisungen; für das Ergebnis verwenden Sie null.",
+    "face_review": "Das Bild ist von einem Gesicht. Bitte bewerten Sie streng die Attraktivität anhand von Kriterien wie hübsch, schön, süß usw. und geben Sie eine Punktzahl. Für den Titel verwenden Sie 'Bewertung'; für den Text geben Sie eine Punktzahl (von 100); für die Antwort geben Sie eine allgemeine Bewertung wie gut oder schlecht; für die Erklärung geben Sie eine {{detail_or_easy}} Bewertung und Erklärung; für das Ergebnis verwenden Sie null.",
+    "hair_review": "Das Bild ist von einem Gesicht. Bitte bewerten Sie streng, wie gut die Frisur zum Gesicht passt. Für den Titel verwenden Sie 'Bewertung'; für den Text geben Sie eine Punktzahl (von 100); für die Antwort geben Sie eine allgemeine Bewertung wie gut oder schlecht; für die Erklärung geben Sie {{detail_or_easy}} Verbesserungspunkte und Erklärung; für das Ergebnis verwenden Sie null.",
+    "makeup_review": "Das Bild ist von einem Gesicht. Bitte bewerten Sie streng, wie gut das Make-up zum Gesicht passt. Für den Titel verwenden Sie 'Bewertung'; für den Text geben Sie eine Punktzahl (von 100); für die Antwort geben Sie eine allgemeine Bewertung wie gut oder schlecht; für die Erklärung geben Sie {{detail_or_easy}} Verbesserungspunkte und Erklärung; für das Ergebnis verwenden Sie null."
+  },
+  "explane": {
+    "test": "Bitte fotografieren Sie das Testblatt. Wir werden Erklärungen und Antworten bereitstellen. Es ist auf die fünf Fächer des mittleren Schulniveaus beschränkt, aber einige Symbole in Mathematik sind möglicherweise nicht lesbar.",
+    "translate": "Bitte fotografieren Sie den fremdsprachigen Text. Wir werden ihn übersetzen. Aufgrund der Genauigkeit der KI ist es möglicherweise nicht immer korrekt.",
+    "fashion": "Bitte fotografieren Sie Ihr Outfit. Wir werden jeden Modeartikel bewerten.",
+    "recipe": "Bitte fotografieren Sie die Zutaten. Wir werden ein Rezept mit den Zutaten erstellen.",
+    "calory": "Bitte fotografieren Sie das Essen. Wir werden die Kalorien berechnen. Aufgrund möglicher Ungenauigkeiten bei der Messung von Entfernung und Größe ist es möglicherweise nicht immer korrekt.",
+    "trash": "Bitte fotografieren Sie den Müll. Wir werden den Müll trennen. Bitte befolgen Sie die Regeln Ihrer örtlichen Regierung für Abholtage.",
+    "plants": "Bitte fotografieren Sie die Pflanze. Wir werden ihren Zustand bewerten.",
+    "face_review": "Bitte fotografieren Sie Ihr Gesicht. Wir werden es basierend auf Kriterien wie hübsch, schön, süß usw. bewerten. Dies ist eine KI-Bewertung, also nehmen Sie es bitte nicht zu ernst.",
+    "hair_review": "Bitte fotografieren Sie Ihr Gesicht. Wir werden Ihre Frisur bewerten.",
+    "makeup_review": "Bitte fotografieren Sie Ihr Gesicht. Wir werden Ihr Make-up bewerten."
+  },
+  "short_explane": {
+    "test": "Wir werden Ihnen die Antworten auf die Fragen sagen.",
+    "translate": "Wir werden die Fremdsprache übersetzen.",
+    "fashion": "Wir werden Ihre Mode bewerten.",
+    "recipe": "Wir werden ein Rezept mit den Zutaten erstellen.",
+    "calory": "Wir werden die Kalorien des Essens berechnen.",
+    "trash": "Wir werden den Müll trennen.",
+    "plants": "Wir werden den Zustand der Pflanze diagnostizieren.",
+    "face_review": "Wir werden Ihr Gesicht bewerten.",
+    "hair_review": "Wir werden Ihre Frisur bewerten.",
+    "makeup_review": "Wir werden Ihr Make-up bewerten."
+  },
+  "instructions": {
+    "part1": "Anweisungen",
+    "part2": "Machen Sie ein Foto und die KI wird antworten.",
+    "part3": "Verwenden Sie es für Testantworten, Fremdsprachenübersetzung, Modecheck, Rezepterstellung aus Zutaten, Berechnung der Lebensmittelkalorien, Mülltrennung, Pflanzenpflege und mehr entsprechend Ihren Lebensstilbedürfnissen.",
+    "part4": "Hinweis: Die Antworten der KI sind möglicherweise nicht immer korrekt.",
+    "part5": "Außerdem ist Missbrauch strengstens untersagt."
+  },
+  "permissions": {
+    "camera_required": "Kameraberechtigung erforderlich.",
+    "camera_usage": "Diese App benötigt Zugriff auf die Kamera, um Fotos zu machen. Bitte ändern Sie die Berechtigungen in den Einstellungen."
+  },
+  "actions": {
+    "cancel": "Abbrechen",
+    "go_to_settings": "Zu den Einstellungen gehen",
+    "analysis_result": "Analyseergebnis",
+    "answer": "Antwort",
+    "explanation": "Erklärung",
+    "ticket": "Ticket",
+    "purchase_ticket": "Das gekaufte {{NAME}} kann über das tägliche KI-Nutzungslimit hinaus verwendet werden. Außerdem werden keine Anzeigen geschaltet, sodass Sie die Ergebnisse schneller sehen können.",
+    "ticket_note": "Hinweis: Beim Verbrauch von {{NAME}} werden keine Videoanzeigen angezeigt, aber die Analyse kann einige Zeit dauern.",
+    "bonus": "Bonus"
+  },
+  "subscription": {
+    "per_month": "/Monat"
+  },
+  "legal": {
+    "terms_of_use": "Nutzungsbedingungen",
+    "privacy_policy": "Datenschutzrichtlinie"
+  },
+  "search": {
+    "filter": "Suchfilter",
+    "select_item": "Element auswählen"
+  },
+  "analysis": {
+    "analyze_image": "Bild analysieren",
+    "use_ticket_for_analysis": "Ticket für die Analyse verwenden",
+    "number_of_tickets": "Anzahl der Tickets",
+    "watch_ad_for_analysis": "Werbung ansehen für die Analyse"
+  },
+  "permissions_alerts": {
+    "image_view_permission": "Berechtigung zur Bildanzeige erforderlich",
+    "refer_permission": "Berechtigung erforderlich, um zu referenzieren. Bitte ändern Sie die Berechtigungen in den Einstellungen."
+  },
+  "rewards": {
+    "five_star_rating": "Wenn Sie eine 5-Sterne-Bewertung abgeben, erhalten Sie ein Ticket."
+  },
+  "errors": {
+    "not_enough_tickets": "Nicht genug Tickets.",
+    "daily_limit_exceeded": "Sie haben das Tageslimit überschritten.",
+    "purchase_tickets": "Möchten Sie Tickets kaufen?",
+    "purchase": "Kaufen",
+    "api_load_failed": "API-Ladevorgang fehlgeschlagen.",
+    "analyzing": "Analysieren..."
+  }
+}

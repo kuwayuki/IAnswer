@@ -3,6 +3,7 @@ import { StyleSheet, View } from "react-native";
 import DropDownPicker, {
   DropDownPickerProps,
 } from "react-native-dropdown-picker";
+import { i18n } from "./locales/i18n";
 
 export type DropdownType = { label: string; value: number; kind?: number };
 
@@ -22,8 +23,8 @@ export default function DropDownPickerAtom(props: DropDownPickerAtomProps) {
           ? [styles.picker, { maxWidth: props.width }]
           : styles.picker
       }
-      searchPlaceholder="検索フィルター"
-      placeholder="項目を選択"
+      searchPlaceholder={i18n.t("search.filter")}
+      placeholder={i18n.t("search.select_item")}
       // placeholderStyle={styles.picker}
       // dropDownContainerStyle={styles.picker}
       // tickIconStyle={styles.picker}
