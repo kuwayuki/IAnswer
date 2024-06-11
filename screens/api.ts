@@ -1,26 +1,41 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { post } from "@aws-amplify/api";
+import { ApiBodyType } from "../App";
+import * as Crypto from "expo-crypto";
 
-export const KEY = {
-  AI_TYPE: "AI_TYPE",
-  INITIAL_READ: "INITIAL_READ",
-};
-export const getLocalStorage = async (
-  key: string
-): Promise<string | undefined | null> => {
-  try {
-    const value = await AsyncStorage.getItem(key);
-    return value;
-  } catch (err) {}
-  return undefined;
+const API_NAME = "IAnswer";
+const SECRET = "KUWAKUWA_@TENSAI";
+const API_URL = {
+  uploadS3Result: "/image/upload",
 };
 
-export const saveLocalStorage = async (key: string, value: string | number) => {
-  try {
-    await AsyncStorage.setItem(
-      key,
-      typeof value === "string" ? value : String(value)
-    );
-  } catch (err) {
-    console.error(err);
-  }
+const hashCurrentDay = async (): Promise<string> => {
+  const today = new Date().toISOString().split("T")[0];
+  let hash;
+  hash = await Crypto.digestStringAsync(
+    Crypto.CryptoDigestAlgorithm.SHA256,
+    today + SECRET,
+    { encoding: Crypto.CryptoEncoding.HEX }
+  );
+  return hash;
+};
+
+export const aiAnswer = async (
+  filePath: string,
+  PromptUser?: string,
+  PromptSystem?: string
+): Promise<any> => {
+  const hash = await hashCurrentDay();
+  const result = await post({
+    apiName: API_NAME,
+    path: API_URL.uploadS3Result,
+    options: {
+      body: {
+        key: filePath,
+        promptUser: PromptUser,
+        promptSystem: PromptSystem,
+        auth: `${hash}`,
+      } as ApiBodyType,
+    },
+  }).response;
+  return result;
 };

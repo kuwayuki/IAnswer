@@ -58,7 +58,6 @@ import {
   launchImageLibraryAsync,
   requestMediaLibraryPermissionsAsync,
 } from "expo-image-picker";
-import { Buffer } from "buffer";
 import ConfirmDialog from "./ConfirmDialog";
 // TODO: Google Admob
 import { initializeInterstitialAd, showInterstitialAd } from "./AdmobInter";
@@ -67,6 +66,7 @@ import {
   rewardInitializeInterstitialAd,
   showRewardInterstitialAd,
 } from "./AdmobRewardInter";
+import { aiAnswer } from "./api";
 
 const { width: screenWidth } = Dimensions.get("window");
 const CameraScreen: React.FC = () => {
@@ -312,9 +312,13 @@ const CameraScreen: React.FC = () => {
   const storeReview = async () => {
     try {
       if (await StoreReview.hasAction()) {
-        alert("評価で★５を付けて頂けると、１回分のチケットが付与されます。");
-        await StoreReview.requestReview();
-        await pointsChange(1);
+        const isReviewed = getLocalStorage(KEY.INIT_REVIEW);
+        if (!isReviewed) {
+          await saveLocalStorage(KEY.INIT_REVIEW, "true");
+          alert("評価で★５を付けて頂けると、１回分のチケットが付与されます。");
+          await StoreReview.requestReview();
+          await pointsChange(1);
+        }
       }
     } catch (error) {
       console.log(error);
@@ -377,21 +381,11 @@ const CameraScreen: React.FC = () => {
       console.log(prompt!.PromptUser);
       console.log(prompt!.PromptSystem);
 
-      const today = new Date().toISOString().split("T")[0];
-      const base64EncodedDate = Buffer.from(today).toString("base64");
-
-      const apiResponse = await post({
-        apiName: "IAnswer",
-        path: "/image/upload",
-        options: {
-          body: {
-            key: filePath,
-            promptUser: prompt!.PromptUser,
-            promptSystem: prompt!.PromptSystem,
-            Authorization: `Bearer ${base64EncodedDate}`,
-          } as ApiBodyType,
-        },
-      }).response;
+      const apiResponse = await aiAnswer(
+        filePath,
+        prompt!.PromptUser,
+        prompt!.PromptSystem
+      );
       if (apiResponse.statusCode !== 200) {
         alert("API読み込みに失敗しました。");
         // returnMaxLimit();

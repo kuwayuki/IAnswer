@@ -68,3 +68,8 @@ LOG ["3840x2160", "1920x1080", "1280x720", "640x480", "352x288", "Photo", "High"
 
 Revenue
 https://app.revenuecat.com/overview
+
+pip install Pillow --platform manylinux2014_x86_64 --target ./python --implementation cp --python-version 3.11 --only-binary=:all --no-deps
+pip install google.generativeai -t ./python
+pip install openai -t ./python
+zip -r deploy_package.zip ./layer
