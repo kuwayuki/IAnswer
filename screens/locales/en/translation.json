@@ -1,4 +1,11 @@
 {
+  "NSUserTrackingUsageDescription": "This app needs your permission to track your activities to provide personalized ads.",
+  "NSMicrophoneUsageDescription": "This app uses the microphone to allow users to send orders via voice message.",
+  "userTrackingPermission": "This app needs your permission to track your activities to provide personalized ads.",
+  "user_tracking_usage_description": "This app needs your permission to track your activities to provide personalized ads.",
+  "cameraPermission": "This app needs access to your camera to take and analyze photos.",
+  "photosPermission": "This app needs access to your photo library to analyze saved photos.",
+  "microphonePermission": "This app uses the microphone to allow users to send orders via voice message.",
   "propmpt_system": "Please return only an array. The format should be JSON like {No: 1, title: 'Question 1', body: '1 + 1', answer: '2', explanation: '1 + 1 = 2.', result: true}.",
   "custom_prompt_user": "The image is of {{name}}. Please analyze and return {{result}}. For title, use '{{title}}'; for body, use '{{body}}'; for answer, use '{{answer}}'; for explanation, use '{{explanation}}'; and for result, use null.",
   "detail_or_easy": "concise",
@@ -18,7 +25,7 @@
   "makeup_diagnosis_mode": "Makeup Diagnosis Mode",
   "prompt_user_descriptions": {
     "test": "The image is of a test sheet. Please analyze the questions and return the results. For title, use the question title; for body, use the question text; for answer, provide the answer; for explanation, give a {{detail_or_easy}} explanation of the solution; for result, indicate whether it is correct or not. If the answer is not provided, mark it as incorrect.",
-    "translate": "The image is in a foreign language. Please analyze and translate it into Japanese. For title, use 'Translation Result'; for body, use the foreign text; for answer, provide the {{detail_or_easy}} translation; for explanation, use null; for result, use null.",
+    "translate": "The image is in a foreign language. Please analyze and translate it into English. For title, use 'Translation Result'; for body, use the foreign text; for answer, provide the {{detail_or_easy}} translation; for explanation, use null; for result, use null.",
     "fashion": "You are a professional fashion designer. Please strictly evaluate the overall fashion sense. For title, use 'Overall Rating'; for body, provide a score (out of 100); for answer, provide a general evaluation such as good or bad; for explanation, provide {{detail_or_easy}} improvement points; for result, use null.",
     "recipe": "The image is of ingredients. Please use some or all of them to come up with a recipe. For title, use the dish name; for body, list the ingredients; for answer, provide the recipe; for explanation, give a {{detail_or_easy}} explanation of the dish; for result, use null.",
     "calory": "The image is of food or ingredients. Please analyze and return the calorie count. For title, use 'Total Calorie Count'; for body, use null; for answer, provide the calorie count; for explanation, give a {{detail_or_easy}} explanation of the calories; for result, use null.",
@@ -54,10 +61,7 @@
   },
   "instructions": {
     "part1": "Instructions",
-    "part2": "Take a picture, and the AI will respond.",
-    "part3": "Use it for test answers, foreign language translation, fashion checks, creating recipes from ingredients, calculating food calories, separating trash, caring for plants, and more according to your lifestyle needs.",
-    "part4": "Note: AI responses may not always be accurate.",
-    "part5": "Also, misuse is strictly prohibited."
+    "part2": "Take a picture, and the AI will respond.\r\nUse it for test answers, foreign language translation, fashion checks, creating recipes from ingredients, calculating food calories, separating trash, caring for plants, and more according to your lifestyle needs.\r\nNote: AI responses may not always be accurate.\r\nAlso, misuse is strictly prohibited."
   },
   "permissions": {
     "camera_required": "Camera permission is required.",

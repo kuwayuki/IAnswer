@@ -1,4 +1,11 @@
 {
+  "NSUserTrackingUsageDescription": "Esta aplicación necesita tu permiso para rastrear tus actividades y proporcionar anuncios personalizados.",
+  "NSMicrophoneUsageDescription": "Esta aplicación utiliza el micrófono para permitir a los usuarios enviar órdenes a través de mensajes de voz.",
+  "userTrackingPermission": "Esta aplicación necesita tu permiso para rastrear tus actividades y proporcionar anuncios personalizados.",
+  "user_tracking_usage_description": "Esta aplicación necesita tu permiso para rastrear tus actividades y proporcionar anuncios personalizados.",
+  "cameraPermission": "Esta aplicación necesita acceso a tu cámara para tomar y analizar fotos.",
+  "photosPermission": "Esta aplicación necesita acceso a tu biblioteca de fotos para analizar las fotos guardadas.",
+  "microphonePermission": "Esta aplicación utiliza el micrófono para permitir a los usuarios enviar órdenes a través de mensajes de voz.",
   "propmpt_system": "Por favor, devuelva solo un array. El formato debe ser JSON como {No: 1, title: 'Pregunta 1', body: '1 + 1', answer: '2', explanation: '1 + 1 = 2.', result: true}.",
   "custom_prompt_user": "La imagen es de {{name}}. Por favor, analice y devuelva {{result}}. Para el título, use '{{title}}'; para el cuerpo, use '{{body}}'; para la respuesta, use '{{answer}}'; para la explicación, use '{{explanation}}'; y para el resultado, use null.",
   "detail_or_easy": "conciso",
@@ -18,7 +25,7 @@
   "makeup_diagnosis_mode": "Modo Diagnóstico de Maquillaje",
   "prompt_user_descriptions": {
     "test": "La imagen es de una hoja de prueba. Por favor, analice las preguntas y devuelva los resultados. Para el título, use el título de la pregunta; para el cuerpo, use el texto de la pregunta; para la respuesta, proporcione la respuesta; para la explicación, dé una explicación {{detail_or_easy}} de la solución; para el resultado, indique si es correcto o no. Si no se proporciona la respuesta, márquela como incorrecta.",
-    "translate": "La imagen está en un idioma extranjero. Por favor, analice y traduzca al japonés. Para el título, use 'Resultado de la Traducción'; para el cuerpo, use el texto extranjero; para la respuesta, proporcione la traducción {{detail_or_easy}}; para la explicación, use null; para el resultado, use null.",
+    "translate": "La imagen está en un idioma extranjero. Por favor, analícela y tradúzcala al español. Para title, use 'Resultado de la traducción'; para body, use el texto extranjero; para answer, proporcione la traducción {{detail_or_easy}}; para explanation, use null; para result, use null.",
     "fashion": "Usted es un diseñador de moda profesional. Por favor, evalúe estrictamente el sentido general de la moda. Para el título, use 'Evaluación General'; para el cuerpo, proporcione una puntuación (de 100); para la respuesta, proporcione una evaluación general como buena o mala; para la explicación, proporcione puntos de mejora {{detail_or_easy}}; para el resultado, use null.",
     "recipe": "La imagen es de ingredientes. Por favor, use algunos o todos ellos para crear una receta. Para el título, use el nombre del plato; para el cuerpo, liste los ingredientes; para la respuesta, proporcione la receta; para la explicación, dé una explicación {{detail_or_easy}} del plato; para el resultado, use null.",
     "calory": "La imagen es de alimentos o ingredientes. Por favor, analice y devuelva la cantidad de calorías. Para el título, use 'Cantidad Total de Calorías'; para el cuerpo, use null; para la respuesta, proporcione la cantidad de calorías; para la explicación, dé una explicación {{detail_or_easy}} de las calorías; para el resultado, use null.",
@@ -54,10 +61,7 @@
   },
   "instructions": {
     "part1": "Instrucciones",
-    "part2": "Tome una foto y la IA responderá.",
-    "part3": "Úselo para respuestas de pruebas, traducción de idiomas extranjeros, verificación de moda, creación de recetas a partir de ingredientes, cálculo de calorías de alimentos, separación de basura, cuidado de plantas y más según sus necesidades de estilo de vida.",
-    "part4": "Nota: Las respuestas de la IA pueden no ser siempre correctas.",
-    "part5": "Además, el uso indebido está estrictamente prohibido."
+    "part2": "Tome una foto y la IA responderá.\r\nÚselo para respuestas de pruebas, traducción de idiomas extranjeros, verificación de moda, creación de recetas a partir de ingredientes, cálculo de calorías de alimentos, separación de basura, cuidado de plantas y más según sus necesidades de estilo de vida.\r\nNota: Las respuestas de la IA pueden no ser siempre correctas.\r\nAdemás, el uso indebido está estrictamente prohibido."
   },
   "permissions": {
     "camera_required": "Se requiere permiso de cámara.",

@@ -1,4 +1,11 @@
 {
+  "NSUserTrackingUsageDescription": "他社のデータを活用して広告を表示するために、トラッキングの許可をお願いします。",
+  "NSMicrophoneUsageDescription": "このアプリは、音声メッセージで注文を送信するためにマイクを使用します。",
+  "userTrackingPermission": "他社のデータを活用して広告を表示するために、トラッキングの許可をお願いします。",
+  "user_tracking_usage_description": "他社のデータを活用して広告を表示するために、トラッキングの許可をお願いします。",
+  "cameraPermission": "撮影写真を解析するために、カメラへのアクセスが必要です。",
+  "photosPermission": "保存済みの写真を解析するために写真ライブラリへのアクセスが必要です。",
+  "microphonePermission": "このアプリは、音声メッセージで注文を送信するためにマイクを使用します。",
   "propmpt_system": "必ず配列のみ返却してください。構成は{No: 1, title: '問１', body: '1 + 1', answer: '2', explanation: '1 + 1 = 2 です。', result: true}のJson形式でお願いします。",
   "custom_prompt_user": "画像は{{name}}です。解析して、{{result}}を返却してください。titleには「{{title}}」、bodyには「{{body}}」、answerには「{{answer}}」、explanationには「{{explanation}}」、resultにはnullをお願いします。",
   "detail_or_easy": "簡潔な",
