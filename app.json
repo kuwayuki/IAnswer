@@ -11,92 +11,31 @@
       },
       "bundleIdentifier": "com.kuwahara.IAnswer",
       "infoPlist": {
-        "NSUserTrackingUsageDescription": {
-          "en": "This app needs your permission to track your activities to provide personalized ads.",
-          "ja": "他社のデータを活用して広告を表示するために、トラッキングの許可をお願いします。",
-          "de": "Diese App benötigt Ihre Erlaubnis, um Ihre Aktivitäten zu verfolgen und personalisierte Werbung bereitzustellen.",
-          "es": "Esta aplicación necesita tu permiso para rastrear tus actividades y proporcionar anuncios personalizados.",
-          "fr": "Cette application a besoin de votre permission pour suivre vos activités et fournir des publicités personnalisées.",
-          "ko": "이 앱은 맞춤형 광고를 제공하기 위해 귀하의 활동을 추적할 수 있는 권한이 필요합니다.",
-          "pt": "Este aplicativo precisa da sua permissão para rastrear suas atividades e fornecer anúncios personalizados.",
-          "zh": "此应用程序需要您的许可来跟踪您的活动以提供个性化广告。",
-          "hi": "यह ऐप आपकी गतिविधियों को ट्रैक करने के लिए आपकी अनुमति की आवश्यकता है ताकि व्यक्तिगत विज्ञापन प्रदान किए जा सकें।"
-        },
-        "NSMicrophoneUsageDescription": {
-          "en": "This app uses the microphone to allow users to send orders via voice message.",
-          "ja": "このアプリは、音声メッセージで注文を送信するためにマイクを使用します。",
-          "de": "Diese App verwendet das Mikrofon, um Benutzern das Senden von Bestellungen per Sprachmitteilung zu ermöglichen.",
-          "es": "Esta aplicación utiliza el micrófono para permitir a los usuarios enviar órdenes a través de mensajes de voz.",
-          "fr": "Cette application utilise le microphone pour permettre aux utilisateurs d'envoyer des commandes via un message vocal.",
-          "ko": "이 앱은 사용자가 음성 메시지를 통해 주문을 보낼 수 있도록 마이크를 사용합니다.",
-          "pt": "Este aplicativo usa o microfone para permitir que os usuários enviem pedidos via mensagem de voz.",
-          "zh": "此应用程序使用麦克风以允许用户通过语音消息发送订单。",
-          "hi": "यह ऐप उपयोगकर्ताओं को वॉइस संदेश के माध्यम से आदेश भेजने की अनुमति देने के लिए माइक्रोफोन का उपयोग करता है।"
-        }
+        "NSUserTrackingUsageDescription": "他社のデータを活用して広告を表示するために、トラッキングの許可をお願いします。",
+        "NSMicrophoneUsageDescription": "This app uses the microphone to allow users to send orders via voice message."
       }
     },
     "plugins": [
       [
         "expo-tracking-transparency",
         {
-          "userTrackingPermission": {
-            "en": "This app needs your permission to track your activities to provide personalized ads.",
-            "ja": "他社のデータを活用して広告を表示するために、トラッキングの許可をお願いします。",
-            "de": "Diese App benötigt Ihre Erlaubnis, um Ihre Aktivitäten zu verfolgen und personalisierte Werbung bereitzustellen.",
-            "es": "Esta aplicación necesita tu permiso para rastrear tus actividades y proporcionar anuncios personalizados.",
-            "fr": "Cette application a besoin de votre permission pour suivre vos activités et fournir des publicités personnalisées.",
-            "ko": "이 앱은 맞춤형 광고를 제공하기 위해 귀하의 활동을 추적할 수 있는 권한이 필요합니다.",
-            "pt": "Este aplicativo precisa da sua permissão para rastrear suas atividades e fornecer anúncios personalizados.",
-            "zh": "此应用程序需要您的许可来跟踪您的活动以提供个性化广告。",
-            "hi": "यह ऐप आपकी गतिविधियों को ट्रैक करने के लिए आपकी अनुमति की आवश्यकता है ताकि व्यक्तिगत विज्ञापन प्रदान किए जा सकें।"
-          }
+          "userTrackingPermission": "他社のデータを活用して広告を表示するために、トラッキングの許可をお願いします。"
         }
       ],
       [
         "expo-camera",
         {
-          "cameraPermission": {
-            "en": "This app needs access to your camera to take and analyze photos.",
-            "ja": "撮影写真を解析するために、カメラへのアクセスが必要です。",
-            "de": "Diese App benötigt Zugriff auf Ihre Kamera, um Fotos zu machen und zu analysieren.",
-            "es": "Esta aplicación necesita acceso a tu cámara para tomar y analizar fotos.",
-            "fr": "Cette application a besoin d'accéder à votre appareil photo pour prendre et analyser des photos.",
-            "ko": "이 앱은 사진을 찍고 분석하기 위해 카메라에 접근할 수 있는 권한이 필요합니다.",
-            "pt": "Este aplicativo precisa de acesso à sua câmera para tirar e analisar fotos.",
-            "zh": "此应用程序需要访问您的相机以拍摄和分析照片。",
-            "hi": "इस ऐप को फोटो लेने और विश्लेषण करने के लिए आपके कैमरे तक पहुंच की आवश्यकता है।"
-          },
-          "microphonePermission": {
-            "en": "This app uses the microphone to allow users to send orders via voice message.",
-            "ja": "このアプリは、音声メッセージで注文を送信するためにマイクを使用します。",
-            "de": "Diese App verwendet das Mikrofon, um Benutzern das Senden von Bestellungen per Sprachmitteilung zu ermöglichen.",
-            "es": "Esta aplicación utiliza el micrófono para permitir a los usuarios enviar órdenes a través de mensajes de voz.",
-            "fr": "Cette application utilise le microphone pour permettre aux utilisateurs d'envoyer des commandes via un message vocal.",
-            "ko": "이 앱은 사용자가 음성 메시지를 통해 주문을 보낼 수 있도록 마이크를 사용합니다.",
-            "pt": "Este aplicativo usa o microfone para permitir que os usuários enviem pedidos via mensagem de voz.",
-            "zh": "此应用程序使用麦克风以允许用户通过语音消息发送订单。",
-            "hi": "यह ऐप उपयोगकर्ताओं को वॉइस संदेश के माध्यम से आदेश भेजने की अनुमति देने के लिए माइक्रोफोन का उपयोग करता है।"
-          }
+          "cameraPermission": "撮影写真を解析するために、カメラへのアクセスが必要です。",
+          "microphonePermission": "このアプリは、音声メッセージで注文を送信するためにマイクを使用します。"
         }
       ],
       [
         "expo-image-picker",
         {
-          "photosPermission": {
-            "en": "This app needs access to your photo library to analyze saved photos.",
-            "ja": "保存済みの写真を解析するために写真ライブラリへのアクセスが必要です。",
-            "de": "Diese App benötigt Zugriff auf Ihre Fotobibliothek, um gespeicherte Fotos zu analysieren.",
-            "es": "Esta aplicación necesita acceso a tu biblioteca de fotos para analizar las fotos guardadas.",
-            "fr": "Cette application a besoin d'accéder à votre bibliothèque de photos pour analyser les photos enregistrées.",
-            "ko": "이 앱은 저장된 사진을 분석하기 위해 사진 라이브러리에 접근할 수 있는 권한이 필요합니다.",
-            "pt": "Este aplicativo precisa de acesso à sua biblioteca de fotos para analisar as fotos salvas.",
-            "zh": "此应用程序需要访问您的照片库以分析保存的照片。",
-            "hi": "इस ऐप को सहेजी गई तस्वीरों का विश्लेषण करने के लिए आपके फोटो पुस्तकालय तक पहुंच की आवश्यकता है।"
-          }
+          "photosPermission": "保存済みの写真を解析するために写真ライブラリへのアクセスが必要です。"
         }
       ],
-      "expo-secure-store",
-      "expo-localization"
+      "expo-secure-store"
     ],
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -138,16 +77,6 @@
     "android_app_id": "ca-app-pub-xxxxxxxx~xxxxxxxx",
     "ios_app_id": "ca-app-pub-2103807205659646~3048157861",
     "delay_app_measurement_init": true,
-    "user_tracking_usage_description": {
-      "en": "By pressing 'Allow', you will be able to receive personalized ads based on third-party data.",
-      "ja": "「許可」を押すと、他社のデータも活用し、よりお客様に適した広告が表示されます。",
-      "de": "Durch Drücken von 'Erlauben' erhalten Sie personalisierte Werbung basierend auf Daten von Drittanbietern.",
-      "es": "Al presionar 'Permitir', podrás recibir anuncios personalizados basados en datos de terceros.",
-      "fr": "En appuyant sur 'Autoriser', vous pourrez recevoir des publicités personnalisées basées sur des données tierces.",
-      "ko": "‘허용’을 누르면 제3자 데이터를 기반으로 맞춤형 광고를 받을 수 있습니다.",
-      "pt": "Ao pressionar 'Permitir', você poderá receber anúncios personalizados com base em dados de terceiros.",
-      "zh": "按下“允许”后，您将能够根据第三方数据接收个性化广告。",
-      "hi": "‘अनुमति दें’ दबाने पर, आप तृतीय-पक्ष डेटा के आधार पर व्यक्तिगत विज्ञापन प्राप्त कर सकेंगे।"
-    }
+    "user_tracking_usage_description": "「許可」を押すと、他社のデータも活用し、よりお客様に適した広告が表示されます。"
   }
 }
