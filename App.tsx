@@ -28,7 +28,11 @@ import {
   DEBUG_MODE,
   KEY,
   getLocalStorage,
+  getLocalStorageSecure,
+  pointsChange,
+  pointsService,
   saveLocalStorage,
+  saveLocalStorageSecure,
 } from "./screens/utils";
 import InitialScreen from "./screens/InitialScreen";
 import SettingScreen from "./screens/SettingScreen";
@@ -152,6 +156,10 @@ const App: React.FC = () => {
       const initialRead = await getLocalStorage(KEY.INITIAL_READ);
       if (!initialRead) {
         saveLocalStorage(KEY.INITIAL_READ, "true");
+
+        // 初回だけ1チケット追加
+        await pointsService(true);
+
         Alert.alert(
           i18n.t("instructions.part1"),
           i18n.t("instructions.part2"),

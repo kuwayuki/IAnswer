@@ -108,6 +108,17 @@ export const pointsChange = async (count: number = 1): Promise<void> => {
   }
 };
 
+export const pointsService = async (
+  isFirstPresent = false,
+  count?: number
+): Promise<void> => {
+  try {
+    const storedCount = await getLocalStorageSecure(KEY.POINTS_LIMIT);
+    if ((isFirstPresent && storedCount == null) || !isFirstPresent)
+      await pointsChange(count);
+  } catch (error) {}
+};
+
 export const returnMaxLimit = async (): Promise<void> => {
   const storedCount = await getLocalStorage(KEY.EXECUTED_COUNT);
   if (storedCount) {
