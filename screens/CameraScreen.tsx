@@ -353,7 +353,8 @@ const CameraScreen: React.FC = () => {
       setLoading(true);
       if (!isPointUse) {
         // TODO: Google Admob
-        showRewardInterstitialAd(appContextDispatch.setShowedAdmob);
+        showInterstitialAd(appContextDispatch.setShowedAdmob);
+        // showRewardInterstitialAd(appContextDispatch.setShowedAdmob);
       } else {
         // ポイント使用時は広告を見たとみなす
         appContextDispatch.setShowedAdmob(true);

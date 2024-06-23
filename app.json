@@ -2,9 +2,9 @@
   "expo": {
     "name": "IAnswer",
     "slug": "IAnswer",
-    "version": "1.0.23",
+    "version": "1.0.24",
     "ios": {
-      "buildNumber": "23",
+      "buildNumber": "24",
       "supportsTablet": true,
       "config": {
         "googleMobileAdsAppId": "ca-app-pub-2103807205659646~3048157861"
@@ -15,15 +15,15 @@
       }
     },
     "locales": {
-      "ja": "./locales/ja/translation.json",
-      "en": "./locales/en/translation.json",
-      "de": "./locales/de/translation.json",
-      "es": "./locales/es/translation.json",
-      "fr": "./locales/fr/translation.json",
-      "ko": "./locales/ko/translation.json",
-      "pt": "./locales/pt-BR/translation.json",
-      "zh": "./locales/zh-CN/translation.json",
-      "hi": "./locales/hi/translation.json"
+      "ja": "./screens/locales/ja/translation.json",
+      "en": "./screens/locales/en/translation.json",
+      "de": "./screens/locales/de/translation.json",
+      "es": "./screens/locales/es/translation.json",
+      "fr": "./screens/locales/fr/translation.json",
+      "ko": "./screens/locales/ko/translation.json",
+      "pt": "./screens/locales/pt-BR/translation.json",
+      "zh": "./screens/locales/zh-CN/translation.json",
+      "hi": "./screens/locales/hi/translation.json"
     },
     "plugins": [
       ["expo-tracking-transparency"],

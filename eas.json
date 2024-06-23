@@ -5,22 +5,14 @@
   "build": {
     "development": {
       "distribution": "internal",
-      "channel": "development",
-      "env": {
-        "EXPO_PUBLIC_ACCESS_KEY": "$(EXPO_PUBLIC_ACCESS_KEY)",
-        "EXPO_PUBLIC_SECRET_KEY": "$(EXPO_PUBLIC_SECRET_KEY)"
-      }
+      "channel": "development"
     },
     "preview": {
       "distribution": "internal",
       "channel": "preview"
     },
     "production": {
-      "channel": "production",
-      "env": {
-        "EXPO_PUBLIC_ACCESS_KEY": "$(EXPO_PUBLIC_ACCESS_KEY)",
-        "EXPO_PUBLIC_SECRET_KEY": "$(EXPO_PUBLIC_SECRET_KEY)"
-      }
+      "channel": "production"
     },
     "development-simulator": {
       "developmentClient": true,

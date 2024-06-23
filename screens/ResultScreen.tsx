@@ -113,11 +113,13 @@ const ResultScreen: React.FC = () => {
         {!appContextState.isPremium && (
           // TODO: Google Admob
           // <></>
-          <BannerAd
-            // unitId={TestIds.BANNER}
-            unitId={BANNER_UNIT_ID.BANNER_2}
-            size={BannerAdSize.BANNER}
-          />
+          <View style={styles.bannerContainer}>
+            <BannerAd
+              // unitId={TestIds.BANNER}
+              unitId={BANNER_UNIT_ID.BANNER_2}
+              size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
+            />
+          </View>
         )}
         {result.map((item: OpenAiResult, index: number) =>
           normalView(item, index)
@@ -128,11 +130,18 @@ const ResultScreen: React.FC = () => {
         {!appContextState.isPremium && (
           // TODO: Google Admob
           // <></>
-          <BannerAd
-            // unitId={TestIds.BANNER}
-            unitId={BANNER_UNIT_ID.BANNER_4}
-            size={BannerAdSize.BANNER}
-          />
+          <>
+            <BannerAd
+              // unitId={TestIds.BANNER}
+              unitId={BANNER_UNIT_ID.BANNER_4}
+              size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
+            />
+            <BannerAd
+              // unitId={TestIds.BANNER}
+              unitId={BANNER_UNIT_ID.BANNER_5}
+              size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
+            />
+          </>
         )}
       </ScrollView>
       <View style={styles.headerContainer}>
@@ -163,6 +172,9 @@ const styles = StyleSheet.create({
     flex: 1,
     top: 65,
   },
+  bannerContainer: {
+    marginTop: 16,
+  },
   preview: {
     width: screenWidth,
     height: 500,
@@ -171,7 +183,7 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   toogleContainer: {
-    top: 50,
+    top: 32,
     left: 5,
     backgroundColor: "rgba(255, 255, 255, 0)",
     alignSelf: "flex-start",
