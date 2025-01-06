@@ -1,0 +1,114 @@
+{
+  "NSUserTrackingUsageDescription": "他社のデータを活用して広告を表示するために、トラッキングの許可をお願いします。",
+  "NSMicrophoneUsageDescription": "このアプリは、音声メッセージで注文を送信するためにマイクを使用します。",
+  "userTrackingPermission": "他社のデータを活用して広告を表示するために、トラッキングの許可をお願いします。",
+  "user_tracking_usage_description": "他社のデータを活用して広告を表示するために、トラッキングの許可をお願いします。",
+  "cameraPermission": "撮影写真を解析するために、カメラへのアクセスが必要です。",
+  "photosPermission": "保存済みの写真を解析するために写真ライブラリへのアクセスが必要です。",
+  "microphonePermission": "このアプリは、音声メッセージで注文を送信するためにマイクを使用します。",
+  "propmpt_system": "必ず配列のみ返却してください。構成は{No: 1, title: '問１', body: '1 + 1', answer: '2', explanation: '1 + 1 = 2 です。', result: true}のJson形式でお願いします。",
+  "custom_prompt_user": "画像は{{name}}です。解析して、{{result}}を返却してください。titleには「{{title}}」、bodyには「{{body}}」、answerには「{{answer}}」、explanationには「{{explanation}}」、resultにはnullをお願いします。",
+  "detail_or_easy": "簡潔な",
+  "all": "全て",
+  "camera": "カメラ",
+  "result": "結果",
+  "settings": "設定",
+  "test_answer_mode": "テスト回答モード",
+  "translate_mode": "翻訳モード",
+  "fashion_check_mode": "ファッションチェックモード",
+  "recipe_mode": "レシピモード",
+  "calory_mode": "カロリーモード",
+  "trash_separation_mode": "ゴミ分別モード",
+  "plant_care_mode": "植物ケアモード",
+  "face_diagnosis_mode": "顔診断モード",
+  "hair_diagnosis_mode": "髪型診断モード",
+  "makeup_diagnosis_mode": "メイク診断モード",
+  "prompt_user_descriptions": {
+    "test": "画像は問題用紙です。問題文を解析して、結果を返却してください。titleには問題のタイトル、bodyには問題文、answerには答え、explanationには{{detail_or_easy}}問題の解き方、resultには合っているか否かをお願いします。答えが書いてない箇所は否にしてください。",
+    "translate": "画像は外国語です。解析して、日本語にしてください。titleには「翻訳結果」、bodyには読み取った外国語、answerには{{detail_or_easy}}翻訳結果、explanationにはnull、resultはnullをお願いします。",
+    "fashion": "あなたはプロのファッションデザイナーです。全体的なファッションセンスから厳しめに評価してください。titleには「総評」、bodyには点数（100点満点）、answerには良い、悪いなどの概要評価、explanationには{{detail_or_easy}}改善点、resultはnullでお願いします。",
+    "recipe": "画像は食材です。一部または全てを利用してレシピを考案してください。titleには料理名、bodyには材料、answerには作り方、explanationには{{detail_or_easy}}料理の説明、resultにはnullをお願いします。",
+    "calory": "画像は料理または食材です。解析して、カロリーを返却してください。titleには「総カロリー数」、bodyにはnull、answerにはカロリー数、explanationにはカロリーの{{detail_or_easy}}説明、resultにはnullをお願いします。",
+    "trash": "画像はゴミです。解析して、ごみの種類を返却してください。titleには名称、bodyにはnull、answerにはごみの種類、explanationには{{detail_or_easy}}説明、resultはnullをお願いします。",
+    "plants": "画像は植物です。解析して、状態を確認してください。titleには植物名称、bodyには良し悪しの概要、answerには{{detail_or_easy}}植物の状態、explanationには{{detail_or_easy}}ケアの方法、resultにはnullをお願いします。",
+    "face_review": "画像は顔です。顔が整っているか、イケメン、美人、可愛いなどを基準に厳しめに点数評価してください。titleには「評価」、bodyには点数（100点満点）、answerには良い、悪いなどの概要評価、explanationには{{detail_or_easy}}評価と説明、resultはnullでお願いします。",
+    "hair_review": "画像は顔です。髪型が顔にあっているか厳しめに評価してください。titleには「評価」、bodyには点数（100点満点）、answerには良い、悪いなどの概要評価、explanationには{{detail_or_easy}}改善点と説明、resultはnullでお願いします。",
+    "makeup_review": "画像は顔です。メイクセットが顔にあっているか厳しめに評価してください。titleには「評価」、bodyには点数（100点満点）、answerには良い、悪いなどの概要評価、explanationには{{detail_or_easy}}改善点と説明、resultはnullでお願いします。"
+  },
+  "explane": {
+    "test": "問題用紙を撮影してください。解説・回答を行います。\r\n５教科の中学生程度までですが、数学などは読み取れない記号などが存在します。",
+    "translate": "外国語を撮影してください。\r\n翻訳を行います。AIの精度によるので必ずしも正解しているわけではありません。",
+    "fashion": "コーディネートを撮影してください。\r\n各ファッションに関しての評価を行います。",
+    "recipe": "食材を撮影してください。\r\n食材からレシピを考案します。",
+    "calory": "料理を撮影してください。\r\nカロリーを計算します。距離や大きさが把握できない可能性があるため、必ずしも正解しているわけではありません。",
+    "trash": "ゴミを撮影してください。\r\nゴミの分別を行います。ゴミの収集日に関しては自治体のルールに則ってください。",
+    "plants": "植物を撮影してください。\r\n植物の状態を評価します。",
+    "face_review": "顔を撮影してください。\r\nイケメン、美人度などを点数評価します。AIの独断で採点したものなので、気にしないでください。",
+    "hair_review": "顔を撮影してください。\r\n髪型のセットを点数評価します。",
+    "makeup_review": "顔を撮影してください。\r\nメイクセットを点数評価します。"
+  },
+  "short_explane": {
+    "test": "問題の回答を教えます",
+    "translate": "外国語を翻訳します",
+    "fashion": "ファッションを評価します",
+    "recipe": "食材からレシピを考案します",
+    "calory": "料理のカロリーを算出します",
+    "trash": "ゴミを分別します",
+    "plants": "植物の状態を診断します",
+    "face_review": "顔を採点します",
+    "hair_review": "髪型のセットを採点します",
+    "makeup_review": "メイクセットを採点します"
+  },
+  "instructions": {
+    "part1": "利用方法",
+    "part2": "写真を撮影すると、AIが回答してくれます。\r\nテストの回答、外国語の翻訳、ファッションチェック、食材からレシピの考案、料理のカロリー計算、ゴミの分別、植物のケア方法など使用したいライフスタイルに応じてご利用ください。\r\n\r\n注意：AIの回答はすべてが正しいというわけではありません。\r\nまた、悪用は厳禁でお願いします。"
+  },
+  "permissions": {
+    "camera_required": "カメラの許可が必要です",
+    "camera_usage": "このアプリでカメラを使用するには、カメラの許可が必要です。設定画面で許可を変更してください。"
+  },
+  "actions": {
+    "cancel": "キャンセル",
+    "go_to_settings": "設定画面へ",
+    "analysis_result": "解析結果：",
+    "answer": "回答：",
+    "explanation": "解説：",
+    "ticket": "チケット",
+    "purchase_ticket": "購入した{{NAME}}は1日のAI利用制限を超えて使用できます。また、広告が表示されないため、結果を確認するまでの時間が短くなります。",
+    "ticket_note": "注意：{{NAME}}消費時は動画広告はでませんが、解析には多少の時間がかかります。",
+    "bonus": "ボーナス："
+  },
+  "subscription": {
+    "per_month": "/月"
+  },
+  "legal": {
+    "terms_of_use": "利用規約",
+    "privacy_policy": "プライバシーポリシー"
+  },
+  "search": {
+    "filter": "検索フィルター",
+    "select_item": "項目を選択"
+  },
+  "analysis": {
+    "analyze_image": "画像を解析します",
+    "use_ticket_for_analysis": "チケットを消費して解析",
+    "number_of_tickets": "チケット数：",
+    "watch_ad_for_analysis": "広告を見て解析"
+  },
+  "permissions_alerts": {
+    "image_view_permission": "イメージビューの許可が必要です",
+    "refer_permission": "参照するには許可が必要です。設定画面で許可を変更してください。"
+  },
+  "rewards": {
+    "five_star_rating": "評価で★５を付けて頂けると、１回分のチケットが付与されます。"
+  },
+  "errors": {
+    "not_enough_tickets": "チケットが足りません",
+    "daily_limit_exceeded": "今日の上限を超えています",
+    "purchase_tickets": "チケットを購入しますか？",
+    "purchase": "購入する",
+    "api_load_failed": "API読み込みに失敗しました。",
+    "analyzing": "解析中...",
+    "explane": "説明"
+  }
+}
