@@ -1,75 +1,41 @@
-Google Admob
-https://apps.admob.com/v2/home?_ga=2.71246102.782286764.1642601502-166732312.1642306416
+# IAnswer アプリ
 
-AuthSession
-https://docs.expo.dev/versions/v44.0.0/sdk/auth-session/
+IAnswer は、ユーザーが様々な質問や問題に対して答えを得ることができる便利なツールです。
 
-StoreReview
-https://docs.expo.dev/versions/v44.0.0/sdk/storereview/
+## 主な機能
 
-Expo で作成したアプリを App Store に申請するまで
-https://qiita.com/mildsummer/items/e98b1b8e4ea7f72b9899
+- **問題用紙の撮影と解答提供**: 問題用紙を撮影すると、答えと解説を提供します。
+- **ファッション評価**: 全身のファッションを撮影して評価を行います。
+- **料理のカロリー表示**: 料理を撮影して総カロリーを表示します。
+- **レシピ考案**: 食材を撮影してレシピを提案します。
+- **ゴミの分別支援**: ゴミを撮影して分別のための種類を教示します。
 
-_アプリのビルド Credential の作成_
-※expo build:ios で自動的に作成される
-Certificates, Identifiers & Profiles
-https://developer.apple.com/account/resources/identifiers/list
+## インストール方法
 
-_アプリの公開_
-App Store Connect
-https://appstoreconnect.apple.com/apps
+IAnswer は iOS デバイス向けに提供されています。以下の手順でインストールしてください。
 
-SKU に命名規則はありません。ただし、App001 のように適当な名前をつけると紛らわしいので、おすすめしません。私の場合、Bundle ID が com.example.MyApp なら SKU は ComExampleMyApp のように設定しています。
+1. App Store を開きます。
+2. 検索バーに「IAnswer」と入力し、検索します。
+3. 表示されたアプリの中から「IAnswer」を選択し、ダウンロードしてインストールします。
 
-月額課金：
-https://docs-expo-dev.translate.goog/versions/latest/sdk/in-app-purchases/?_x_tr_sl=en&_x_tr_tl=ja&_x_tr_hl=ja&_x_tr_pto=sc
-参考:https://tech-blog.re-arc-lab.jp/posts/211015_expo-in-app-purchases/
-OTA update のやりかた
+## 使用方法
 
-$ expo publish
+1. **アプリの起動**: インストール後、アプリを起動します。
+2. **機能の選択**: メニューから使用したい機能を選択します。
+3. **撮影**: 指示に従い、対象物を撮影します。
+4. **結果の確認**: アプリが提供する答えや情報を確認します。
 
-eas build --profile development-simulator --platform ios
+## 利用規約とプライバシーポリシー
 
-% ビルドした状態でのみテストしたいとき(Purchase や Google-Admob)
-npm install --dev-client
-% pacakge を追加した場合には必ず再インストールすること！(ipa ファイルをデリバリーするとなぜか失敗...production なら旨くいった)
-eas build --profile development --platform ios
-% QR コードを読み取る or Expo GO で読み取る
-npx expo start --dev-client
-% Expo で起動すると、上でインストールしたペリオチャートが起動する。
+アプリの利用に際しては、以下のリンクから利用規約とプライバシーポリシーをご確認ください。
 
-% npx expo start --dev-client 以外は起動できなくなるので、アンインストール時は下記を行う
-npm uninstall --dev-client
-npm run start
+- **利用規約**: [IAnswer アプリ 利用規約](https://kuwank.hatenablog.com/entry/2024/06/03/141839)
+- **プライバシーポリシー**: [IAnswer プライバシーポリシー](https://kuwank.hatenablog.com/entry/2024/06/03/141839)
 
-% app.json-"version": "2"はずれるようにする必要がある。
-% app.json-"ios"."buildNumber": "2"はずれるようにする必要がある。
-% eas build -p ios
-% eas submit --latest -p ios
-% eas update --branch production --message "Bug Fixed"
+## サポート
 
-npm install --dev-client
+ご不明な点やサポートが必要な場合は、アプリ内のサポートセクションをご参照いただくか、開発者のウェブサイトをご確認ください。
 
-ee68028@yahoo.ne.jp
+---
 
-eas build --platform ios --auto-submit
-
-% １．★OTA (初回だけ production で公開（TEST_FLIGHT でも可能）。次回以降は eas update で OTA)
-eas build --platform ios --profile production
-% ２'．★OTA App Store Connect の最新ビルドに配置（Mac 不要！）
-eas submit --latest -p ios
-% ２．OTA(以降はこれだけで OK)：初回読込に２回起動する必要がある
-eas update --branch production --message "Bug Fixed"
-
-LOG ["3840x2160", "1920x1080", "1280x720", "640x480", "352x288", "Photo", "High", "Medium", "Low"]
-
-1000Token
-= 0.02 = 0.005 + 0.015
-
-Revenue
-https://app.revenuecat.com/overview
-
-pip install Pillow --platform manylinux2014_x86_64 --target ./python --implementation cp --python-version 3.11 --only-binary=:all --no-deps
-pip install google.generativeai -t ./python
-pip install openai -t ./python
-zip -r deploy_package.zip ./layer
+IAnswer は、日常生活の様々なシーンでユーザーの疑問や問題解決をサポートするために設計されています。ぜひご活用ください。
